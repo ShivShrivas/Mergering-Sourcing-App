@@ -40,6 +40,7 @@ public class SEILIGL extends Application {
     public static final String LANGUAGE = BuildConfig.APPLICATION_ID + ".LANGUAGE";
     public static final String USER_ID = BuildConfig.APPLICATION_ID + ".USER_ID";
     public static final String LOGIN_TOKEN = BuildConfig.APPLICATION_ID + ".LOGIN_TOKEN";
+    public static final String LOGIN_TOKEN2 = BuildConfig.APPLICATION_ID + ".LOGIN_TOKEN2";
     public static final String ALLOW_COLLECTION = BuildConfig.APPLICATION_ID + ".ALLOW_COLLECTION";
     public static final String IS_ACTUAL = BuildConfig.APPLICATION_ID + ".IS_ACTUAL";
     public static final String APP_UPDATE_URL = BuildConfig.APPLICATION_ID + ".APP_UPDATE_URL";

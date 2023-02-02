@@ -1,5 +1,9 @@
 package com.softeksol.paisalo.jlgsourcing.activities;
 
+import static com.softeksol.paisalo.jlgsourcing.Global.ESIGN_TYPE_TAG;
+
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +25,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.RequestParams;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.softeksol.paisalo.ESign.activities.ActivityESingList;
 import com.softeksol.paisalo.jlgsourcing.BuildConfig;
 import com.softeksol.paisalo.jlgsourcing.Global;
 import com.softeksol.paisalo.jlgsourcing.R;
@@ -40,6 +45,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -137,22 +143,58 @@ public class ActivityManagerSelect extends AppCompatActivity implements View.OnC
         switch (operationItem.getId()) {
             case 1:
                 intent = new Intent(ActivityManagerSelect.this, ActivityBorrowerKyc.class);
+                intent.putExtra(Global.MANAGER_TAG, manager);
+                startActivity(intent);
                 break;
             case 2:
                 intent = new Intent(ActivityManagerSelect.this, ActivityFinancing.class);
+                intent.putExtra(Global.MANAGER_TAG, manager);
+                startActivity(intent);
                 break;
             case 3:
                 intent = new Intent(ActivityManagerSelect.this, ActivityCollection.class);
+                intent.putExtra(Global.MANAGER_TAG, manager);
+                startActivity(intent);
                 break;
             case 4:
                 intent = new Intent(ActivityManagerSelect.this, ActivityDeposit.class);
+                intent.putExtra(Global.MANAGER_TAG, manager);
+                startActivity(intent);
                 break;
             case 5:
                 intent = new Intent(ActivityManagerSelect.this, ActivityPreClosure.class);
+                intent.putExtra(Global.MANAGER_TAG, manager);
+                startActivity(intent);
+                break;
+            case 6:
+                final Intent intent1 = new Intent(this, ActivityESingList.class);
+                intent1.putExtra(Global.MANAGER_TAG, manager);
+
+                ArrayList<String> menuOptions = new ArrayList<>();
+                if (IglPreferences.getPrefString(this, SEILIGL.ALLOW_COLLECTION, "N").contains("L")) {
+                    menuOptions.add("Loan Application");
+                }
+                if (IglPreferences.getPrefString(this, SEILIGL.ALLOW_COLLECTION, "N").contains("E")) {
+                    menuOptions.add("Loan Documentation");
+                }
+                if(menuOptions.size()>0){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    String[] mOptions = new String[menuOptions.size()];
+                    mOptions = menuOptions.toArray(mOptions);
+                    builder.setItems(mOptions, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            intent1.putExtra(ESIGN_TYPE_TAG, which);
+                            startActivity(intent1);
+                        }
+                    });
+                    builder.create().show();
+                }else{
+                    Utils.alert(this,"eSign Disabled");
+                }
                 break;
         }
-        intent.putExtra(Global.MANAGER_TAG, manager);
-        startActivity(intent);
+
     }
 
     @Override

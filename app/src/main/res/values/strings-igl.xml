@@ -8,6 +8,9 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <string name="title_activity_login">Sign in</string>
+    <string name="loan_financing">Loan Financing</string>
+
     <string name="loan_home">Home</string>
     <string name="share_deviceID">Share Device ID</string>
     <string name="loan_application">Loan Applications</string>
@@ -146,4 +149,67 @@
     <string name="pre_closure_amount">Pre-Closure Amount</string>
     <string name="pre_close_case">Case Pre-Closure</string>
     <string name="select_operation">Select an Operation</string>
+
+
+    <string name="loan_detail">Loan Detail</string>
+    <string name="loan_detail_case_location">Case Location</string>
+    <string name="loan_detail_request_disb">Request Disbursement</string>
+    <string name="loan_detail_doc_download_success">Document downloaded successfully</string>
+    <string name="loan_detail_doc_download_failed">Document downloaded failed. Please try again</string>
+
+
+
+    <!--Esigning Activity -->
+    <string name="e_signing">E-Signing</string>
+    <string name="e_sign">eSign</string>
+    <string name="e_sign_name">Name</string>
+    <string name="e_sign_as">eSign As</string>
+    <string name="e_sign_father">Guardian</string>
+    <string name="e_sign_take">Take Signature</string>
+    <string name="e_sign_i_agree">I hereby agree to authenticate myself using Aadhaar through NSDL e-Gov eSign Services,
+        and also confirm to affix my Signature (generated through eSign DSC) on the above Loan Documents.
+    </string>
+    <string name="e_kyc_i_agree">I hereby agree to authenticate myself using Aadhaar through eKYC Service, and also
+        confirm to let it be used for my KYC.
+    </string>
+
+    <string name="consent_1">I hereby authorize NSDL e-Gov on behalf of Paisalo Digital Limited to-\n
+        1. Use my Aadhaar details for Loan Document eSignature and authenticate my identity through the Aadhaar
+        Authentication system (Aadhaar based e-KYC services of UIDAI) in accordance with the provisions of the Aadhar
+        (Targeted Delivery of Financial and other Subsidies, Benefits and Services) Act, 2016 and the allied rules and
+        regulations notified thereunder and for no other purpose.\n
+        2. Authenticate my Aadhaar through OTP or Biometric for authenticating my identity through the Aadhaar
+        Authentication system for obtaining my e-KYC through Aadhaar based e-KYC services of UIDAI and use my Photo and
+        Demographic details (Name, Gender, Date of Birth and Address) for Loan Document eSignature.\n
+        3. I understand that Security and confidentiality of personal identity data provided, for the purpose of Aadhaar
+        based authentication is ensured by NSDL e-Gov and the data will be stored by NSDL e-Gov till such time as
+        mentioned in guidelines from UIDAI from time to time.
+        4. I have understood that the system of downloading the copy of loan document for my record from the link
+        provided by the company through email or SMS post e-signing of the loan document. I shall download the copy of
+        loan documents as per my convenience at later stage.
+    </string>
+    <string name="consent_2">I hereby authorize NSDL e-Gov on behalf of Paisalo Digital Limited to-
+        <br/>
+        <ol>
+            <li>Use my Aadhaar details for <b>Loan Document eSignature</b> and authenticate my identity through the
+                Aadhaar Authentication system (Aadhaar based e-KYC services of UIDAI) in accordance with the provisions
+                of the Aadhar (Targeted Delivery of Financial and other Subsidies, Benefits and Services) Act, 2016 and
+                the allied rules and regulations notified thereunder and for no other purpose.
+            </li>
+            <li>Authenticate my Aadhaar through OTP or Biometric for authenticating my identity through the Aadhaar
+                Authentication system for obtaining my e-KYC through Aadhaar based e-KYC services of UIDAI and use my
+                Photo and Demographic details (Name, Gender, Date of Birth and Address) for <b>Loan Document
+                    eSignature</b>.
+            </li>
+            <li>I understand that Security and confidentiality of personal identity data provided, for the purpose of
+                Aadhaar based authentication is ensured by NSDL e-Gov and the data will be stored by NSDL e-Gov till
+                such time as mentioned in guidelines from UIDAI from time to time.
+            </li>
+            <li>I have understood that the system of downloading the copy of loan document for my record from the link
+                provided by the company through email or SMS post e-signing of the loan document. I shall download the
+                copy of loan documents as per my convenience at later stage.
+            </li>
+        </ol>
+    </string>
+
 </resources>

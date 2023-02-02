@@ -59,6 +59,11 @@ public class AdapterOperation extends ArrayAdapter<OperationItem> {
                 }else if (operationItem.getOprationName().equals("Collection")){
                     holder.imageView.setImageResource(R.drawable.collection_ic);
 
+                }else if (operationItem.getOprationName().equals("E-Sign")){
+                    holder.imageView.setImageResource(R.drawable.esign_ic
+
+                    );
+
                 }
             }
         }

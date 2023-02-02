@@ -97,5 +97,15 @@ public class IglPreferences {
         }
 
         return jo;
+    }  public static JSONObject getAccesstokenESign(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        JSONObject jo;
+        try {
+            jo = new JSONObject(preferences.getString("tokenEsign", ""));
+        } catch (JSONException je) {
+            jo = null;
+        }
+
+        return jo;
     }
 }

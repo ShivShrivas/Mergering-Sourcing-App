@@ -8,10 +8,11 @@ public class Global {
     public static final String IMAGE_DIRECTORY_NAME = "Android File Upload";
     public static final String BORROWER_TAG = "BORROWERD";
     public static final String ESIGNER_TAG = "ESIGNER";
-
+    public static final String ESIGN_TYPE_TAG = "ESIGN_TYPE";
     public static final int EKYC_REQUEST_CODE = 403;
     public static final int EKYC_UPDATET_CODE = 404;
     public static final int MANUAL_FORM_REQUEST_CODE = 405;
+    public static final int ESIGN_REQUEST_CODE = 404;
 
     public static final String GUARANTOR_TAG = "GUARANTORD";
     public static final String MANAGER_TAG = "MANAGERD";

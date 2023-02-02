@@ -79,6 +79,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
     final static int CALLBACK_NUMBER = 1001;
 
     DataAsyncResponseHandler dataAsyncResponseHandler;
+    DataAsyncResponseHandler dataAsyncResponseHandler2;
     File storageDir;
     String apkPath;
     private EditText userName;
@@ -163,59 +164,95 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                 Log.d("TAG",SEILIGL.USER_ID+"");
 
 
-                dataAsyncResponseHandler = new DataAsyncResponseHandler(ActivityLogin.this, "Logging in ...") {
+
+
+
+
+
+                (new WebOperations()).getAccessTokenEsign(ActivityLogin.this, UserName, Password, dataAsyncResponseHandler2);
+
+                dataAsyncResponseHandler2 = new DataAsyncResponseHandler(ActivityLogin.this, "Logging in ...") {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         String jsonString = new String(responseBody);
-                        Log.e("TAG", "onSuccess: "+"++++++++++++++++++++++++++++++==============="+getRequestURI());
-                        Log.e("TAG", "onSuccess: "+responseBody+headers);
                         Log.d("Login Resp",jsonString);
                         JSONObject jo;
                         JSONArray ja;
+                        //AlertDialog alertDialog = new AlertDialog.Builder(ActivityLogin.this).create();
                         try {
                             jo = new JSONObject(jsonString);
-
-                            Type listType = new TypeToken<List<Manager>>() {
-                            }.getType();
 
                             JSONObject loginData = new JSONObject(jo.getString("LoginData"));
                             jo.remove("LoginData");
 
-                            //JSONObject json = new JSONObject(String.valueOf(loginData.getJSONArray("folist")));
-
-                            JSONArray jArray = loginData.getJSONArray("folist");
-
-                            JSONObject jsonObject = (JSONObject) jArray.get(0);
-                            Log.d("CHeckingLoginValue", jsonObject.getString("FOCode"));
-                            IglPreferences.setSharedPref(getBaseContext(), SEILIGL.LOGIN_TOKEN, jo.toString());
-
-                            //Log.d("Token", jo.toString());
-                            JSONObject foImei = loginData.getJSONObject("foImei");
-                            String branchCode = jsonObject.getString("FOCode");
-                            String Creator = jsonObject.getString("Creator");
-                            String IMEI_NO = jsonObject.getString("IMEINO");
-                            loginData.remove("foImei");
-                            Log.d("FOiemi", foImei.toString());
-                            Log.d("LoginData", loginData.toString());
-                            Log.d("CREATORAAYA", Creator+"");
-                            Log.d("branchCode", branchCode+"");
-                            Log.d("IMEI_NO", IMEI_NO+"");
-
-                            IglPreferences.setSharedPref(getBaseContext(), SEILIGL.USER_ID, UserName);
-                            IglPreferences.setSharedPref(getBaseContext(), SEILIGL.CREATOR, Creator);
-                            IglPreferences.setSharedPref(getBaseContext(), SEILIGL.IMEI, IMEI_NO+"");
-                            IglPreferences.setSharedPref(getBaseContext(), SEILIGL.BRANCH_CODE, branchCode);
-                            IglPreferences.setSharedPref(getBaseContext(), SEILIGL.ALLOW_COLLECTION, foImei.getString("SIMNO"));
-                            //IglPreferences.setSharedPref(getBaseContext(),SEILIGL.DATABASE_NAME,foImei.getString("actualYN").equals("N")?"IGLDIG_TEST_PL":"IGLDIG_PL");
-                            IglPreferences.setSharedPref(getBaseContext(), SEILIGL.IS_ACTUAL, foImei.getString("actualYN"));
-                            IglPreferences.setSharedPref(getBaseContext(), SEILIGL.DEVICE_IMEI, foImei.getString("IMEINO"));
-
+                            Type listType = new TypeToken<List<Manager>>() {
+                            }.getType();
                             List<Manager> managers = WebOperations.convertToObjectArray(loginData.getString("folist"), listType);
+                            loginData.remove("folist");
+                            //Log.d("Login Resp",loginData.toString());
 
-                            int version = foImei.getInt("NewAppVerison");
-                            Log.e("NewVersionCheck",version+"");
-                            Log.e("NewVersionCheck",BuildConfig.VERSION_CODE+"");
-                            if (version > BuildConfig.VERSION_CODE) {
+                        /*IglPreferences.removePref(getBaseContext(), SEILESign.APP_SETTINGS);
+                        IglPreferences.removePref(getBaseContext(), SEILESign.IS_ACTUAL);
+                        IglPreferences.removePref(getBaseContext(), SEILESign.DEVICE_IMEI);
+                        IglPreferences.removePref(getBaseContext(), SEILESign.LOGIN_TOKEN);
+                        IglPreferences.removePref(getBaseContext(), SEILESign.USER_ID);
+                        IglPreferences.removePref(getBaseContext(), SEILESign.APP_UPDATE_URL);*/
+
+                            IglPreferences.setSharedPref(getBaseContext(), "tokenEsign", jo.toString());
+
+                            dataAsyncResponseHandler = new DataAsyncResponseHandler(ActivityLogin.this, "Logging in ...") {
+                                @Override
+                                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                    String jsonString = new String(responseBody);
+                                    Log.e("TAG", "onSuccess: "+"++++++++++++++++++++++++++++++==============="+getRequestURI());
+                                    Log.e("TAG", "onSuccess: "+responseBody+headers);
+                                    Log.d("Login Resp",jsonString);
+                                    JSONObject jo;
+                                    JSONArray ja;
+                                    try {
+                                        jo = new JSONObject(jsonString);
+
+                                        Type listType = new TypeToken<List<Manager>>() {
+                                        }.getType();
+
+                                        JSONObject loginData = new JSONObject(jo.getString("LoginData"));
+                                        jo.remove("LoginData");
+
+                                        //JSONObject json = new JSONObject(String.valueOf(loginData.getJSONArray("folist")));
+
+                                        JSONArray jArray = loginData.getJSONArray("folist");
+
+                                        JSONObject jsonObject = (JSONObject) jArray.get(0);
+                                        Log.d("CHeckingLoginValue", jsonObject.getString("FOCode"));
+                                        IglPreferences.setSharedPref(getBaseContext(), SEILIGL.LOGIN_TOKEN, jo.toString());
+
+                                        //Log.d("Token", jo.toString());
+                                        JSONObject foImei = loginData.getJSONObject("foImei");
+                                        String branchCode = jsonObject.getString("FOCode");
+                                        String Creator = jsonObject.getString("Creator");
+                                        String IMEI_NO = jsonObject.getString("IMEINO");
+                                        loginData.remove("foImei");
+                                        Log.d("FOiemi", foImei.toString());
+                                        Log.d("LoginData", loginData.toString());
+                                        Log.d("CREATORAAYA", Creator+"");
+                                        Log.d("branchCode", branchCode+"");
+                                        Log.d("IMEI_NO", IMEI_NO+"");
+
+                                        IglPreferences.setSharedPref(getBaseContext(), SEILIGL.USER_ID, UserName);
+                                        IglPreferences.setSharedPref(getBaseContext(), SEILIGL.CREATOR, Creator);
+                                        IglPreferences.setSharedPref(getBaseContext(), SEILIGL.IMEI, IMEI_NO+"");
+                                        IglPreferences.setSharedPref(getBaseContext(), SEILIGL.BRANCH_CODE, branchCode);
+                                        IglPreferences.setSharedPref(getBaseContext(), SEILIGL.ALLOW_COLLECTION, foImei.getString("SIMNO"));
+                                        //IglPreferences.setSharedPref(getBaseContext(),SEILIGL.DATABASE_NAME,foImei.getString("actualYN").equals("N")?"IGLDIG_TEST_PL":"IGLDIG_PL");
+                                        IglPreferences.setSharedPref(getBaseContext(), SEILIGL.IS_ACTUAL, foImei.getString("actualYN"));
+                                        IglPreferences.setSharedPref(getBaseContext(), SEILIGL.DEVICE_IMEI, foImei.getString("IMEINO"));
+
+                                        List<Manager> managers = WebOperations.convertToObjectArray(loginData.getString("folist"), listType);
+
+                                        int version = foImei.getInt("NewAppVerison");
+                                        Log.e("NewVersionCheck",version+"");
+                                        Log.e("NewVersionCheck",BuildConfig.VERSION_CODE+"");
+                                        if (version > BuildConfig.VERSION_CODE) {
 //                            String appPath = foImei.getString("AppDownPath");
 //                            if (appPath.toUpperCase().startsWith("ID")) {
 //                                //https://docs.google.com/uc?export=download&id=
@@ -249,44 +286,49 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
 //                                    updateApplication(alertDialog);
 //                                }
 //                            });
-                                if (foImei.getString("RequestUrl").length() > 4) {
-                                    //IglPreferences.setSharedPref(getBaseContext(), SEILIGL.BASE_URL, foImei.getString("RequestUrl"));
-                                    //(new WebOperations()).getAccessToken(context,UserName, Password, reloginResponseHandler);
-                                    updateReloginToken(foImei.getString("RequestUrl"), UserName, Password);
-                                }
-                                //updateManager( managers);
-                                Intent intent = new Intent(ActivityLogin.this, ActivityOperationSelect.class);
-                                startActivity(intent);
-                                finish();
-                            }
-                            else {
-                                if (foImei.getString("RequestUrl").length() > 4) {
-                                    //IglPreferences.setSharedPref(getBaseContext(), SEILIGL.BASE_URL, foImei.getString("RequestUrl"));
-                                    //(new WebOperations()).getAccessToken(context,UserName, Password, reloginResponseHandler);
-                                    updateReloginToken(foImei.getString("RequestUrl"), UserName, Password);
-                                }
-                                //updateManager( managers);
-                                Intent intent = new Intent(ActivityLogin.this, ActivityOperationSelect.class);
+                                            if (foImei.getString("RequestUrl").length() > 4) {
+                                                //IglPreferences.setSharedPref(getBaseContext(), SEILIGL.BASE_URL, foImei.getString("RequestUrl"));
+                                                //(new WebOperations()).getAccessToken(context,UserName, Password, reloginResponseHandler);
+                                                updateReloginToken(foImei.getString("RequestUrl"), UserName, Password);
+                                            }
+                                            //updateManager( managers);
+                                            Intent intent = new Intent(ActivityLogin.this, ActivityOperationSelect.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                        else {
+                                            if (foImei.getString("RequestUrl").length() > 4) {
+                                                //IglPreferences.setSharedPref(getBaseContext(), SEILIGL.BASE_URL, foImei.getString("RequestUrl"));
+                                                //(new WebOperations()).getAccessToken(context,UserName, Password, reloginResponseHandler);
+                                                updateReloginToken(foImei.getString("RequestUrl"), UserName, Password);
+                                            }
+                                            //updateManager( managers);
+                                            Intent intent = new Intent(ActivityLogin.this, ActivityOperationSelect.class);
 //                            Intent intent = new Intent(ActivityLogin.this, AttendenceActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                    super.onFailure(statusCode, headers, responseBody, error);
+                                    Log.e("TAG", "onFailure: "+"++++++++++++++++++++++++++++++==============="+getRequestURI()+getRequestHeaders());
+                                    Log.e("TAG", "onFailure: "+responseBody+error.getMessage());
+
+                                }
+                            };
+
+                            (new WebOperations()).getAccessToken(ActivityLogin.this, UserName, Password, dataAsyncResponseHandler);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                        super.onFailure(statusCode, headers, responseBody, error);
-                        Log.e("TAG", "onFailure: "+"++++++++++++++++++++++++++++++==============="+getRequestURI()+getRequestHeaders());
-                        Log.e("TAG", "onFailure: "+responseBody+error.getMessage());
-
-                    }
                 };
-
-                (new WebOperations()).getAccessToken(ActivityLogin.this, UserName, Password, dataAsyncResponseHandler);
-
             }
         });
         btnSignIn.setEnabled(false);

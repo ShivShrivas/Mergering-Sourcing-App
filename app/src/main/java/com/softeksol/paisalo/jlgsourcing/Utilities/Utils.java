@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -80,7 +81,26 @@ public class Utils {
     RestAdapter restAdapter = new RestAdapter.Builder()
             .setConverter(new GsonConverter(gson))
             .build();*/
+   public static String getESignXmlAttribute(@NonNull String xml, String key) {
+       String retVal = "";
+       Document doc = null;
+       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+       try {
+           DocumentBuilder db = dbf.newDocumentBuilder();
 
+           InputSource is = new InputSource();
+           is.setCharacterStream(new StringReader(xml));
+           doc = db.parse(is);
+           retVal = doc.getFirstChild().getAttributes().getNamedItem(key).getNodeValue();
+       } catch (ParserConfigurationException pce) {
+
+       } catch (SAXException e) {
+           e.printStackTrace();
+       } catch (IOException e) {
+           e.printStackTrace();
+       }
+       return retVal;
+   }
     private static void confirmDelete(final BorrowerRecViewHolder vh) {
         final Context context = vh.mView.getContext();
         new AlertDialog.Builder(context)

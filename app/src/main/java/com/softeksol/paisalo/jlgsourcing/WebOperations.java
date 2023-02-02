@@ -102,6 +102,12 @@ public class WebOperations {
         //client.addHeader("content-type", "application/json;charset=utf-8");
     }
 
+    public static void setHttpHeadersJsonESign(Context context, AsyncHttpClient client, Boolean setBearer) {
+        setHttpHeadersESign(context, client, setBearer);
+        client.addHeader("accept", "application/json");
+        client.addHeader("access", "application/json");
+        client.addHeader("content-type", "application/json;charset=utf-8");
+    }
     public static ArrayList<Header> getHttpHeadersJson(Context context, Boolean setBearer) {
         ArrayList<Header> headers = new ArrayList<>();
         headers.add(new BasicHeader("Accept", "application/json"));
@@ -141,6 +147,24 @@ public class WebOperations {
         client.setTimeout(700000);
 
 
+    }
+    public static void setHttpHeadersESign(Context context, AsyncHttpClient client, Boolean setBearer) {
+        if (setBearer) {
+            String bearerString = "";
+            try {
+                Log.d("TAG", "setHttpHeaders: "+IglPreferences.getAccesstokenESign(context).getString("access_token"));
+                bearerString = IglPreferences.getAccesstokenESign(context).getString("access_token");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            client.addHeader("Authorization", "bearer " + bearerString);
+        }
+        client.addHeader("Content-Encoding", "gzip,deflate,compress");
+        client.addHeader("imeino", IglPreferences.getPrefString(context, SEILIGL.DEVICE_IMEI, "0"));
+        client.addHeader("devid", IglPreferences.getPrefString(context, SEILIGL.DEVICE_ID, "0"));
+        client.addHeader("dbname", IglPreferences.getPrefString(context, SEILIGL.DATABASE_NAME, BuildConfig.DATABASE_NAME));
+//        client.addHeader("devid", "1319793985785243");
+        client.setTimeout(70000);
     }
 
     public static ArrayList<Header> getHttpHeaders(Context context, ArrayList<Header> headers, Boolean setBearer) {
@@ -200,6 +224,21 @@ public class WebOperations {
             e.printStackTrace();
         }
     }
+    public void getAccessTokenEsign(Context context, String userId, String password, ResponseHandlerInterface dataAsyncResponseHandler) {
+        try {
+            AsyncHttpClient client = new AsyncHttpClient();
+            setHttpHeadersJsonESign(context, client, false);
+            RequestParams params = new RequestParams();
+            params.add("grant_type", "password");
+            params.add("username", userId);
+            params.add("password", password);
+            String url = "https://agra.seil.in:8444/ESignSBIAV1/" + "token";
+            client.post(url, params, dataAsyncResponseHandler);
+            Log.d("CheckBaseUrl",url+"////"+userId+"////"+password+"////"+"base URL :"+IglPreferences.getPrefString(context, SEILIGL.BASE_URL, ""));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /*public void updateOtions(String userId, String password, DataAsyncHttpResponseHandler dataAsyncHttpResponseHandler) {
         AsyncHttpClient client = new AsyncHttpClient();
@@ -217,6 +256,25 @@ public class WebOperations {
             //Log.d("Json Data",jsonString);
             String url = IglPreferences.getPrefString(context, SEILIGL.BASE_URL, "") + "api/" + controller + "/" + method;
             Log.d("TAG", "postEntity: "+ IglPreferences.getPrefString(context, SEILIGL.BASE_URL, "") + "api/" + controller + "/" + method);
+            StringEntity entity = new StringEntity(Utils.cleanTextContent(jsonString));
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.setThreadPool(Executors.newSingleThreadExecutor());
+            setHttpHeadersJson(context, client, true);
+            Log.d("Url", url+"///post entity:///"+entity+"/////response hendler:"+responseHandler);
+            client.post(context, url, entity, "application/json", responseHandler);
+            //client.getLogInterface().setLoggingEnabled(1);
+            //client.setLoggingEnabled(true);
+            //client.setLoggingLevel(9);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void postEntityESign(Context context, String controller, String method, String jsonString, ResponseHandlerInterface responseHandler) {
+        try {
+            //Log.d("Json Data",jsonString);
+            String url = "https://agra.seil.in:8444/ESignSBIAV1/" + "api/" + controller + "/" + method;
+            Log.d("TAG", "postEntity: "+ "https://agra.seil.in:8444/ESignSBIAV1/" + "api/" + controller + "/" + method);
             StringEntity entity = new StringEntity(Utils.cleanTextContent(jsonString));
             AsyncHttpClient client = new AsyncHttpClient();
             client.setThreadPool(Executors.newSingleThreadExecutor());
@@ -301,6 +359,15 @@ public class WebOperations {
             e.printStackTrace();
         }
     }
+    public void postEntityEsign(Context context, String url, RequestParams params, ResponseHandlerInterface responseHandler) {
+        //String url = IglPreferences.getPrefString(context, SEILESign.BASE_URL, "") + "api/" + relativeUrl;
+        //Log.d("URL", url);
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.setThreadPool(Executors.newSingleThreadExecutor());
+        client.setTimeout(700000);
+        client.post(context, url, params, responseHandler);
+    }
 
     public void postEntity1(Context context, String controller, String method, String jsonString, ResponseHandlerInterface responseHandler) {
         try {
@@ -371,6 +438,22 @@ public class WebOperations {
             client.setThreadPool(Executors.newSingleThreadExecutor());
             setHttpHeaders(context, client, true);
             Log.d("Url", url+"///Params:///"+params+"/////response hendler:"+responseHandler);
+            //Log.d("JsonData",jsonString);
+            client.get(context, url, params, responseHandler);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getEntityESign(Context context, String controller, String method, RequestParams params, ResponseHandlerInterface responseHandler) {
+        try {
+            String url = "https://agra.seil.in:8444/ESignSBIAV1/"+ "api/" + controller + "/" + method;
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.setThreadPool(Executors.newSingleThreadExecutor());
+            setHttpHeadersESign(context, client, true);
+            Log.d("Url", url);
+
+            Log.d("Urlcheck", params.toString());
             //Log.d("JsonData",jsonString);
             client.get(context, url, params, responseHandler);
         } catch (Exception e) {

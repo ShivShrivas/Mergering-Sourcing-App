@@ -88,8 +88,8 @@ public class ActivityOperationSelect extends AppCompatActivity {
         if (IglPreferences.getPrefString(this, SEILIGL.ALLOW_COLLECTION, "N").contains("P")) {
             operationItems.add(new OperationItem(5, "Premature", R.color.colorMenuPremature, "casepremature", "FOForPreclosure"));
         }
-        if (IglPreferences.getPrefString(this, SEILIGL.ALLOW_COLLECTION, "N").contains("P")) {
-            operationItems.add(new OperationItem(6, "Premature", R.color.colorMenuPremature, "casepremature", "Getmappedfo"));
+        if (IglPreferences.getPrefString(this, SEILIGL.ALLOW_COLLECTION, "N").contains("C")) {
+            operationItems.add(new OperationItem(6, "E-Sign", R.color.colorMenuPremature, "POSDB", "Getmappedfo"));
         }
 
         GridView lv = (GridView) findViewById(R.id.lvcOpSelect);
@@ -137,6 +137,9 @@ public class ActivityOperationSelect extends AppCompatActivity {
                         intent = new Intent(ActivityOperationSelect.this, ActivityManagerSelect.class);
                         break;
                     case 5:
+                        intent = new Intent(ActivityOperationSelect.this, ActivityManagerSelect.class);
+                        break;
+                    case 6:
                         intent = new Intent(ActivityOperationSelect.this, ActivityManagerSelect.class);
                         break;
                 }
