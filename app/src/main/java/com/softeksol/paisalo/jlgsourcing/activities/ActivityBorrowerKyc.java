@@ -56,6 +56,7 @@ import com.softeksol.paisalo.jlgsourcing.entities.Manager;
 import com.softeksol.paisalo.jlgsourcing.entities.RangeCategory;
 import com.softeksol.paisalo.jlgsourcing.entities.dto.BorrowerDTO;
 import com.softeksol.paisalo.jlgsourcing.entities.dto.OldFIById;
+import com.softeksol.paisalo.jlgsourcing.entities.dto.OperationItem;
 import com.softeksol.paisalo.jlgsourcing.handlers.AsyncResponseHandler;
 import com.softeksol.paisalo.jlgsourcing.handlers.DataAsyncResponseHandler;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -1051,9 +1052,20 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                                 AlertDialog.Builder builder = new AlertDialog.Builder(ActivityBorrowerKyc.this);
                                 builder.setTitle("Borrower KYC");
                                 builder.setMessage("KYC Saved with " + manager.Creator + " / " + FiCode + "\nPlease capture / scan documents");
-                                builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                builder.setPositiveButton("Want to E-Sign", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
+                                        OperationItem operationItem=new OperationItem(6, "E-Sign", R.color.colorMenuPremature, "POSDB", "Getmappedfo");
+
+                                        Intent intent = new Intent(ActivityBorrowerKyc.this, ActivityManagerSelect.class);
+                                        intent.putExtra(Global.OPTION_ITEM, operationItem);
+                                        intent.putExtra("Title", operationItem.getOprationName());
+                                        startActivity(intent);
+                                    }
+                                });
+                                builder.setNegativeButton("Done", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
                                         showScanDocs();
                                     }
                                 });
