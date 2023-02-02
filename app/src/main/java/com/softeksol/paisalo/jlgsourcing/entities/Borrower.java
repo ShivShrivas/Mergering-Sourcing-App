@@ -517,6 +517,15 @@ public class Borrower extends BaseModel implements Serializable {
 
     @Expose
     @Column
+    public int TotalIncome;
+
+    @Expose
+    @Column
+    public int TotalExpense;
+
+
+    @Expose
+    @Column
     public Date GeoDateTime;
 
     @Expose
@@ -1271,6 +1280,8 @@ public class Borrower extends BaseModel implements Serializable {
                 ", BankAcOpenDt=" + BankAcOpenDt +
                 ", Latitude=" + Latitude +
                 ", Longitude=" + Longitude +
+                ", TotalIncome=" + TotalIncome +
+                ", TotalExpense=" + TotalExpense +
                 ", GeoDateTime=" + GeoDateTime +
                 ", RelationWBorrower='" + RelationWBorrower + '\'' +
                 ", AMApproval='" + AMApproval + '\'' +
@@ -1297,6 +1308,8 @@ public class Borrower extends BaseModel implements Serializable {
         this.Last_Mod_Date = borrowerDTO.Last_Mod_Date;
         this.Latitude = borrowerDTO.Latitude;
         this.Longitude = borrowerDTO.Longitude;
+        this.TotalIncome = borrowerDTO.TotalIncome;
+        this.TotalExpense = borrowerDTO.TotalExpense;
         this.Age = borrowerDTO.Age;
         this.Area_Of_House = borrowerDTO.Area_Of_House;
         this.FAmily_member = borrowerDTO.FAmily_member;

@@ -15,5 +15,6 @@
     <color name="colorMenuPremature">#3949AB</color>
     <color name="defaultTextColor">#9F9F9F</color>
     <color name="blueTextColor">#1DA1F2</color>
-
+    <color name="red">#FF0000</color>
+    <color name="green">#52D600</color>
 </resources>
