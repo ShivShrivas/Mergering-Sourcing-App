@@ -125,7 +125,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     private TextInputEditText tietAadharId, tietName, tietAge, tietDob, tietGuardian,
             tietAddress1, tietAddress2, tietAddress3, tietCity, tietPinCode, tietMobile,
             tietDrivingLic, tietPanNo, tietVoterId,
-            tietFather, tietMother, tietBankCIF, tietBankAccount;
+            tietFather, tietMother, tietBankCIF, tietBankAccount,tietIncome,tietExpence;
     private SearchView svOldCase;
     private TextView textViewFiDetails;
     private TextWatcher ageTextWatcher;
@@ -197,6 +197,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                 genders.add(new RangeCategory("Transgender", "Gender"));
         }*/
         acspGender = findViewById(R.id.acspGender);
+        tietIncome = findViewById(R.id.tietIncome);
+        tietExpence = findViewById(R.id.tietExpence);
         acspGender.setAdapter(new AdapterListRange(this, genders, false));
 
         myCalendar = Calendar.getInstance();
@@ -589,6 +591,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.Business_Detail = ((RangeCategory) acspBusinessDetail.getSelectedItem()).RangeCode;
         borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
         borrower.bank_ac_no = Utils.getNotNullText(tietBankAccount);
+        borrower.TotalIncome = Integer.parseInt(Utils.getNotNullText(tietIncome));
+        borrower.TotalExpense = Integer.parseInt(Utils.getNotNullText(tietExpence));
 
     }
 
@@ -707,8 +711,6 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
     private void setAadharContent(String aadharDataString) {
         try {
-
-
             Log.d("CheckXMLDATA2", "AadharData:->" + aadharDataString);
             if (aadharDataString.toUpperCase().contains("XML")) {
 
@@ -797,7 +799,10 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
     }
 
-     // 20/11/2022 ========================================
+
+
+
+    // 20/11/2022 ========================================
     protected byte[] decompressData(byte[] byteScanData) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream(byteScanData.length);
         ByteArrayInputStream bin = new ByteArrayInputStream(byteScanData);
@@ -889,6 +894,13 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
         Log.e("Parts======3======> ","part data =====> "+decodedData.get(15));
 
+        int inc=0;
+        Log.d("TAG", "decodeData: "+decodedData.get(0).startsWith("V")+"/////"+decodedData.get(0));
+        if (decodedData.get(0).startsWith("V")){
+            inc=0;
+        }else {
+            inc=1;
+        }
         // populate decoded data
         SimpleDateFormat sdt = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
@@ -904,10 +916,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             e.printStackTrace();
         }
 
-
-
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        Date date = formatter.parse(decodedData.get(4));
+        Date date = formatter.parse(decodedData.get(4-inc));
 
         Instant instant = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -923,18 +933,64 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     // run karo sir ok
 
 
+        borrower.Gender = decodedData.get(5-inc);
+        if (decodedData.get(13-inc).equals("")||decodedData.get(13-inc).equals(null)){
+        }else{
+            borrower.p_state = AadharUtils.getStateCode(decodedData.get(13-inc));
+        }
+        if (decodedData.get(3-inc).equals("")||decodedData.get(3-inc).equals(null)){
+            //tietName.setEnabled(true);
+        }else{
+            borrower.setNames(decodedData.get(3-inc));
+        }
+        if (decodedData.get(4-inc).equals("")||decodedData.get(4-inc).equals(null)){
+            //tietDob.setEnabled(true);
+        }else{
+            borrower.DOB = date;
+        }
+        if (decodedData.get(6-inc).equals("")||decodedData.get(6-inc).equals(null)){
 
-        borrower.setNames(decodedData.get(3));
-        borrower.DOB = date;
+        }else{
+            borrower.setGuardianNames(decodedData.get(6-inc));
+        }
 
-        borrower.Gender = decodedData.get(5);
-        borrower.setGuardianNames(decodedData.get(6));
-        borrower.P_city = decodedData.get(7);
-        borrower.p_pin = Integer.parseInt(decodedData.get(11));
-        borrower.P_Add1 = decodedData.get(9);
-        borrower.P_add2 = decodedData.get(8);
-        borrower.P_add3 = decodedData.get(10);
-        borrower.p_state = AadharUtils.getStateCode(decodedData.get(13));
+        if (decodedData.get(7-inc).equals("")||decodedData.get(7-inc).equals(null)){
+           // tietCity.setEnabled(true);
+        }else{
+            borrower.P_city = decodedData.get(7-inc);
+        }
+
+        if (decodedData.get(11-inc).equals("")||decodedData.get(11-inc).equals(null)){
+        }else{
+            borrower.p_pin = Integer.parseInt(decodedData.get(11-inc));
+        }
+
+
+        if (decodedData.get(10-inc).equals("")||decodedData.get(10-inc).equals(null)){
+          //  tietAddress3.setEnabled(true);
+        }else{
+            borrower.P_add3 = decodedData.get(10-inc);
+        }
+
+        try{
+            if (decodedData.get(9-inc).equals("")||decodedData.get(9-inc).equals(null)){
+                tietAddress2.setEnabled(false);
+            }else{
+
+                borrower.P_Add1 = decodedData.get(9-inc);
+                borrower.P_add2 = decodedData.get(8-inc);
+            }
+        }catch (Exception e){
+            tietAddress2.setEnabled(false);
+        }
+
+
+        //borrower.P_city = decodedData.get(7);
+
+       // borrower.P_Add1 = decodedData.get(9);
+       // borrower.P_add2 = decodedData.get(8);
+       // borrower.P_add3 = decodedData.get(10);
+
         setDataToView(this.findViewById(android.R.id.content).getRootView());
         validateBorrower();
         tietAge.setEnabled(false);
@@ -1265,6 +1321,26 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             case R.id.tietVoter:
             case R.id.tietPAN:
             case R.id.tietDrivingLlicense:
+            case R.id.tietIncome:
+                if (editText.getText().toString().trim().length() > 0) {
+                    if (editText.getText().toString().trim().length() < 1) {
+                        editText.setError("Enter Income");
+                        retVal = false;
+                    }
+                } else {
+                    retVal = true;
+                    editText.setError(null);
+                }
+                break;
+            case R.id.tietExpence:
+                    if (editText.getText().toString().trim().length() < 1) {
+                        editText.setError("Enter Expense");
+                        retVal = false;
+                    }else {
+                    retVal = true;
+                    editText.setError(null);
+                }
+                break;
             case R.id.tietBankCIF:
                 if (editText.getText().toString().trim().length() > 0) {
                     if (editText.getText().toString().trim().length() < 10) {
@@ -1307,6 +1383,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         retVal &= validateControls(tietDrivingLic, tietDrivingLic.getText().toString());
         retVal &= validateControls(tietMother, tietMother.getText().toString());
         retVal &= validateControls(tietFather, tietFather.getText().toString());
+        retVal &= validateControls(tietIncome, tietIncome.getText().toString());
+        retVal &= validateControls(tietExpence, tietExpence.getText().toString());
         return retVal;
     }
 

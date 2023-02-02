@@ -150,6 +150,10 @@
     <string name="pre_close_case">Case Pre-Closure</string>
     <string name="select_operation">Select an Operation</string>
 
+    <string name="total_income">Total Income Monthly(Personal+Family)</string>
+    <string name="total_expense">Total Expense Monthly(Personal+Family)</string>
+
+
 
     <string name="loan_detail">Loan Detail</string>
     <string name="loan_detail_case_location">Case Location</string>
