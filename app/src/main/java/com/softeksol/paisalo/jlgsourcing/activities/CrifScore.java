@@ -91,6 +91,8 @@ public class CrifScore extends AppCompatActivity {
                 }
 
 
+
+
                /* text_wait.setVisibility(View.VISIBLE);
                 text_serverMessage.setText("");
                 btnTryAgain.setVisibility(View.GONE);
