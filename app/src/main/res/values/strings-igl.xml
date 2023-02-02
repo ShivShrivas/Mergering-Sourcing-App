@@ -216,4 +216,18 @@
         </ol>
     </string>
 
+    <array name="banktypedata">
+        <item>SBI</item>
+        <item>BOB</item>
+        <item>UCO</item>
+        <item>PNB</item>
+    </array>
+
+    <array name="loanduration">
+        <item>"12"</item>
+        <item>"18"</item>
+        <item>"24"</item>
+
+    </array>
+
 </resources>

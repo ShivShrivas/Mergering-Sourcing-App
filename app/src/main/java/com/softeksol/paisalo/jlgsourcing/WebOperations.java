@@ -250,6 +250,19 @@ public class WebOperations {
         Log.d("BaseUrl", Global.BaseUrl + "token" + " " + userId + " " + password + "  " + Global.myIMEI);
         client.post(Global.BaseUrl + "token", params, dataAsyncHttpResponseHandler);
     }*/
+    public void postEntityESignSubmit(Context context, String controller, String method, String jsonString, ResponseHandlerInterface responseHandler) {
+        try {
+            //Log.d("Json Data", jsonString);
+            String url = "https://agra.seil.in:8444/ESignSBIAV1/" + "api/" + controller + "/" + method;
+            StringEntity entity = new StringEntity(jsonString);
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.setThreadPool(Executors.newSingleThreadExecutor());
+            setHttpHeadersJsonESign(context, client, true);
+            client.post(context, url, entity, "application/json", responseHandler);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void postEntity(Context context, String controller, String method, String jsonString, ResponseHandlerInterface responseHandler) {
         try {

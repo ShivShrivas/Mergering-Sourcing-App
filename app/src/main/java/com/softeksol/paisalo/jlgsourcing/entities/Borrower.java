@@ -526,6 +526,16 @@ public class Borrower extends BaseModel implements Serializable {
 
     @Expose
     @Column
+    public String Bank;
+
+
+    @Expose
+    @Column
+    public String LoanDuration;
+
+
+    @Expose
+    @Column
     public Date GeoDateTime;
 
     @Expose
@@ -1090,7 +1100,7 @@ public class Borrower extends BaseModel implements Serializable {
         if (this.P_ph3 == null || this.P_ph3.length() < 10) {
             messages.put("Mobile", "Mobile Number should be of 10 Digits");
         }
-        if (this.P_Add1 == null || this.P_Add1.length() < 10) {
+        if (this.P_Add1 == null || this.P_Add1.length() < 1) {
             messages.put("Address", "Address 1 is not specified");
         }
         if (this.P_city == null || this.P_city.length() < 4) {

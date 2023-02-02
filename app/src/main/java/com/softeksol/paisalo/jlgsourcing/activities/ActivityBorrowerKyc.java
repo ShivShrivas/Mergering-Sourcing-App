@@ -4,6 +4,7 @@ package com.softeksol.paisalo.jlgsourcing.activities;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
@@ -119,8 +120,10 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     private ImageView imgViewScanQR;
     private Manager manager;
     private long borrower_id;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
     private CheckBox chkTvTopup;
-    private AppCompatSpinner acspGender, acspRelationship, acspAadharState, acspOccupation,
+    private AppCompatSpinner acspGender, acspRelationship, acspAadharState, acspOccupation,loanDuration,banktype,
             acspLoanAmount, acspBusinessDetail, acspLoanPurpose;
     private TextInputEditText tietAadharId, tietName, tietAge, tietDob, tietGuardian,
             tietAddress1, tietAddress2, tietAddress3, tietCity, tietPinCode, tietMobile,
@@ -150,6 +153,11 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.activity_borrower_entry);
         manager = (Manager) getIntent().getSerializableExtra(Global.MANAGER_TAG);
 
+// Storing data into SharedPreferences
+         sharedPreferences = getSharedPreferences("KYCData",MODE_PRIVATE);
+
+// Creating an Editor object to edit(write to the file)
+      editor = sharedPreferences.edit();
         //borrower = new Borrower();
         borrower = new Borrower(manager.Creator, manager.TAG, manager.FOCode, manager.AreaCd, IglPreferences.getPrefString(ActivityBorrowerKyc.this, SEILIGL.USER_ID, ""));
 
@@ -197,6 +205,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                 genders.add(new RangeCategory("Transgender", "Gender"));
         }*/
         acspGender = findViewById(R.id.acspGender);
+        banktype = findViewById(R.id.banktype);
+        loanDuration = findViewById(R.id.acspGender);
         tietIncome = findViewById(R.id.tietIncome);
         tietExpence = findViewById(R.id.tietExpence);
         acspGender.setAdapter(new AdapterListRange(this, genders, false));
@@ -565,7 +575,6 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.setNames(Utils.getNotNullText(tietName));
         borrower.Age = Utils.getNotNullInt(tietAge);
         borrower.DOB = myCalendar.getTime();
-
         borrower.setGuardianNames(Utils.getNotNullText(tietGuardian));
         borrower.P_Add1 = Utils.getNotNullText(tietAddress1);
         borrower.P_add2 = Utils.getNotNullText(tietAddress2);
@@ -593,6 +602,30 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.bank_ac_no = Utils.getNotNullText(tietBankAccount);
         borrower.TotalIncome = Integer.parseInt(Utils.getNotNullText(tietIncome));
         borrower.TotalExpense = Integer.parseInt(Utils.getNotNullText(tietExpence));
+        borrower.LoanDuration= loanDuration.getSelectedItem().toString();
+        borrower.Bank= banktype.getSelectedItem().toString();
+
+//        editor.putString("Name",)
+       editor.putString("Adhaar", Utils.getNotNullText(tietAadharId));
+       editor.putString("Name", Utils.getNotNullText(tietName));
+       editor.putInt("Age", Utils.getNotNullInt(tietAge));
+       editor.putString("Gur", Utils.getNotNullText(tietGuardian));
+       editor.putString("Address", Utils.getNotNullText(tietAddress1)+Utils.getNotNullText(tietAddress2)+Utils.getNotNullText(tietAddress3));
+       editor.putString("City", Utils.getNotNullText(tietCity));
+       editor.putInt("PIN", Utils.getNotNullInt(tietPinCode));
+       editor.putString("LoanAmount", acspLoanAmount.getSelectedItem().toString());
+       editor.putString("State", acspAadharState.getSelectedItem().toString());
+       editor.putString("Mobile", Utils.getNotNullString(tietMobile));
+       editor.putString("PAN", Utils.getNotNullString(tietPanNo));
+       editor.putString("Gender", acspGender.getSelectedItem().toString());
+       editor.putString("Bank", banktype.getSelectedItem().toString());
+       editor.putInt("Income", Utils.getNotNullInt(tietIncome));
+       editor.putInt("Expense", Utils.getNotNullInt(tietExpence));
+       editor.putString("Duration", loanDuration.getSelectedItem().toString());
+       editor.putInt("VoterId", Utils.getNotNullInt(tietVoterId));
+       editor.putString("DOB", Utils.getNotNullString(tietDob));
+       editor.putString("LoanReason", acspLoanPurpose.getSelectedItem().toString());
+       editor.apply();
 
     }
 
@@ -932,7 +965,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         }
     // run karo sir ok
 
-
+        borrower.aadharid=decodedData.get(2-inc);
         borrower.Gender = decodedData.get(5-inc);
         if (decodedData.get(13-inc).equals("")||decodedData.get(13-inc).equals(null)){
         }else{
@@ -1301,13 +1334,13 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
                 break;
             case R.id.tietAddress1:
-                if (editText.getText().toString().trim().length() < 6) {
+                if (editText.getText().toString().trim().length() < 1) {
                     editText.setError("Should be more than 5 Characters");
                     retVal = false;
                 }
                 break;
             case R.id.tietCity:
-                if (editText.getText().toString().trim().length() < 3) {
+                if (editText.getText().toString().trim().length() < 1) {
                     editText.setError("Should be more than 2 Characters");
                     retVal = false;
                 }

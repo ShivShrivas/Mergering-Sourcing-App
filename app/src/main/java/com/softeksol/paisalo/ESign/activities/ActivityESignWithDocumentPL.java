@@ -1,5 +1,6 @@
 package com.softeksol.paisalo.ESign.activities;
 
+import static com.softeksol.paisalo.jlgsourcing.Global.BORROWER_TAG;
 import static com.softeksol.paisalo.jlgsourcing.Global.ESIGN_TYPE_TAG;
 
 import android.content.DialogInterface;
@@ -38,12 +39,19 @@ import com.softeksol.paisalo.jlgsourcing.SEILIGL;
 import com.softeksol.paisalo.jlgsourcing.Utilities.IglPreferences;
 import com.softeksol.paisalo.jlgsourcing.Utilities.Utils;
 import com.softeksol.paisalo.jlgsourcing.WebOperations;
+import com.softeksol.paisalo.jlgsourcing.activities.ActivityBorrowerKyc;
+import com.softeksol.paisalo.jlgsourcing.activities.ActivityManagerSelect;
+import com.softeksol.paisalo.jlgsourcing.activities.CrifScore;
+import com.softeksol.paisalo.jlgsourcing.entities.Borrower;
+import com.softeksol.paisalo.jlgsourcing.entities.Borrower_Table;
 import com.softeksol.paisalo.jlgsourcing.entities.ESignBorrower;
 import com.softeksol.paisalo.jlgsourcing.entities.ESignBorrower_Table;
 import com.softeksol.paisalo.jlgsourcing.entities.ESignGuarantor;
 import com.softeksol.paisalo.jlgsourcing.entities.ESignGuarantor_Table;
 import com.softeksol.paisalo.jlgsourcing.entities.ESigner;
+import com.softeksol.paisalo.jlgsourcing.entities.dto.OperationItem;
 import com.softeksol.paisalo.jlgsourcing.handlers.DataAsyncResponseHandler;
+import com.softeksol.paisalo.jlgsourcing.retrofit.BorrowerData;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -133,7 +141,8 @@ public class ActivityESignWithDocumentPL extends AppCompatActivity implements Vi
         if (requestCode == APK_ESIGN_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 String eSignResponse = data.getStringExtra("signedResponse");
-//                sendESign(eSignResponse);
+                sendESign(eSignResponse);
+
             } else {
                 Toast.makeText(getBaseContext(),
                         "Nothing Selected", Toast.LENGTH_SHORT)
@@ -166,6 +175,16 @@ public class ActivityESignWithDocumentPL extends AppCompatActivity implements Vi
                 .and(ESignBorrower_Table.Creator.eq(eSigner.Creator))
                 .querySingle();
         return eSignBorrower.KycUuid;
+    }
+
+
+    public String getBorrowerData(ESigner eSigner) {
+        Borrower borrowerData = SQLite.select()
+                .from(Borrower.class)
+                .where(Borrower_Table.FiID.eq(eSigner.FiCode))
+                .and(Borrower_Table.Creator.eq(eSigner.Creator))
+                .querySingle();
+        return borrowerData.aadharid;
     }
 
     private boolean isPackageInstalled(String packageName, PackageManager packageManager) {
@@ -403,11 +422,32 @@ public class ActivityESignWithDocumentPL extends AppCompatActivity implements Vi
                             updateESigner(eSigner);
                             dlg.dismiss();
                             setResult(RESULT_OK);
-                            finish();
+//                            finish();
+//                            AlertDialog.Builder builder = new AlertDialog.Builder(ActivityESignWithDocumentPL.this);
+//                            builder.setTitle("Generate CRIF Score");
+//                            builder.setMessage("Do you want to generate CRIF Score?");
+//                            builder.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialog, int which) {
+
+                                    Intent intent = new Intent(ActivityESignWithDocumentPL.this, CrifScore.class);
+                                    intent.putExtra("ficode",eSigner.FiCode);
+                                    intent.putExtra("creator",eSigner.Creator);
+                                    startActivity(intent);
+//                                }
+//                            });
+//                            builder.setNegativeButton("Done", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                                   finish();
+//                                }
+//                            });
+//                            builder.create().show();
                         }
                     }
                 };
-                (new WebOperations()).postEntity(ActivityESignWithDocumentPL.this, "docsESignPvn", "AcceptESign", jo.toString(), asyncResponseHandler);
+                (new WebOperations()).postEntityESignSubmit(ActivityESignWithDocumentPL.this, "docsESignPvn", "AcceptESign", jo.toString(), asyncResponseHandler);
 
             }
         };
@@ -416,6 +456,10 @@ public class ActivityESignWithDocumentPL extends AppCompatActivity implements Vi
         builder.setNeutralButton("Reject", onDialogSubmitListner);
         alertDialog = builder.create();
         alertDialog.show();
+    }
+
+    private void getChrifScore() {
+
     }
 
     private void updateESigner(ESigner eSigner) {

@@ -4,6 +4,7 @@ import static java.lang.Thread.sleep;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -47,6 +48,10 @@ public class CrifScore extends AppCompatActivity {
     LinearLayout layout_design,layout_design_pending;
     Button btnTryAgain,btnSrifScore;
     TextView textView_emi;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+    Intent i;
+    String ficode,creator;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -56,7 +61,8 @@ public class CrifScore extends AppCompatActivity {
         actionBar.setTitle("Loan Eligibility");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
+        sharedPreferences = getSharedPreferences("KYCData",MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         progressBar=findViewById(R.id.circular_determinative_pb);
         progressBarsmall=findViewById(R.id.progressBar);
         textView7=findViewById(R.id.textView7);
@@ -76,8 +82,10 @@ public class CrifScore extends AppCompatActivity {
         layout_design.setVisibility(View.GONE);
         btnTryAgain.setVisibility(View.GONE);
         layout_design_pending.setVisibility(View.VISIBLE);
-        Intent intent=getIntent();
-        BorrowerData borrowerdata = (BorrowerData)intent.getSerializableExtra("borrowerdata");
+        i=getIntent();
+        ficode=i.getStringExtra("ficode");
+        creator=i.getStringExtra("creator");
+
         //Toast.makeText(this,borrowerdata.getTietAadhar(), Toast.LENGTH_SHORT).show();
 
         btnSrifScore=findViewById(R.id.btnSrifScore);
@@ -106,11 +114,11 @@ public class CrifScore extends AppCompatActivity {
                 text_serverMessage.setText("");
                 btnTryAgain.setVisibility(View.GONE);
                 progressBarsmall.setVisibility(View.VISIBLE);
-                checkCrifScore(borrowerdata);
+                checkCrifScore();
 
             }
         });
-        checkCrifScore(borrowerdata);
+        checkCrifScore();
 
 
         String[] arraySpinner = new String[] {
@@ -124,14 +132,14 @@ public class CrifScore extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s.setAdapter(adapter);
 
-        int spinnerBankPos=adapter.getPosition(borrowerdata.getStr_banktype());
-        s.setSelection(spinnerBankPos);
+//        int spinnerBankPos=adapter.getPosition(borrowerdata.getStr_banktype());
+//        s.setSelection(spinnerBankPos);
 
 
         s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            borrowerdata.setStr_banktype(parent.getSelectedItem().toString());
+//            borrowerdata.setStr_banktype(parent.getSelectedItem().toString());
             }
 
             @Override
@@ -143,10 +151,10 @@ public class CrifScore extends AppCompatActivity {
 
     }
 
-    private void checkCrifScore(BorrowerData borrowerdata){
+    private void checkCrifScore(){
         //String address=borrowerdata.getTietAddress1()+" "+borrowerdata.getTietAddress2()+" "+borrowerdata.getTietAddress3();
         ApiInterface apiInterface= ApiClient.getClient("https://agra.paisalo.in:8462/creditmatrix/api/CrifReport/").create(ApiInterface.class);
-        Call<CheckCrifData> call=apiInterface.checkCrifScore(getJsonOfKyc(borrowerdata));
+        Call<CheckCrifData> call=apiInterface.checkCrifScore(getJsonOfKyc());
         call.enqueue(new Callback<CheckCrifData>() {
             @Override
             public void onResponse(Call<CheckCrifData> call, Response<CheckCrifData> response) {
@@ -309,32 +317,34 @@ public class CrifScore extends AppCompatActivity {
     }
 
 
-    private JsonObject getJsonOfKyc(BorrowerData borrowerData) {
+    private JsonObject getJsonOfKyc() {
         JsonObject jsonObject=new JsonObject();
-        String ficode=getRandomSixNumberString();
-        String randCreator=getRandomTwoNumberString();
+
+
+
+
         jsonObject.addProperty("ficode",ficode);
-       jsonObject.addProperty("full_name",borrowerData.getTietName());
-       jsonObject.addProperty("dob",borrowerData.getTietDob());
-       jsonObject.addProperty("co",borrowerData.getTietFatherName());
-       jsonObject.addProperty("address",borrowerData.getTietAddress1()+borrowerData.getTietAddress2()+borrowerData.getTietAddress3());
-       jsonObject.addProperty("city",borrowerData.getTietCity());
-       jsonObject.addProperty("state",borrowerData.getStr_acspAadharState());
-       jsonObject.addProperty("pin",borrowerData.getTietPinCode());
-       jsonObject.addProperty("loan_amount",borrowerData.getStr_acspLoanAppFinanceLoanAmount());
-       jsonObject.addProperty("mobile",borrowerData.getTietMobile());
-       jsonObject.addProperty("creator","Agra"+randCreator);
-       jsonObject.addProperty("pancard",borrowerData.getTietPAN());
-       jsonObject.addProperty("voter_id",borrowerData.getTietVoter());
+       jsonObject.addProperty("full_name",sharedPreferences.getString("Name",""));
+       jsonObject.addProperty("dob",sharedPreferences.getString("DOB",""));
+       jsonObject.addProperty("co",sharedPreferences.getString("Gur",""));
+       jsonObject.addProperty("address",sharedPreferences.getString("Address",""));
+       jsonObject.addProperty("city",sharedPreferences.getString("City",""));
+       jsonObject.addProperty("state",sharedPreferences.getString("State",""));
+       jsonObject.addProperty("pin",sharedPreferences.getString("PIN",""));
+       jsonObject.addProperty("loan_amount",sharedPreferences.getString("LoanAmount",""));
+       jsonObject.addProperty("mobile",sharedPreferences.getString("Mobile",""));
+       jsonObject.addProperty("creator",creator);
+       jsonObject.addProperty("pancard",sharedPreferences.getString("PAN",""));
+       jsonObject.addProperty("voter_id",sharedPreferences.getString("VoterId",""));
        jsonObject.addProperty("BrCode","001");
        jsonObject.addProperty("GrpCode","0001");
-       jsonObject.addProperty("AadharID",borrowerData.getTietAadhar());
-       jsonObject.addProperty("Gender",borrowerData.getStr_acspGender());
-       jsonObject.addProperty("Bank",borrowerData.getStr_banktype());
-       jsonObject.addProperty("Income",borrowerData.getTietIncome());
-       jsonObject.addProperty("Expense",borrowerData.getTietExpence());
-       jsonObject.addProperty("LoanReason",borrowerData.getStr_acspLoanReason());
-       jsonObject.addProperty("Duration",borrowerData.getStr_loanDuration());
+       jsonObject.addProperty("AadharID",sharedPreferences.getString("Adhaar",""));
+       jsonObject.addProperty("Gender",sharedPreferences.getString("Gender",""));
+       jsonObject.addProperty("Bank",sharedPreferences.getString("Bank",""));
+       jsonObject.addProperty("Income",sharedPreferences.getString("Income",""));
+       jsonObject.addProperty("Expense",sharedPreferences.getString("Expense",""));
+       jsonObject.addProperty("LoanReason",sharedPreferences.getString("LoanReason",""));
+       jsonObject.addProperty("Duration",sharedPreferences.getString("Duration",""));
 
         return jsonObject;
 
