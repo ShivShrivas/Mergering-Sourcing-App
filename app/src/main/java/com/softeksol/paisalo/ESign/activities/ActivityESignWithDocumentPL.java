@@ -133,7 +133,7 @@ public class ActivityESignWithDocumentPL extends AppCompatActivity implements Vi
         if (requestCode == APK_ESIGN_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 String eSignResponse = data.getStringExtra("signedResponse");
-                sendESign(eSignResponse);
+//                sendESign(eSignResponse);
             } else {
                 Toast.makeText(getBaseContext(),
                         "Nothing Selected", Toast.LENGTH_SHORT)

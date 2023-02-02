@@ -278,7 +278,7 @@ public class WebOperations {
             StringEntity entity = new StringEntity(Utils.cleanTextContent(jsonString));
             AsyncHttpClient client = new AsyncHttpClient();
             client.setThreadPool(Executors.newSingleThreadExecutor());
-            setHttpHeadersJson(context, client, true);
+            setHttpHeadersJsonESign(context, client, true);
             Log.d("Url", url+"///post entity:///"+entity+"/////response hendler:"+responseHandler);
             client.post(context, url, entity, "application/json", responseHandler);
             //client.getLogInterface().setLoggingEnabled(1);
