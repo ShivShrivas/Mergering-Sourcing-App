@@ -51,6 +51,7 @@ import com.softeksol.paisalo.jlgsourcing.WebOperations;
 import com.softeksol.paisalo.jlgsourcing.adapters.AdapterListRange;
 import com.softeksol.paisalo.jlgsourcing.adapters.AdapterRecViewListDocuments;
 import com.softeksol.paisalo.jlgsourcing.entities.AadharData;
+import com.softeksol.paisalo.jlgsourcing.entities.AdharCardXML;
 import com.softeksol.paisalo.jlgsourcing.entities.Borrower;
 import com.softeksol.paisalo.jlgsourcing.entities.BorrowerExtraBank;
 import com.softeksol.paisalo.jlgsourcing.entities.DocumentStore;
@@ -640,10 +641,10 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.Business_Detail = ((RangeCategory) acspBusinessDetail.getSelectedItem()).RangeCode;
         borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
         borrower.bank_ac_no = Utils.getNotNullText(tietBankAccount);
-        borrower.TotalIncome = Integer.parseInt(Utils.getNotNullText(tietIncome));
-        borrower.TotalExpense = Integer.parseInt(Utils.getNotNullText(tietExpence));
-        borrower.LoanDuration= loanDuration.getSelectedItem().toString();
-        borrower.Bank= banktype.getSelectedItem().toString();
+//        borrower.TotalIncome = Integer.parseInt(Utils.getNotNullText(tietIncome));
+//        borrower.TotalExpense = Integer.parseInt(Utils.getNotNullText(tietExpence));
+//        borrower.LoanDuration= loanDuration.getSelectedItem().toString();
+//        borrower.Bank= banktype.getSelectedItem().toString();
 
 //        editor.putString("Name",)
         editor.clear();
@@ -754,7 +755,11 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                 String scanFormat = scanningResult.getFormatName();
                 Log.d("CheckXMLDATA3","AadharData:->" + scanContent);
                 if (scanFormat != null) {
-                    setAadharContent(scanContent);
+                    try {
+                        setAadharContent(scanContent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } else {
@@ -801,73 +806,96 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         }
     }
 
-    private void setAadharContent(String aadharDataString) {
-        try {
+    private void setAadharContent(String aadharDataString) throws Exception {
+//        try {
             Log.d("CheckXMLDATA2", "AadharData:->" + aadharDataString);
-            if (aadharDataString.toUpperCase().contains("XML")) {
+        if (aadharDataString.toUpperCase().contains("XML")) {
+            Log.d("XML printing", "AadharData:->" + aadharDataString);
+            //AadharData aadharData = AadharUtils.getAadhar(aadharDataString);
+            AadharData aadharData = AadharUtils.getAadhar(AadharUtils.ParseAadhar(aadharDataString));
 
-                Log.d("XML printing", "AadharData:->" + aadharDataString);
-                //AadharData aadharData = AadharUtils.getAadhar(aadharDataString);
-                AadharData aadharData = AadharUtils.getAadhar(AadharUtils.ParseAadhar(aadharDataString));
+            if (aadharData.Address2 == null) {
+                aadharData.Address2 = aadharData.Address3;
+                aadharData.Address3 = null;
+            } else if (aadharData.Address2.trim().equals("")) {
+                aadharData.Address2 = aadharData.Address3;
+                aadharData.Address3 = null;
+            }
+            if (aadharData.Address1 == null) {
+                aadharData.Address1 = aadharData.Address2;
+                aadharData.Address2 = aadharData.Address3;
+                aadharData.Address3 = null;
+            } else if (aadharData.Address1.trim().equals("")) {
+                aadharData.Address1 = aadharData.Address2;
+                aadharData.Address2 = aadharData.Address3;
+                aadharData.Address3 = null;
+            }
 
-                if (aadharData.AadharId != null) {
+            // populate decoded data
+            SimpleDateFormat sdt = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                sdt = new SimpleDateFormat("dd-MM-YYYY");
 
-                    Borrower borrower1 = Borrower.getBorrower(aadharData.AadharId);
-                    if (borrower1 != null) {
-                        borrower = borrower1;
-                        setDataToView(activity.findViewById(android.R.id.content).getRootView());
-                        tietAadharId.setEnabled(false);
-                        return;
-                    }
+            }
+            Date result = null;
 
-                    if (chkTvTopup.isChecked()) {
-                        if (tietAadharId.getText().toString().equals(aadharData.AadharId)) {
-                            Utils.alert(this, "Aadhar ID did not match with Topup Case");
-                            return;
-                        }
-                    }
-                    borrower.aadharid = aadharData.AadharId;
-                }
+//                    result = sdt.parse(decodedData.get(4-inc));
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            Date date = aadharData.DOB;
+            Log.d("TAG", "decodeData: "+date);
+            Instant instant = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                instant = date.toInstant();
+                ZonedDateTime zone = instant.atZone(ZoneId.systemDefault());
+                LocalDate givenDate = zone.toLocalDate();
 
-                if (aadharData.Address2 == null) {
-                    aadharData.Address2 = aadharData.Address3;
-                    aadharData.Address3 = null;
-                } else if (aadharData.Address2.trim().equals("")) {
-                    aadharData.Address2 = aadharData.Address3;
-                    aadharData.Address3 = null;
-                }
-                if (aadharData.Address1 == null) {
-                    aadharData.Address1 = aadharData.Address2;
-                    aadharData.Address2 = aadharData.Address3;
-                    aadharData.Address3 = null;
-                } else if (aadharData.Address1.trim().equals("")) {
-                    aadharData.Address1 = aadharData.Address2;
-                    aadharData.Address2 = aadharData.Address3;
-                    aadharData.Address3 = null;
-                }
-                borrower.isAadharVerified = aadharData.isAadharVerified;
-                borrower.setNames(aadharData.Name);
-                borrower.DOB = aadharData.DOB;
-                borrower.Age = aadharData.Age;
-                borrower.Gender = aadharData.Gender;
-                borrower.setGuardianNames(aadharData.GurName);
-                borrower.P_city = aadharData.City;
-                borrower.p_pin = aadharData.Pin;
-                borrower.P_Add1 = aadharData.Address1;
-                borrower.P_add2 = aadharData.Address2;
-                borrower.P_add3 = aadharData.Address3;
-                borrower.p_state = AadharUtils.getStateCode(aadharData.State);
-                setDataToView(this.findViewById(android.R.id.content).getRootView());
-                validateBorrower();
-                tietAge.setEnabled(false);
-                tietDob.setEnabled(false);
-
-               //====== ================================
+                Period period = Period.between(givenDate, LocalDate.now());
+                Log.d("TAG", "decodeData: "+period.getYears());
+                tietAge.setText(String.valueOf(period.getYears()));
+//            borrower.Age = period.getYears();
+                System.out.print(period.getYears()+" "+period.getMonths()+" and "+period.getDays()+" days");
+            }
 
 
+//                int spinnerPositionForState = stateAdapter.getPosition(decodedData.get(13-inc));
+//                acspAadharState.setSelection(spinnerPositionForState);
+            tietAadharId.setText(aadharData.AadharId);
+
+            tietName.setText(aadharData.Name);
+
+//                tietDob.setText(String.valueOf(aadharData.DOB));
+//
+////        borrower.Gender = decodedData.get(5);
+            tietGuardian.setText(aadharData.GurName==null?"":aadharData.GurName);
+////        borrower.setGuardianNames(decodedData.get(6));
+            tietCity.setText(aadharData.City);
+////        borrower.P_city = decodedData.get(7);
+            tietPinCode.setText(String.valueOf(aadharData.Pin));
+////        borrower.p_pin = Integer.parseInt(decodedData.get(11));
+            tietAddress1.setText(aadharData.Address1);
+////        borrower.P_Add1 = decodedData.get(9);
+            tietAddress2.setText(aadharData.Address2);
+////        borrower.P_add2 = decodedData.get(8);
+            tietAddress3.setText(aadharData.Address3);
+
+//        borrower.P_add3 = decodedData.get(10);
+            Log.e("Parts======3======> ","part data =====> "+aadharData.Address3);
+
+//        borrower.p_state = AadharUtils.getStateCode(decodedData.get(13));
+//        setDataToView(this.findViewById(android.R.id.content).getRootView());
+//        validateBorrower();
+            tietAge.setEnabled(false);
+            tietCity.setEnabled(false);
+            tietName.setEnabled(false);
+            acspGender.setEnabled(false);
+            tietAadharId.setEnabled(false);
+            tietPinCode.setEnabled(false);
+            tietAddress1.setEnabled(false);
+            tietAddress2.setEnabled(false);
 
 
-            } else {
+
+        }  else {
 
                 final BigInteger bigIntScanData = new BigInteger(aadharDataString, 10);
                 Log.e("testbigin======", "AadharData:->" + bigIntScanData);
@@ -885,9 +913,9 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                 decodeSignature(decompByteScanData);
                 decodeMobileEmail(decompByteScanData);
             }
-            } catch(Exception ex) {
-            Utils.alert(this, ex.getMessage());
-        }
+//            } catch(Exception ex) {
+//            Utils.alert(this, ex.getMessage());
+//        }
 
     }
 
@@ -979,6 +1007,20 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         Log.e("Parts======2======> ","part data =====> "+decodedData.toString());
         //emailMobilePresent = Integer.parseInt(decodedData[0]);
 
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(1));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(2));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(3));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(4));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(5));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(6));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(7));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(8));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(9));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(10));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(11));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(12));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(13));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(14));
         Log.e("Parts======3======> ","part data =====> "+decodedData.get(15));
 
         int inc=0;
@@ -1017,7 +1059,6 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             borrower.Age = period.getYears();
             System.out.print(period.getYears()+" years "+period.getMonths()+" and "+period.getDays()+" days");
         }
-    // run karo sir ok
 
         borrower.aadharid=decodedData.get(2-inc);
         borrower.Gender = decodedData.get(5-inc);
@@ -1082,6 +1123,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         validateBorrower();
         tietAge.setEnabled(false);
         tietDob.setEnabled(false);
+        acspAadharState.setEnabled(false);
+        acspGender.setEnabled(false);
 
 
     }
