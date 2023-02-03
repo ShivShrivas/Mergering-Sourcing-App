@@ -61,6 +61,10 @@ public class CrifScore extends AppCompatActivity {
         actionBar.setTitle("Loan Eligibility");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        i=getIntent();
+        Log.d("TAG", "onCreate: "+i.getStringExtra("ficode"));
+        ficode=i.getStringExtra("FIcode");
+        creator=i.getStringExtra("creator");
         sharedPreferences = getSharedPreferences("KYCData",MODE_PRIVATE);
         editor = sharedPreferences.edit();
         progressBar=findViewById(R.id.circular_determinative_pb);
@@ -82,9 +86,7 @@ public class CrifScore extends AppCompatActivity {
         layout_design.setVisibility(View.GONE);
         btnTryAgain.setVisibility(View.GONE);
         layout_design_pending.setVisibility(View.VISIBLE);
-        i=getIntent();
-        ficode=i.getStringExtra("ficode");
-        creator=i.getStringExtra("creator");
+
 
         //Toast.makeText(this,borrowerdata.getTietAadhar(), Toast.LENGTH_SHORT).show();
 
@@ -95,7 +97,12 @@ public class CrifScore extends AppCompatActivity {
                 if(btnSrifScore.getText().toString().equals("CLOSE")){
                     finish();
                 }else{
-
+                    text_wait.setVisibility(View.VISIBLE);
+                    text_serverMessage.setText("");
+                    layout_design.setVisibility(View.GONE);
+                    btnTryAgain.setVisibility(View.GONE);
+                    layout_design_pending.setVisibility(View.VISIBLE);
+                    checkCrifScore();
                 }
 
                /* text_wait.setVisibility(View.VISIBLE);
@@ -132,14 +139,16 @@ public class CrifScore extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s.setAdapter(adapter);
 
-//        int spinnerBankPos=adapter.getPosition(borrowerdata.getStr_banktype());
-//        s.setSelection(spinnerBankPos);
+        int spinnerBankPos=adapter.getPosition(sharedPreferences.getString("Bank",""));
+        s.setSelection(spinnerBankPos);
 
 
         s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//            borrowerdata.setStr_banktype(parent.getSelectedItem().toString());
+                editor.putString("Bank",parent.getSelectedItem().toString());
+                editor.apply();
+                btnSrifScore.setText("Try Again");
             }
 
             @Override
@@ -154,6 +163,7 @@ public class CrifScore extends AppCompatActivity {
     private void checkCrifScore(){
         //String address=borrowerdata.getTietAddress1()+" "+borrowerdata.getTietAddress2()+" "+borrowerdata.getTietAddress3();
         ApiInterface apiInterface= ApiClient.getClient("https://agra.paisalo.in:8462/creditmatrix/api/CrifReport/").create(ApiInterface.class);
+        Log.d("TAG", "checkCrifScore: "+getJsonOfKyc());
         Call<CheckCrifData> call=apiInterface.checkCrifScore(getJsonOfKyc());
         call.enqueue(new Callback<CheckCrifData>() {
             @Override
@@ -167,7 +177,7 @@ public class CrifScore extends AppCompatActivity {
                             checkCrifData=response.body();
                             getCrifScore(checkCrifData);
                         }
-                    },20000);
+                    },25000);
                 }else{
                     layout_design.setVisibility(View.GONE);
                     layout_design_pending.setVisibility(View.VISIBLE);

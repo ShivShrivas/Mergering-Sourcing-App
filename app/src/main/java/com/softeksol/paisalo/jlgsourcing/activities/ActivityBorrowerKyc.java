@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -73,6 +74,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -146,7 +148,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     protected int emailMobilePresent, imageStartIndex, imageEndIndex;
     protected ArrayList<String> decodedData;
     protected String signature,email,mobile;
-
+    String loanDurationData,stateData,genderData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,6 +160,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
 // Creating an Editor object to edit(write to the file)
       editor = sharedPreferences.edit();
+
         //borrower = new Borrower();
         borrower = new Borrower(manager.Creator, manager.TAG, manager.FOCode, manager.AreaCd, IglPreferences.getPrefString(ActivityBorrowerKyc.this, SEILIGL.USER_ID, ""));
 
@@ -206,7 +209,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         }*/
         acspGender = findViewById(R.id.acspGender);
         banktype = findViewById(R.id.banktype);
-        loanDuration = findViewById(R.id.acspGender);
+        loanDuration = findViewById(R.id.loanDuration);
         tietIncome = findViewById(R.id.tietIncome);
         tietExpence = findViewById(R.id.tietExpence);
         acspGender.setAdapter(new AdapterListRange(this, genders, false));
@@ -458,7 +461,44 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
         tietBankAccount = findViewById(R.id.tietBankAccount);
         tietBankCIF = findViewById(R.id.tietBankCIF);
+        loanDuration.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                loanDurationData=adapterView.getSelectedItem().toString();
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        acspAadharState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                RangeCategory rangeCategory= (RangeCategory) adapterView.getSelectedItem();
+                Log.d("TAG", "onItemSelected: "+rangeCategory.DescriptionEn);
+                stateData=rangeCategory.DescriptionEn;
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        acspGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                RangeCategory rangeCategory= (RangeCategory) adapterView.getSelectedItem();
+                Log.d("TAG", "onItemSelected: "+rangeCategory.DescriptionEn);
+                genderData=rangeCategory.DescriptionEn;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         recyclerView = (RecyclerView) findViewById(R.id.rv_document_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
         adapterRecViewListDocuments = new AdapterRecViewListDocuments(this, R.layout.layout_item_document_cardview, this);
@@ -606,29 +646,48 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.Bank= banktype.getSelectedItem().toString();
 
 //        editor.putString("Name",)
-       editor.putString("Adhaar", Utils.getNotNullText(tietAadharId));
+        editor.clear();
+        editor.apply();
+       editor.putString("Adhaar",tietAadharId.getText().toString());
        editor.putString("Name", Utils.getNotNullText(tietName));
-       editor.putInt("Age", Utils.getNotNullInt(tietAge));
+       editor.putString("Age", String.valueOf(Utils.getNotNullInt(tietAge)));
        editor.putString("Gur", Utils.getNotNullText(tietGuardian));
        editor.putString("Address", Utils.getNotNullText(tietAddress1)+Utils.getNotNullText(tietAddress2)+Utils.getNotNullText(tietAddress3));
        editor.putString("City", Utils.getNotNullText(tietCity));
-       editor.putInt("PIN", Utils.getNotNullInt(tietPinCode));
-       editor.putString("LoanAmount", acspLoanAmount.getSelectedItem().toString());
-       editor.putString("State", acspAadharState.getSelectedItem().toString());
-       editor.putString("Mobile", Utils.getNotNullString(tietMobile));
-       editor.putString("PAN", Utils.getNotNullString(tietPanNo));
-       editor.putString("Gender", acspGender.getSelectedItem().toString());
+       editor.putString("PIN", tietPinCode.getText().toString());
+       editor.putString("LoanAmount", String.valueOf(borrower.Loan_Amt));
+       editor.putString("State",stateData);
+       editor.putString("Mobile",tietMobile.getText().toString());
+       editor.putString("PAN",tietPanNo.getText().toString());
+       editor.putString("Gender", genderData);
        editor.putString("Bank", banktype.getSelectedItem().toString());
-       editor.putInt("Income", Utils.getNotNullInt(tietIncome));
-       editor.putInt("Expense", Utils.getNotNullInt(tietExpence));
-       editor.putString("Duration", loanDuration.getSelectedItem().toString());
-       editor.putInt("VoterId", Utils.getNotNullInt(tietVoterId));
-       editor.putString("DOB", Utils.getNotNullString(tietDob));
-       editor.putString("LoanReason", acspLoanPurpose.getSelectedItem().toString());
+       editor.putString("Income", String.valueOf(Utils.getNotNullInt(tietIncome)));
+       editor.putString("Expense", String.valueOf(Utils.getNotNullInt(tietExpence)));
+       editor.putString("Duration", loanDurationData);
+       editor.putString("VoterId", Utils.getNotNullText(tietVoterId));
+
+       editor.putString("DOB", parseDateToddMMyyyy(tietDob.getText().toString()));
+       editor.putString("LoanReason", borrower.Loan_Reason);
        editor.apply();
 
     }
+    public String parseDateToddMMyyyy(String time) {
+        String inputPattern = "dd-MMM-yyyy";
+        String outputPattern = "dd-MM-yyyy";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
 
+        Date date = null;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            str = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_kyc_submit_cancel, menu);
@@ -914,12 +973,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         Iterator<byte[]> i = encodedData.iterator();
         decodedData = new ArrayList<String>();
         while(i.hasNext()){
-            try {
-                decodedData.add(new String(i.next(), "ISO-8859-1"));
-            } catch (UnsupportedEncodingException e) {
-                Log.e("Exception", "Decoding QRcode, ISO-8859-1 not supported: " + e.toString());
-               // throw new QrCodeException("Decoding QRcode, ISO-8859-1 not supported",e);
-            }
+            decodedData.add(new String(i.next(), StandardCharsets.ISO_8859_1));
         }
         // set the value of email/mobile present flag
         Log.e("Parts======2======> ","part data =====> "+decodedData.toString());

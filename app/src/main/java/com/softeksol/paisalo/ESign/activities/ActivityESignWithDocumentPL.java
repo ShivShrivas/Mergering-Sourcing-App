@@ -126,12 +126,11 @@ public class ActivityESignWithDocumentPL extends AppCompatActivity implements Vi
         switch (v.getId()) {
             case R.id.btnESignProcessEsign:
                 //processApkESign(v);
-                showAadharDialog();
+              showAadharDialog();
                 //processWebESign("419957856512",getString(R.string.consent_1));
                 break;
         }
     }
-
     /**
      * Receiving activity result method will be called after closing the camera
      */
@@ -420,7 +419,6 @@ public class ActivityESignWithDocumentPL extends AppCompatActivity implements Vi
                         if (statusCode == 200 && whichButton == DialogInterface.BUTTON_POSITIVE) {
                             eSigner.ESignSucceed = "Y";
                             updateESigner(eSigner);
-                            dlg.dismiss();
                             setResult(RESULT_OK);
 //                            finish();
 //                            AlertDialog.Builder builder = new AlertDialog.Builder(ActivityESignWithDocumentPL.this);
@@ -431,9 +429,13 @@ public class ActivityESignWithDocumentPL extends AppCompatActivity implements Vi
 //                                public void onClick(DialogInterface dialog, int which) {
 
                                     Intent intent = new Intent(ActivityESignWithDocumentPL.this, CrifScore.class);
-                                    intent.putExtra("ficode",eSigner.FiCode);
+
+                                    intent.putExtra("FIcode",String.valueOf(eSigner.FiCode));
                                     intent.putExtra("creator",eSigner.Creator);
                                     startActivity(intent);
+                                    dlg.dismiss();
+                                    finish();
+
 //                                }
 //                            });
 //                            builder.setNegativeButton("Done", new DialogInterface.OnClickListener() {
