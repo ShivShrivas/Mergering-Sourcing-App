@@ -2,6 +2,7 @@ package com.softeksol.paisalo.jlgsourcing.activities;
 
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,6 +34,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.JsonObject;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.loopj.android.http.RequestParams;
@@ -51,7 +53,6 @@ import com.softeksol.paisalo.jlgsourcing.WebOperations;
 import com.softeksol.paisalo.jlgsourcing.adapters.AdapterListRange;
 import com.softeksol.paisalo.jlgsourcing.adapters.AdapterRecViewListDocuments;
 import com.softeksol.paisalo.jlgsourcing.entities.AadharData;
-import com.softeksol.paisalo.jlgsourcing.entities.AdharCardXML;
 import com.softeksol.paisalo.jlgsourcing.entities.Borrower;
 import com.softeksol.paisalo.jlgsourcing.entities.BorrowerExtraBank;
 import com.softeksol.paisalo.jlgsourcing.entities.DocumentStore;
@@ -62,6 +63,9 @@ import com.softeksol.paisalo.jlgsourcing.entities.dto.OldFIById;
 import com.softeksol.paisalo.jlgsourcing.entities.dto.OperationItem;
 import com.softeksol.paisalo.jlgsourcing.handlers.AsyncResponseHandler;
 import com.softeksol.paisalo.jlgsourcing.handlers.DataAsyncResponseHandler;
+import com.softeksol.paisalo.jlgsourcing.retrofit.ApiClient;
+import com.softeksol.paisalo.jlgsourcing.retrofit.ApiInterface;
+import com.softeksol.paisalo.jlgsourcing.retrofit.CheckCrifData;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -92,7 +96,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
@@ -102,18 +105,15 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
 import cz.msebera.android.httpclient.Header;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.softeksol.paisalo.jlgsourcing.Utilities.Verhoeff.validateCaseCode;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.Date;
 
 public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnClickListener,AdapterRecViewListDocuments.ItemListener, CameraUtils.OnCameraCaptureUpdate { //, CameraUtils.OnCameraCaptureUpdate
     private final AppCompatActivity activity = this;
@@ -133,10 +133,11 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             tietDrivingLic, tietPanNo, tietVoterId,
             tietFather, tietMother, tietBankCIF, tietBankAccount,tietIncome,tietExpence;
     private SearchView svOldCase;
-    private TextView textViewFiDetails;
+    private TextView textViewFiDetails,tilPAN_Name,tilVoterId_Name;
     private TextWatcher ageTextWatcher;
     private Calendar myCalendar;
     private DatePickerDialog.OnDateSetListener dateSetListner;
+    ImageView voterIdCheckSign,panCheckSign;
     private MyTextWatcher aadharTextChangeListner;
     private RecyclerView recyclerView;
     private AdapterRecViewListDocuments adapterRecViewListDocuments;
@@ -208,11 +209,17 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                 genders.add(new RangeCategory("Female", "Gender"));
                 genders.add(new RangeCategory("Transgender", "Gender"));
         }*/
+        panCheckSign = findViewById(R.id.panCheckSign);
+        voterIdCheckSign = findViewById(R.id.voterIdCheckSign);
         acspGender = findViewById(R.id.acspGender);
         banktype = findViewById(R.id.banktype);
         loanDuration = findViewById(R.id.loanDuration);
         tietIncome = findViewById(R.id.tietIncome);
         tietExpence = findViewById(R.id.tietExpence);
+        tilPAN_Name = findViewById(R.id.tilPAN_Name);
+        tilVoterId_Name = findViewById(R.id.tilVoterId_Name);
+        tilPAN_Name.setVisibility(View.GONE);
+        tilVoterId_Name.setVisibility(View.GONE);
         acspGender.setAdapter(new AdapterListRange(this, genders, false));
 
         myCalendar = Calendar.getInstance();
@@ -326,8 +333,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         });
 
         tietDob = findViewById(R.id.tietDob);
-        tietDob.setFocusable(false);
-        tietDob.setEnabled(false);
+
 
         tietGuardian = findViewById(R.id.tietGuardian);
         tietGuardian.addTextChangedListener(new MyTextWatcher(tietGuardian) {
@@ -406,20 +412,11 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                 validateControls(editText, text);
             }
         });
+
         tietPanNo = findViewById(R.id.tietPAN);
-        tietPanNo.addTextChangedListener(new MyTextWatcher(tietPanNo) {
-            @Override
-            public void validate(EditText editText, String text) {
-                validateControls(editText, text);
-            }
-        });
+
         tietVoterId = findViewById(R.id.tietVoter);
-        tietVoterId.addTextChangedListener(new MyTextWatcher(tietVoterId) {
-            @Override
-            public void validate(EditText editText, String text) {
-                validateControls(editText, text);
-            }
-        });
+
         tietDrivingLic = findViewById(R.id.tietDrivingLlicense);
         tietDrivingLic.addTextChangedListener(new MyTextWatcher(tietDrivingLic) {
             @Override
@@ -442,7 +439,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         acspBusinessDetail.setAdapter(new AdapterListRange(this, RangeCategory.getRangesByCatKey("loan_purpose", "DescriptionEn", true), false));
 
         acspLoanPurpose = findViewById(R.id.acspLoanReason);
-        acspLoanPurpose.setAdapter(new AdapterListRange(this, RangeCategory.getRangesByCatKey("loan_purpose", "DescriptionEn", true), false));
+        acspLoanPurpose.setAdapter(new AdapterListRange(this, RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true), false));
 
         tietMother = findViewById(R.id.tietMotherName);
         tietMother.addTextChangedListener(new MyTextWatcher(tietMother) {
@@ -498,6 +495,30 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+        panCheckSign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (tietPanNo.getText().toString().trim().length() == 10) {
+                    cardValidate(tietPanNo.getText().toString().trim(),"pancard");
+                } else {
+                    tilPAN_Name.setVisibility(View.GONE);
+
+                    tietPanNo.setError("Enter PAN");
+                }
+            }
+        });
+        voterIdCheckSign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (tietVoterId.getText().toString().trim().length() == 10) {
+                    cardValidate(tietVoterId.getText().toString().trim(),"voterid");
+                } else {
+                    tilVoterId_Name.setVisibility(View.GONE);
+                    tietVoterId.setError("Enter Voter Id");
+                }
             }
         });
         recyclerView = (RecyclerView) findViewById(R.id.rv_document_list);
@@ -639,7 +660,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         String occCode = Utils.getSpinnerStringValue((AppCompatSpinner) v.findViewById(R.id.acspOccupation));
         borrower.fiExtraBank.setCkycOccupationCode(occCode);
         borrower.Business_Detail = ((RangeCategory) acspBusinessDetail.getSelectedItem()).RangeCode;
-        borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
+            borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
         borrower.bank_ac_no = Utils.getNotNullText(tietBankAccount);
 //        borrower.TotalIncome = Integer.parseInt(Utils.getNotNullText(tietIncome));
 //        borrower.TotalExpense = Integer.parseInt(Utils.getNotNullText(tietExpence));
@@ -734,7 +755,14 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                 */
             case R.id.tietDob:
                 Date dob = DateUtils.getParsedDate(tietDob.getText().toString(), "dd-MMM-yyyy");
-                myCalendar.setTime(dob);
+                try{
+                    if (!dob.equals(null)){
+                        myCalendar.setTime(dob);
+                    }
+                }catch (Exception e){
+
+                }
+
                 new DatePickerDialog(this, dateSetListner,
                         myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)
                 ).show();
@@ -1205,83 +1233,88 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         if (borrower != null) {
             getDataFromView(this.findViewById(android.R.id.content).getRootView());
 
-            if (validateBorrower()) {
-                Map<String, String> messages = borrower.validateKyc(this);
-                if (messages.size() > 0) {
-                    String combineMessage = Arrays.toString(messages.values().toArray());
-                    combineMessage = combineMessage.replace("[", "->").replace(", ", "\n->").replace("]", "");
-                    Utils.alert(this, combineMessage);
-                } else {
-                    showSubmitBorrowerMenuItem = false;
-                    invalidateOptionsMenu();
-                    if (!chkTvTopup.isChecked()) borrower.OldCaseCode = null;
-                    borrower.Oth_Prop_Det = null;
-                    borrower.save();
-                    borrower.associateExtraBank(borrower.fiExtraBank);
-                    borrower.fiExtraBank.save();
+            if (tietVoterId.getText().toString().trim().equals("") && tietPanNo.getText().toString().trim().equals("")){
+                Utils.showSnakbar(findViewById(android.R.id.content),"Please enter either PAN number or Voter ID");
+            }else{
+                if (validateBorrower()) {
+                    Map<String, String> messages = borrower.validateKyc(this);
+                    if (messages.size() > 0) {
+                        String combineMessage = Arrays.toString(messages.values().toArray());
+                        combineMessage = combineMessage.replace("[", "->").replace(", ", "\n->").replace("]", "");
+                        Utils.alert(this, combineMessage);
+                    } else {
+                        showSubmitBorrowerMenuItem = false;
+                        invalidateOptionsMenu();
+                        if (!chkTvTopup.isChecked()) borrower.OldCaseCode = null;
+                        borrower.Oth_Prop_Det = null;
+                        borrower.save();
+                        borrower.associateExtraBank(borrower.fiExtraBank);
+                        borrower.fiExtraBank.save();
 
-                    BorrowerDTO borrowerDTO = new BorrowerDTO(borrower);
-                    borrowerDTO.fiFamExpenses = null;
-                    borrowerDTO.fiExtra = null;
-                    AsyncResponseHandler dataAsyncResponseHandler = new AsyncResponseHandler(this, "Loan Financing\nSubmittiong Loan Application", "Submitting Borrower Information") {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                            String jsonString = new String(responseBody);
-                            //Log.d("Response Data",jsonString);
-                            try {
-                                JSONObject jo = new JSONObject(jsonString);
-                                long FiCode = jo.getLong("FiCode");
-                                borrower.updateFiCode(FiCode, borrower.Tag);
-                                borrower.Oth_Prop_Det = null;
-                                borrower.save();
+                        BorrowerDTO borrowerDTO = new BorrowerDTO(borrower);
+                        borrowerDTO.fiFamExpenses = null;
+                        borrowerDTO.fiExtra = null;
+                        AsyncResponseHandler dataAsyncResponseHandler = new AsyncResponseHandler(this, "Loan Financing\nSubmittiong Loan Application", "Submitting Borrower Information") {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                String jsonString = new String(responseBody);
+                                //Log.d("Response Data",jsonString);
+                                try {
+                                    JSONObject jo = new JSONObject(jsonString);
+                                    long FiCode = jo.getLong("FiCode");
+                                    borrower.updateFiCode(FiCode, borrower.Tag);
+                                    borrower.Oth_Prop_Det = null;
+                                    borrower.save();
 
-                                AlertDialog.Builder builder = new AlertDialog.Builder(ActivityBorrowerKyc.this);
-                                builder.setTitle("Borrower KYC");
-                                builder.setMessage("KYC Saved with " + manager.Creator + " / " + FiCode + "\nPlease capture / scan documents");
-                                builder.setPositiveButton("Want to E-Sign", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        OperationItem operationItem=new OperationItem(6, "E-Sign", R.color.colorMenuPremature, "POSDB", "Getmappedfo");
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(ActivityBorrowerKyc.this);
+                                    builder.setTitle("Borrower KYC");
+                                    builder.setMessage("KYC Saved with " + manager.Creator + " / " + FiCode + "\nPlease capture / scan documents");
+                                    builder.setPositiveButton("Want to E-Sign", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            OperationItem operationItem=new OperationItem(6, "E-Sign", R.color.colorMenuPremature, "POSDB", "Getmappedfo");
 
-                                        Intent intent = new Intent(ActivityBorrowerKyc.this, ActivityManagerSelect.class);
-                                        intent.putExtra(Global.OPTION_ITEM, operationItem);
-                                        intent.putExtra("Title", operationItem.getOprationName());
-                                        startActivity(intent);
-                                    }
-                                });
-                                builder.setNegativeButton("Done", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        showScanDocs();
-                                    }
-                                });
-                                builder.create().show();
-                            } catch (JSONException jo) {
-                                Utils.showSnakbar(findViewById(android.R.id.content), jo.getMessage());
+                                            Intent intent = new Intent(ActivityBorrowerKyc.this, ActivityManagerSelect.class);
+                                            intent.putExtra(Global.OPTION_ITEM, operationItem);
+                                            intent.putExtra("Title", operationItem.getOprationName());
+                                            startActivity(intent);
+                                        }
+                                    });
+                                    builder.setNegativeButton("Done", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            showScanDocs();
+                                        }
+                                    });
+                                    builder.create().show();
+                                } catch (JSONException jo) {
+                                    Utils.showSnakbar(findViewById(android.R.id.content), jo.getMessage());
 
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                            super.onFailure(statusCode, headers, responseBody, error);
-                            //btnSubmit.setEnabled(true);
-                            showSubmitBorrowerMenuItem = true;
-                            invalidateOptionsMenu();
-                        }
-                    };
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                super.onFailure(statusCode, headers, responseBody, error);
+                                //btnSubmit.setEnabled(true);
+                                showSubmitBorrowerMenuItem = true;
+                                invalidateOptionsMenu();
+                            }
+                        };
 
 
-                    //Log.d("Borrower Json",WebOperations.convertToJson(borrower));
-                    String borrowerJsonString = WebOperations.convertToJson(borrowerDTO);
-                    //Log.d("Borrower Json", borrowerJsonString);
-                    Log.d("TAG", "updateBorrower: "+borrowerJsonString+dataAsyncResponseHandler);
+                        //Log.d("Borrower Json",WebOperations.convertToJson(borrower));
+                        String borrowerJsonString = WebOperations.convertToJson(borrowerDTO);
+                        //Log.d("Borrower Json", borrowerJsonString);
+                        Log.d("TAG", "updateBorrower: "+borrowerJsonString+dataAsyncResponseHandler);
 
-                    (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+                        (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+                    }
+                } else {
+                    Utils.alert(this, "There is at least one errors in the Aadhar Data");
                 }
-            } else {
-                Utils.alert(this, "There is at least one errors in the Aadhar Data");
             }
+
         }
     }
 
@@ -1388,7 +1421,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         };
         RequestParams params = new RequestParams();
         params.add("Aadharid", aadharId);
-        (new WebOperations()).getEntity(this, "posdb", "getaadharstatus", params, dataAsyncResponseHandler);
+            (new WebOperations()).getEntity(this, "posdb", "getaadharstatus", params, dataAsyncResponseHandler);
 
     }
 
@@ -1448,8 +1481,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                     retVal = false;
                 }
                 break;
-            case R.id.tietVoter:
-            case R.id.tietPAN:
+
             case R.id.tietDrivingLlicense:
             case R.id.tietIncome:
                 if (editText.getText().toString().trim().length() > 0) {
@@ -1462,6 +1494,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                     editText.setError(null);
                 }
                 break;
+
+
             case R.id.tietExpence:
                     if (editText.getText().toString().trim().length() < 1) {
                         editText.setError("Enter Expense");
@@ -1497,6 +1531,80 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         return retVal;
     }
 
+    private void cardValidate(String id,String type) {
+
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        progressDialog.setIndeterminate(false);
+        progressDialog.setTitle("Fetching Details");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+        ApiInterface apiInterface= ApiClient.getClient("https://agra.paisalo.in:8462/creditmatrix/api/").create(ApiInterface.class);
+        Log.d("TAG", "checkCrifScore: "+getJsonOfString(id,type));
+        Call<JsonObject> call=apiInterface.cardValidate(getJsonOfString(id,type));
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (type.equals("pancard")){
+                    try {
+                        tilPAN_Name.setVisibility(View.VISIBLE);
+                        tilPAN_Name.setText(response.body().get("data").getAsJsonObject().get("name").getAsString());
+                        panCheckSign.setImageResource(R.drawable.check_sign_ic_green);
+                    }catch (Exception e){
+                        tilPAN_Name.setVisibility(View.VISIBLE);
+                        tilPAN_Name.setText("Card Holder Name Not Found");
+                        panCheckSign.setImageResource(R.drawable.check_sign_ic);
+
+                    }
+                    progressDialog.cancel();
+                }else{
+                    try {
+                        tilVoterId_Name.setVisibility(View.VISIBLE);
+
+                        tilVoterId_Name.setText(response.body().get("data").getAsJsonObject().get("name").getAsString());
+                        voterIdCheckSign.setImageResource(R.drawable.check_sign_ic_green);
+
+                    }catch (Exception e){
+                        tilVoterId_Name.setVisibility(View.VISIBLE);
+
+                        tilVoterId_Name.setText("Card Holder Name Not Found");
+                        voterIdCheckSign.setImageResource(R.drawable.check_sign_ic);
+
+                    }
+                    progressDialog.cancel();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                if (type.equals("pancard")){
+                    tilPAN_Name.setText(t.getMessage());
+                    panCheckSign.setImageResource(R.drawable.check_sign_ic);
+
+                    progressDialog.cancel();
+
+                }else{
+                    tilVoterId_Name.setText(t.getMessage());
+                    progressDialog.cancel();
+                    voterIdCheckSign.setImageResource(R.drawable.check_sign_ic);
+
+
+                }
+            }
+        });
+    }
+
+    private JsonObject getJsonOfString(String id, String type) {
+        JsonObject jsonObject=new JsonObject();
+        jsonObject.addProperty("type",type);
+        jsonObject.addProperty("txtnumber",id);
+        jsonObject.addProperty("ifsc","");
+        jsonObject.addProperty("userdob","");
+        return  jsonObject;
+    }
+
     private boolean validateBorrower() {
         boolean retVal = true;
         retVal &= validateControls(tietAadharId, tietAadharId.getText().toString());
@@ -1508,8 +1616,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         retVal &= validateControls(tietCity, tietCity.getText().toString());
         retVal &= validateControls(tietPinCode, tietPinCode.getText().toString());
         retVal &= validateControls(tietMobile, tietMobile.getText().toString());
-        retVal &= validateControls(tietVoterId, tietVoterId.getText().toString());
-        retVal &= validateControls(tietPanNo, tietPanNo.getText().toString());
+//        retVal &= validateControls(tietVoterId, tietVoterId.getText().toString()) || validateControls(tietPanNo, tietPanNo.getText().toString());
         retVal &= validateControls(tietDrivingLic, tietDrivingLic.getText().toString());
         retVal &= validateControls(tietMother, tietMother.getText().toString());
         retVal &= validateControls(tietFather, tietFather.getText().toString());

@@ -267,9 +267,10 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilVoter"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/voterIdCheckSign"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tilMobile">
 
@@ -282,13 +283,36 @@
             android:inputType="textCapCharacters" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilPAN"
+    <ImageView
+        android:id="@+id/voterIdCheckSign"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/check_sign_ic"
+        app:layout_constraintBottom_toBottomOf="@+id/tilVoter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tilVoter" />
+
+    <TextView
+        android:id="@+id/tilVoterId_Name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:text="Voter Id Holder Name"
+        android:textSize="15dp"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tilVoter">
+        app:layout_constraintTop_toBottomOf="@+id/tilVoter" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilPAN"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/panCheckSign"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tilVoterId_Name">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tietPAN"
@@ -299,22 +323,27 @@
             android:inputType="textCapCharacters" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
+    <ImageView
+        android:id="@+id/panCheckSign"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/check_sign_ic"
+        app:layout_constraintBottom_toBottomOf="@+id/tilPAN"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tilPAN" />
+    <TextView
         android:id="@+id/tilPAN_Name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
+        android:text="PAN Card Holder Name"
+        android:layout_marginTop="-5dp"
+        android:textSize="15dp"
+        android:layout_marginStart="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tilPAN">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 /-"
-            android:hint="@string/applicant_pan_name"
-            android:inputType="textCapCharacters" />
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toBottomOf="@id/tilPAN"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/cardView_DrivingLicence"

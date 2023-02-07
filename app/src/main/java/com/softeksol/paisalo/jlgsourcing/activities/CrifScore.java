@@ -162,7 +162,7 @@ public class CrifScore extends AppCompatActivity {
 
     private void checkCrifScore(){
         //String address=borrowerdata.getTietAddress1()+" "+borrowerdata.getTietAddress2()+" "+borrowerdata.getTietAddress3();
-        ApiInterface apiInterface= ApiClient.getClient("https://agra.paisalo.in:8462/creditmatrix/api/CrifReport/").create(ApiInterface.class);
+        ApiInterface apiInterface= ApiClient.getClient("https://agra.paisalo.in:8462/creditmatrix/api/").create(ApiInterface.class);
         Log.d("TAG", "checkCrifScore: "+getJsonOfKyc());
         Call<CheckCrifData> call=apiInterface.checkCrifScore(getJsonOfKyc());
         call.enqueue(new Callback<CheckCrifData>() {
@@ -182,6 +182,8 @@ public class CrifScore extends AppCompatActivity {
                     layout_design.setVisibility(View.GONE);
                     layout_design_pending.setVisibility(View.VISIBLE);
                     text_serverMessage.setText("Server Error!!");
+                    btnTryAgain.setVisibility(View.VISIBLE);
+                    text_wait.setVisibility(View.GONE);
 
                 }
 
@@ -205,7 +207,7 @@ public class CrifScore extends AppCompatActivity {
 
     private void getCrifScore(CheckCrifData checkCrifData) {
         //String address=borrowerdata.getTietAddress1()+" "+borrowerdata.getTietAddress2()+" "+borrowerdata.getTietAddress3();
-        ApiInterface apiInterface= ApiClient.getClient("https://agra.paisalo.in:8462/creditmatrix/api/CrifReport/").create(ApiInterface.class);
+        ApiInterface apiInterface= ApiClient.getClient("https://agra.paisalo.in:8462/creditmatrix/api/").create(ApiInterface.class);
         Call<ScrifData> call=apiInterface.getCrifScore(getJSOnOfCheckDataResponse(checkCrifData));
         call.enqueue(new Callback<ScrifData>() {
             @Override
@@ -248,6 +250,7 @@ public class CrifScore extends AppCompatActivity {
                                 textView7.setText(message);
                                 textView13.setVisibility(View.VISIBLE);
                                 textView6.setVisibility(View.VISIBLE);
+
                                 textView_emi.setVisibility(View.VISIBLE);
                                 textView_valueEmi.setVisibility(View.VISIBLE);
                                 textView6.setText(amount+" ₹");
@@ -290,7 +293,8 @@ public class CrifScore extends AppCompatActivity {
                     layout_design.setVisibility(View.GONE);
                     layout_design_pending.setVisibility(View.VISIBLE);
                     text_serverMessage.setText("Server Error!!");
-
+                    btnTryAgain.setVisibility(View.VISIBLE);
+                    text_wait.setVisibility(View.GONE);
                 }
 
 

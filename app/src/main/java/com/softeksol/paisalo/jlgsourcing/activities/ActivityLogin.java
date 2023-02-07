@@ -550,6 +550,8 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
             sendIntent.setType("text/plain");
 
             Intent shareIntent = Intent.createChooser(sendIntent, null);
+
+
             startActivity(shareIntent);
         }
     }

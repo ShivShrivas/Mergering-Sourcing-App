@@ -4,6 +4,7 @@ package com.softeksol.paisalo.jlgsourcing.retrofit;
 import com.google.gson.JsonObject;
 
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -16,12 +17,20 @@ public interface ApiInterface {
     public Call<LoginResponse> login(@Field("grant_type") String grantType, @Field("username") String  userName, @Field("password") String password);
 
 */
-    @POST("CheckCrifReport")
+    @POST("CrifReport/CheckCrifReport")
     public  Call<CheckCrifData> checkCrifScore(@Body JsonObject object);
 
 
-    @POST("GetCrifReport")
+    @POST("CrifReport/GetCrifReport")
     public  Call<ScrifData> getCrifScore(@Body JsonObject object);
+
+
+
+    @POST("IdentityVerification/Get")
+    public Call<JsonObject> cardValidate(@Body JsonObject object);
+
+
+
 
 /*
     @Field("ficode") String fiCode, @Field("full_name") String fullName, @Field("dob") String dob,
