@@ -59,7 +59,7 @@ import org.json.JSONObject;
 import cz.msebera.android.httpclient.Header;
 
 
-public class ActivityESignWithDocumentPL extends AppCompatActivity implements View.OnClickListener {
+public class  ActivityESignWithDocumentPL extends AppCompatActivity implements View.OnClickListener {
  //   static final String ACTION_ESIGNRESPONSE = "com.nsdl.egov.esign.rdservice.fp.CAPTURE";
     private static final int BORROWER_FINGERPRINT_REQUEST_CODE = 401;
     private static final int GUARANTOR_FINGERPRINT_REQUEST_CODE = 402;

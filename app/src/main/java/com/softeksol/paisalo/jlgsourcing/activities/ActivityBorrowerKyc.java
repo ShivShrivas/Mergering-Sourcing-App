@@ -683,7 +683,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 //        borrower.LoanDuration= loanDuration.getSelectedItem().toString();
 //        borrower.Bank= banktype.getSelectedItem().toString();
 
-//        editor.putString("Name",)
+//     editor.putString("Name",)
         editor.clear();
         editor.apply();
        editor.putString("Adhaar",tietAadharId.getText().toString());
@@ -1245,7 +1245,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         this.uriPicture = uriImage;
     }
 
-    private void updateBorrower() {
+    private void  updateBorrower() {
         if (borrower != null) {
             getDataFromView(this.findViewById(android.R.id.content).getRootView());
 

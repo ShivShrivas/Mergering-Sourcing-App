@@ -150,8 +150,8 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
             @Override
             public void onClick(View view) {
 
-                 UserName = ((EditText) findViewById(R.id.til_login_username)).getText().toString();
-                Password = ((EditText) findViewById(R.id.etLoginPassword)).getText().toString();
+                 UserName = ((EditText) findViewById(R.id.til_login_username)).getText().toString().trim();
+                 Password = ((EditText) findViewById(R.id.etLoginPassword)).getText().toString().trim();
 
                 if (checkAndRequestPermissions()){
                     getDeviceID();

@@ -39,7 +39,8 @@ import static com.softeksol.paisalo.jlgsourcing.Utilities.DateUtils.formatdateTi
 
 @ModelContainer
 @Table(database = DbIGL.class)
-public class DocumentStore extends BaseModel {
+public class
+DocumentStore extends BaseModel {
 
     @Column
     @Expose

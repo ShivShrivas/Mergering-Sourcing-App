@@ -151,7 +151,7 @@ public class ActivityESingList extends AppCompatActivity {
 //    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_esing_list);
         getSupportActionBar().setTitle(getString(R.string.app_name) + " (" + BuildConfig.VERSION_NAME + ")" + " / ");
@@ -167,7 +167,6 @@ public class ActivityESingList extends AppCompatActivity {
                 ESignBorrower borrower = (ESignBorrower) adapterView.getAdapter().getItem(i);
                 Intent intent;
                 Log.d("TAG", "onItemClick: "+borrower.AadharNo+esignType);
-
                 if (esignType == 1) {
                     intent = new Intent(ActivityESingList.this, ActivityLoanDetails.class);
                     Log.d("TAG", "onItemClick: "+borrower.AadharNo);
