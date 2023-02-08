@@ -1,5 +1,6 @@
 package com.softeksol.paisalo.jlgsourcing.entities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -969,7 +970,7 @@ public class Borrower extends BaseModel implements Serializable {
     }
 
     public Map<String, String> validateLoanApplication(Context context) {
-//        int docCount = 3;
+       int docCount = 3;
         Map<String, String> messages = new HashMap<>();
         if (this.aadharid == null || this.aadharid.trim().length() == 0) {
             messages.put("Borrower Aadhar", "Aadhar number is missing");
@@ -990,8 +991,10 @@ public class Borrower extends BaseModel implements Serializable {
             messages.put("No Document ID", "A valid document ID must be filled in");
         } else {
             if (this.voterid != null) {
-                if (this.PanNO.length() != 10)
-                messages.put("Pan No", "PAN Card Number should be of 10 Digits");
+                if (this.PanNO.length() != 10){
+                    messages.put("Pan No", "PAN Card Number should be of 10 Digits");
+                }
+
 //                docCount += 2;
             }else{
                 if (this.voterid.length() != 10)
@@ -1026,14 +1029,14 @@ public class Borrower extends BaseModel implements Serializable {
             this.isAadharVerified = "N";
             this.save();
         }
-      //  if (!this.isAadharVerified.equals("Y")) docCount += 2;
+      if (!this.isAadharVerified.equals("Y")) docCount += 2;
 
         int guarantorCount = this.getFiGuarantors().size();
         if (guarantorCount > 0) {
             int cnt = 0;
             for (Guarantor guarantor : this.getFiGuarantors()) {
                 cnt++;
-               // docCount += 1;
+                docCount += 1;
                 if (guarantor.getPictureStore() == null) {
                     messages.put("Guarantor " + cnt + " Picture", "Picture is missing");
                 }
@@ -1053,11 +1056,11 @@ public class Borrower extends BaseModel implements Serializable {
                     guarantor.save();
                 }
 
-//                if (BuildConfig.APPLICATION_ID == "com.softeksol.paisalo.jlgsourcing") {
-//                    if (!guarantor.getIsAadharVerified().equals("Y")) docCount += 2;
-//                }
+                if (BuildConfig.APPLICATION_ID == "com.softeksol.paisalo.jlgsourcing") {
+                    if (!guarantor.getIsAadharVerified().equals("Y")) docCount += 2;
+                }
 
-                //if(guarantor.getIsAadharVerified().equals("Y")) docCount=docCount+1; else docCount=docCount+3;
+               if(guarantor.getIsAadharVerified().equals("Y")) docCount=docCount+1; else docCount=docCount+3;
                 /*if (guarantor.getVoterid()==null || guarantor.getVoterid().length()<10){ messages.put("Guarantor VoterID","Guarantor VoterID Number should be of 10 Digits"+ " for Guarantor #"+String.valueOf(cnt));}
                 if(guarantor.getPicture()==null){
                     messages.put("Guarantor Picture","Picture Must be captured"+ " for Guarantor #"+String.valueOf(cnt));
@@ -1067,15 +1070,15 @@ public class Borrower extends BaseModel implements Serializable {
                 } else {
                     if (guarantor.getVoterid() != null && guarantor.getVoterid().length() > 0 && guarantor.getVoterid().length() < 10) {
                         messages.put("Guarantor VoterID", "Guarantor VoterID Number should be of 10 Digits");
-//                        docCount += 2;
+                        docCount += 2;
                     }
                     if (guarantor.getDrivinglic() != null && guarantor.getDrivinglic().length() > 0 && guarantor.getDrivinglic().length() < 10) {
                         messages.put("Guarantor Driving License", "Guarantor Driving License Number should be of 10 Digits");
-//                        docCount += 2;
+                       docCount += 2;
                     }
                     if (guarantor.getPANNo() != null && guarantor.getPANNo().length() > 0 && guarantor.getPANNo().length() != 10) {
                         messages.put("Guarantor Pan No", "Guarantor PAN Number should be of 10 Digits");
-//                        docCount += 1;
+                        docCount += 1;
                     }
                 }
             }
@@ -1083,9 +1086,9 @@ public class Borrower extends BaseModel implements Serializable {
             if (BuildConfig.APPLICATION_ID == "com.softeksol.paisalo.jlgsourcing")
                 messages.put("Guarantor", "At least one Guarantor should be present");
         }
-//        if (getFiDocuments().size() < docCount) {
-//            messages.put("Loan Application KYC", "Capture all the required KYC Documents");
-//        }
+        if (getFiDocuments().size() < docCount) {
+            messages.put("Loan Application KYC", "Capture all the required KYC Documents");
+        }
         return messages;
     }
 

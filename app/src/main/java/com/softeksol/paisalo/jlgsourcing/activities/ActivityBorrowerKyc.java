@@ -133,11 +133,11 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             tietDrivingLic, tietPanNo, tietVoterId,
             tietFather, tietMother, tietBankCIF, tietBankAccount,tietIncome,tietExpence;
     private SearchView svOldCase;
-    private TextView textViewFiDetails,tilPAN_Name,tilVoterId_Name;
+    private TextView textViewFiDetails,tilPAN_Name,tilVoterId_Name,tilBankAcHolder_Name;
     private TextWatcher ageTextWatcher;
     private Calendar myCalendar;
     private DatePickerDialog.OnDateSetListener dateSetListner;
-    ImageView voterIdCheckSign,panCheckSign;
+    ImageView voterIdCheckSign,panCheckSign,bankAcCheckSign;
     private MyTextWatcher aadharTextChangeListner;
     private RecyclerView recyclerView;
     private AdapterRecViewListDocuments adapterRecViewListDocuments;
@@ -211,6 +211,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         }*/
         panCheckSign = findViewById(R.id.panCheckSign);
         voterIdCheckSign = findViewById(R.id.voterIdCheckSign);
+        bankAcCheckSign = findViewById(R.id.bankAcCheckSign);
         acspGender = findViewById(R.id.acspGender);
         banktype = findViewById(R.id.banktype);
         loanDuration = findViewById(R.id.loanDuration);
@@ -218,8 +219,10 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         tietExpence = findViewById(R.id.tietExpence);
         tilPAN_Name = findViewById(R.id.tilPAN_Name);
         tilVoterId_Name = findViewById(R.id.tilVoterId_Name);
+        tilBankAcHolder_Name = findViewById(R.id.tilBankAcHolder_Name);
         tilPAN_Name.setVisibility(View.GONE);
         tilVoterId_Name.setVisibility(View.GONE);
+        tilBankAcHolder_Name.setVisibility(View.GONE);
         acspGender.setAdapter(new AdapterListRange(this, genders, false));
 
         myCalendar = Calendar.getInstance();
@@ -304,9 +307,9 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                     if (borrower1 != null) {
                         borrower = borrower1;
                         setDataToView(activity.findViewById(android.R.id.content).getRootView());
-                    } /*else {
+                    } else {
                         fetchAadharDetails(aadharId);
-                    }*/
+                    }
                 } else {
                     llTopupCode.setVisibility(View.INVISIBLE);
                 }
@@ -502,7 +505,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(View view) {
                 if (tietPanNo.getText().toString().trim().length() == 10) {
-                    cardValidate(tietPanNo.getText().toString().trim(),"pancard");
+                    cardValidate(tietPanNo.getText().toString().trim(),"pancard","");
                 } else {
                     tilPAN_Name.setVisibility(View.GONE);
 
@@ -514,10 +517,23 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(View view) {
                 if (tietVoterId.getText().toString().trim().length() == 10) {
-                    cardValidate(tietVoterId.getText().toString().trim(),"voterid");
-                } else {
+                    cardValidate(tietVoterId.getText().toString().trim(),"voterid","");
+                }else {
                     tilVoterId_Name.setVisibility(View.GONE);
                     tietVoterId.setError("Enter Voter Id");
+                }
+            }
+        });
+
+        bankAcCheckSign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (tietBankAccount.getText().toString().trim().length()>0 && tietBankCIF.getText().toString().trim().length()>0) {
+                    cardValidate(tietBankAccount.getText().toString().trim(),"bankaccount",tietBankCIF.getText().toString());
+                } else {
+                    tilBankAcHolder_Name.setVisibility(View.GONE);
+                    tietBankCIF.setError("Enter correct IFSC");
+                    tietBankAccount.setError("Enter Correct account number");
                 }
             }
         });
@@ -1043,7 +1059,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         Log.e("Parts======3======> ","part data =====> "+decodedData.get(6));
         Log.e("Parts======3======> ","part data =====> "+decodedData.get(7));
         Log.e("Parts======3======> ","part data =====> "+decodedData.get(8));
-        Log.e("Parts======3======> ","part data =====> "+decodedData.get(9));
+        Log.e("Parts======3======> ","part data =====> "+decodedData.get(14));
         Log.e("Parts======3======> ","part data =====> "+decodedData.get(10));
         Log.e("Parts======3======> ","part data =====> "+decodedData.get(11));
         Log.e("Parts======3======> ","part data =====> "+decodedData.get(12));
@@ -1134,7 +1150,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             }else{
 
                 borrower.P_Add1 = decodedData.get(9-inc);
-                borrower.P_add2 = decodedData.get(8-inc);
+                borrower.P_add2 = decodedData.get(14-inc);
             }
         }catch (Exception e){
             tietAddress2.setEnabled(false);
@@ -1531,7 +1547,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         return retVal;
     }
 
-    private void cardValidate(String id,String type) {
+    private void cardValidate(String id,String type,String bankIfsc) {
 
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setCanceledOnTouchOutside(false);
@@ -1541,8 +1557,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
         ApiInterface apiInterface= ApiClient.getClient("https://agra.paisalo.in:8462/creditmatrix/api/").create(ApiInterface.class);
-        Log.d("TAG", "checkCrifScore: "+getJsonOfString(id,type));
-        Call<JsonObject> call=apiInterface.cardValidate(getJsonOfString(id,type));
+        Log.d("TAG", "checkCrifScore: "+getJsonOfString(id,type,bankIfsc));
+        Call<JsonObject> call=apiInterface.cardValidate(getJsonOfString(id,type,bankIfsc));
         call.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -1558,7 +1574,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
                     }
                     progressDialog.cancel();
-                }else{
+                }else if(type.equals("voterid")){
                     try {
                         tilVoterId_Name.setVisibility(View.VISIBLE);
 
@@ -1570,6 +1586,22 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
                         tilVoterId_Name.setText("Card Holder Name Not Found");
                         voterIdCheckSign.setImageResource(R.drawable.check_sign_ic);
+
+                    }
+                    progressDialog.cancel();
+
+                }else if(type.equals("bankaccount")){
+                    try {
+                        tilBankAcHolder_Name.setVisibility(View.VISIBLE);
+
+                        tilBankAcHolder_Name.setText(response.body().get("data").getAsJsonObject().get("full_name").getAsString());
+                        bankAcCheckSign.setImageResource(R.drawable.check_sign_ic_green);
+
+                    }catch (Exception e){
+                        tilBankAcHolder_Name.setVisibility(View.VISIBLE);
+
+                        tilBankAcHolder_Name.setText("Account Holder Name Not Found");
+                        bankAcCheckSign.setImageResource(R.drawable.check_sign_ic);
 
                     }
                     progressDialog.cancel();
@@ -1596,11 +1628,11 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         });
     }
 
-    private JsonObject getJsonOfString(String id, String type) {
+    private JsonObject getJsonOfString(String id, String type,String bankIfsc) {
         JsonObject jsonObject=new JsonObject();
         jsonObject.addProperty("type",type);
         jsonObject.addProperty("txtnumber",id);
-        jsonObject.addProperty("ifsc","");
+        jsonObject.addProperty("ifsc",bankIfsc);
         jsonObject.addProperty("userdob","");
         return  jsonObject;
     }

@@ -256,31 +256,68 @@
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
+            <LinearLayout
                 android:layout_width="match_parent"
+                android:gravity="center"
                 android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tietBankAccount"
-                    android:hint="@string/applicant_bank_account_number"
-                    android:inputType="textCapWords"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/tietBankCIF"
-                    android:hint="@string/bank_customerID"
-                    android:inputType="textCapWords"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 /."
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tietBankAccount"
+                            android:hint="@string/applicant_bank_account_number"
+                            android:inputType="textCapWords"
+                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tietBankCIF"
+                            android:hint="Enter IFCS code"
+                            android:inputType="textCapWords"
+                            android:capitalize="characters"
+                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/."
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <TextView
+                        android:id="@+id/tilBankAcHolder_Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:text="Bank Account Holder Name"
+                        android:textSize="15dp"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tilVoter" />
+
+                </LinearLayout>
+                <ImageView
+                    android:id="@+id/bankAcCheckSign"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/check_sign_ic"
+                    app:layout_constraintBottom_toBottomOf="@+id/tilPAN"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tilPAN" />
+            </LinearLayout>
+
+
 
         </LinearLayout>
 

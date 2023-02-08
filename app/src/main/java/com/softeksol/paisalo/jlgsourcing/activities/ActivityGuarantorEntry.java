@@ -338,6 +338,7 @@ public class ActivityGuarantorEntry extends AppCompatActivity implements View.On
         switch (view.getId()) {
             case R.id.imgViewScanQR:
                 IntentIntegrator scanIntegrator = new IntentIntegrator(this);
+                scanIntegrator.setOrientationLocked(false);
                 scanIntegrator.initiateScan(Collections.singleton("QR_CODE"));
                 break;
             case R.id.btnGuarantorUpdate:
