@@ -62,6 +62,17 @@ public class RangeCategory extends BaseModel {
         }
     }
 
+    public RangeCategory(String cat_key, String groupDescriptionEn, String groupDescriptionHi, String descriptionEn, String descriptionHi, long sortOrder, String rangeCode, long id) {
+        this.cat_key = cat_key;
+        GroupDescriptionEn = groupDescriptionEn;
+        GroupDescriptionHi = groupDescriptionHi;
+        DescriptionEn = descriptionEn;
+        DescriptionHi = descriptionHi;
+        SortOrder = sortOrder;
+        RangeCode = rangeCode;
+        this.id = id;
+    }
+
     public static void updateOptions(final Context context) {
         //DataAsyncHttpResponseHandler dataAsyncHttpResponseHandler = new DataAsyncHttpResponseHandler() {
         DataAsyncResponseHandler dataAsyncHttpResponseHandler = new DataAsyncResponseHandler(context, "Loan Financing", "Updating Master Data") {

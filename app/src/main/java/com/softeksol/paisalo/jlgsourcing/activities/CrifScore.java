@@ -3,6 +3,8 @@ package com.softeksol.paisalo.jlgsourcing.activities;
 import static java.lang.Thread.sleep;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,6 +27,9 @@ import androidx.core.content.ContextCompat;
 
 import com.google.gson.JsonObject;
 import com.softeksol.paisalo.jlgsourcing.R;
+import com.softeksol.paisalo.jlgsourcing.WebOperations;
+import com.softeksol.paisalo.jlgsourcing.fragments.FragmentCollection;
+import com.softeksol.paisalo.jlgsourcing.handlers.DataAsyncResponseHandler;
 import com.softeksol.paisalo.jlgsourcing.retrofit.ApiClient;
 import com.softeksol.paisalo.jlgsourcing.retrofit.ApiInterface;
 import com.softeksol.paisalo.jlgsourcing.retrofit.BorrowerData;
@@ -33,6 +38,7 @@ import com.softeksol.paisalo.jlgsourcing.retrofit.ScrifData;
 
 import java.util.Random;
 
+import cz.msebera.android.httpclient.Header;
 import pl.droidsonroids.gif.GifImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -96,6 +102,30 @@ public class CrifScore extends AppCompatActivity {
             public void onClick(View v) {
                 if(btnSrifScore.getText().toString().equals("CLOSE")){
                     finish();
+                }else if(btnSrifScore.getText().toString().equals("PROCEED")){
+                    DataAsyncResponseHandler asyncResponseHandler = new DataAsyncResponseHandler(CrifScore.this, "Data Submitting", "Saving Loan Details") {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            if (statusCode == 200) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(CrifScore.this);
+                            builder.setTitle("Thanks for choosing us!!");
+                            builder.setMessage("Submitted Loan Request has been submitted");
+                            builder.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    finish();
+                                }
+                            });
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Toast.makeText(CrifScore.this, error.getMessage() , Toast.LENGTH_LONG).show();
+                        }
+                    };
+                    (new WebOperations()).postEntity(CrifScore.this, "BreEligibility", "SaveBreEligibility" ,String.valueOf(getJsonForCrif(ficode,creator,amount,emi)), asyncResponseHandler);
+
                 }else{
                     text_wait.setVisibility(View.VISIBLE);
                     text_serverMessage.setText("");
@@ -158,6 +188,15 @@ public class CrifScore extends AppCompatActivity {
         });
 
 
+    }
+
+    private JsonObject getJsonForCrif(String ficode, String creator, String amount, String emi) {
+        JsonObject jsonObject=new JsonObject();
+        jsonObject.addProperty("Ficode",ficode);
+        jsonObject.addProperty("Creator",creator);
+        jsonObject.addProperty("Loan_Amt",amount);
+        jsonObject.addProperty("Emi",emi);
+        return jsonObject;
     }
 
     private void checkCrifScore(){
