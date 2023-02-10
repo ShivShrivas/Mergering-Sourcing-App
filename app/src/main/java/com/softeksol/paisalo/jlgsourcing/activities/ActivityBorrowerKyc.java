@@ -63,9 +63,9 @@ import com.softeksol.paisalo.jlgsourcing.entities.dto.OldFIById;
 import com.softeksol.paisalo.jlgsourcing.entities.dto.OperationItem;
 import com.softeksol.paisalo.jlgsourcing.handlers.AsyncResponseHandler;
 import com.softeksol.paisalo.jlgsourcing.handlers.DataAsyncResponseHandler;
+import com.softeksol.paisalo.jlgsourcing.location.GpsTracker;
 import com.softeksol.paisalo.jlgsourcing.retrofit.ApiClient;
 import com.softeksol.paisalo.jlgsourcing.retrofit.ApiInterface;
-import com.softeksol.paisalo.jlgsourcing.retrofit.CheckCrifData;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -153,6 +153,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     ArrayList<RangeCategory> genders;
     String loanDurationData,stateData,genderData;
     boolean aadharNumberentry=false;
+    String isAdhaarEntry ="M";
+    String bankName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -544,6 +546,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         banktype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                bankName=adapterView.getSelectedItem().toString();
                 ArrayList<RangeCategory> arrayListBob=new ArrayList<>();
                 arrayListBob.add(new RangeCategory("loan_purpose","MSME","MSME","MSME","MSME",18,"MSME",149));
                 ArrayList<RangeCategory> arrayListUco=new ArrayList<>();
@@ -681,6 +684,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     }
 
     private void getDataFromView(View v) {
+        GpsTracker gpsTracker=new GpsTracker(ActivityBorrowerKyc.this);
         borrower.aadharid = Utils.getNotNullText(tietAadharId);
         borrower.setNames(Utils.getNotNullText(tietName));
         borrower.Age = Utils.getNotNullInt(tietAge);
@@ -691,7 +695,9 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.P_add3 = Utils.getNotNullText(tietAddress3);
         borrower.P_city = Utils.getNotNullText(tietCity);
         borrower.p_pin = Utils.getNotNullInt(tietPinCode);
-
+        Log.d("TAG", "getDataFromView: "+gpsTracker.getLongitude()+"////"+gpsTracker.getLatitude());
+        borrower.Latitude= (float) gpsTracker.getLatitude();
+        borrower.Longitude= (float) gpsTracker.getLongitude();
         borrower.Gender = ((RangeCategory) acspGender.getSelectedItem()).RangeCode.substring(0, 1);
         if (acspRelationship.getVisibility() == View.VISIBLE && acspRelationship.getAdapter().getCount() > 0)
             borrower.RelationWBorrower = ((RangeCategory) acspRelationship.getSelectedItem()).RangeCode;
@@ -704,7 +710,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
         borrower.fiExtraBank.setFatherName(Utils.getNotNullText(tietFather));
         borrower.fiExtraBank.setMotherName(Utils.getNotNullText(tietMother));
-        borrower.fiExtraBank.setBankCif(Utils.getNotNullText(tietBankCIF));
+        borrower.Enc_Property=Utils.getNotNullText(tietBankCIF);
         String occCode = Utils.getSpinnerStringValue((AppCompatSpinner) v.findViewById(R.id.acspOccupation));
         borrower.fiExtraBank.setCkycOccupationCode(occCode);
         borrower.Business_Detail = ((RangeCategory) acspBusinessDetail.getSelectedItem()).RangeCode;
@@ -713,7 +719,10 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.TotalIncome = Integer.parseInt(Utils.getNotNullText(tietIncome));
         borrower.TotalExpense = Integer.parseInt(Utils.getNotNullText(tietExpence));
         borrower.LoanDuration= loanDuration.getSelectedItem().toString();
-        borrower.Bank= banktype.getSelectedItem().toString();
+        Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
+        Log.d("TAG", "getDataFromView: "+bankName);
+        borrower.T_ph3= bankName;
+        borrower.isAdhaarEntry= isAdhaarEntry;
 
 //     editor.putString("Name",)
         editor.clear();
@@ -832,6 +841,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                 Log.d("CheckXMLDATA3","AadharData:->" + scanContent);
                 if (scanFormat != null) {
                     try {
+                        isAdhaarEntry ="A";
                         setAadharContent(scanContent);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1333,7 +1343,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                         //Log.d("Borrower Json", borrowerJsonString);
                         Log.d("TAG", "updateBorrower: "+borrowerJsonString);
 
-//                        (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+                        (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
                     }
                 } else {
                     Utils.alert(this, "There is at least one errors in the Aadhar Data");
