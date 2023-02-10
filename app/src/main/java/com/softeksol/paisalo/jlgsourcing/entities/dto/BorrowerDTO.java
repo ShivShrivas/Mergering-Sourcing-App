@@ -407,6 +407,10 @@ public class BorrowerDTO {
     public List<BorrowerFamilyMemberDTO> fiFamMems;
 
 
+    @Expose
+    public String isAdhaarEntry;
+
+
     public BorrowerDTO() {
     }
 
@@ -538,6 +542,7 @@ public class BorrowerDTO {
         this.Vehicle_USe_By = borrower.Vehicle_USe_By;
         this.Verified_phone = borrower.Verified_phone;
         this.VoterID = borrower.voterid;
+        this.isAdhaarEntry = borrower.isAdhaarEntry;
 
         BorrowerExtraBank borrowerExtraBank = borrower.getBorrowerExtraBank();
         if (borrowerExtraBank == null) {

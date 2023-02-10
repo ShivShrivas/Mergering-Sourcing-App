@@ -579,6 +579,10 @@ public class Borrower extends BaseModel implements Serializable {
     @Column
     public String isCurrentAddressDifferent = "N";
 
+    @Expose
+    @Column
+    public String isAdhaarEntry;
+
 
     public Borrower(String creator, String tag, String groupCode, String cityCode, String userId) {
         this.Creator = creator;
@@ -1312,6 +1316,7 @@ public class Borrower extends BaseModel implements Serializable {
                 ", fiFamLoans=" + fiFamLoans +
                 ", fiFamExpenses=" + fiFamExpenses +
                 ", isCurrentAddressDifferent='" + isCurrentAddressDifferent + '\'' +
+                ", isAdhaarEntry='" + isAdhaarEntry + '\'' +
                 '}';
     }
 
@@ -1443,6 +1448,7 @@ public class Borrower extends BaseModel implements Serializable {
         this.Vehicle_USe_By = borrowerDTO.Vehicle_USe_By;
         this.Verified_phone = borrowerDTO.Verified_phone;
         this.voterid = borrowerDTO.VoterID;
+        this.isAdhaarEntry = borrowerDTO.isAdhaarEntry;
 
         this.save();
 
@@ -1502,6 +1508,8 @@ public class Borrower extends BaseModel implements Serializable {
         }
         return borrowerFamilyLoans;
     }
+
+
     /*private List<BorrowerFamilyExpenses> getFamilyExpenses(List<BorrowerFamilyMemberDTO> fiFamMems){
         List<BorrowerFamilyExpenses> borrowerFamilyLoans=null;
         if(fiFamMems!=null){
