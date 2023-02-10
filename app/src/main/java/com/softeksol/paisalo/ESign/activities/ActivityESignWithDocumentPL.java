@@ -73,6 +73,7 @@ public class  ActivityESignWithDocumentPL extends AppCompatActivity implements V
     byte[] baBorrowerFingerPrintImage, baGuarantorFingerPrintImage;
     //ESingAuthRequestParms eSingParms;
     ESigner eSigner;
+    ESignBorrower eSignerborower;
     AlertDialog alertDialog;
     //ESignStore eSignStore;
     private String documentPath;
@@ -99,11 +100,11 @@ public class  ActivityESignWithDocumentPL extends AppCompatActivity implements V
         } else {
             Intent data = getIntent();
             eSigner = (ESigner) data.getSerializableExtra(Global.ESIGNER_TAG);
+            eSignerborower = (ESignBorrower) data.getSerializableExtra("ESIGN_BORROWER");
             esignType = data.getIntExtra(ESIGN_TYPE_TAG, 1);
         }
 
         if (eSigner.docPath != null) {
-
             fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             Fragment frag = MuPDFFragment.newInstance(eSigner.docPath, false);
@@ -125,12 +126,8 @@ public class  ActivityESignWithDocumentPL extends AppCompatActivity implements V
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnESignProcessEsign:
-              // showAadharDialog();
-                Intent intent = new Intent(ActivityESignWithDocumentPL.this, CrifScore.class);
-                intent.putExtra("FIcode",String.valueOf(eSigner.FiCode));
-                intent.putExtra("creator",eSigner.Creator);
-                startActivity(intent);
-                //processWebESign("419957856512",getString(R.string.consent_1));
+                 showAadharDialog();
+                 //processWebESign("419957856512",getString(R.string.consent_1));
                 //processApkESign(v);
                 break;
         }
@@ -433,7 +430,6 @@ public class  ActivityESignWithDocumentPL extends AppCompatActivity implements V
 //                                public void onClick(DialogInterface dialog, int which) {
 
                                     Intent intent = new Intent(ActivityESignWithDocumentPL.this, CrifScore.class);
-
                                     intent.putExtra("FIcode",String.valueOf(eSigner.FiCode));
                                     intent.putExtra("creator",eSigner.Creator);
                                     startActivity(intent);

@@ -284,6 +284,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
+        android:layout_marginTop="5dp"
         android:id="@+id/voterIdCheckSign"
         android:layout_width="30dp"
         android:layout_height="30dp"
@@ -324,6 +325,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
+        android:layout_marginTop="5dp"
         android:id="@+id/panCheckSign"
         android:layout_width="30dp"
         android:layout_height="30dp"
