@@ -58,6 +58,7 @@ public class CrifScore extends AppCompatActivity {
     SharedPreferences.Editor editor;
     Intent i;
     String ficode,creator;
+    CheckCrifData checkCrifData=new CheckCrifData();
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -132,7 +133,8 @@ public class CrifScore extends AppCompatActivity {
                     layout_design.setVisibility(View.GONE);
                     btnTryAgain.setVisibility(View.GONE);
                     layout_design_pending.setVisibility(View.VISIBLE);
-                    checkCrifScore();
+                    layout_design.setVisibility(View.GONE);
+                    getCrifScore(checkCrifData);
                 }
 
                /* text_wait.setVisibility(View.VISIBLE);
@@ -178,7 +180,7 @@ public class CrifScore extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 editor.putString("Bank",parent.getSelectedItem().toString());
                 editor.apply();
-                btnSrifScore.setText("Try Again");
+                btnSrifScore.setText("TRY AGAIN");
             }
 
             @Override
@@ -212,7 +214,6 @@ public class CrifScore extends AppCompatActivity {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            CheckCrifData checkCrifData=new CheckCrifData();
                             checkCrifData=response.body();
                             getCrifScore(checkCrifData);
                         }
@@ -264,13 +265,26 @@ public class CrifScore extends AppCompatActivity {
                         progressBarsmall.setVisibility(View.GONE);
                     }else{
                         if (data.equals("0")){
-                            Toast.makeText(CrifScore.this, ""+scrifData.getMessage(), Toast.LENGTH_SHORT).show();
+                          /* // Toast.makeText(CrifScore.this, ""+scrifData.getMessage(), Toast.LENGTH_SHORT).show();
                             layout_design.setVisibility(View.GONE);
                             layout_design_pending.setVisibility(View.VISIBLE);
                             text_serverMessage.setText(scrifData.getMessage());
                             btnTryAgain.setVisibility(View.VISIBLE);
                             text_wait.setVisibility(View.GONE);
-                            progressBarsmall.setVisibility(View.GONE);
+                            progressBarsmall.setVisibility(View.GONE);*/
+                            message=scrifData.getMessage();
+                            gifImageView.setImageResource(R.drawable.crosssign);
+                            textView8.setText("Sorry!!");
+                            textView8.setTextColor(ContextCompat.getColor(CrifScore.this,R.color.red));
+                            textView7.setText(message);
+                            textView13.setVisibility(View.GONE);
+                            textView6.setVisibility(View.GONE);
+                            textView_valueEmi.setVisibility(View.GONE);
+                            textView_emi.setVisibility(View.GONE);
+                            btnSrifScore.setText("TRY AGAIN");
+                            layout_design.setVisibility(View.VISIBLE);
+                            layout_design_pending.setVisibility(View.GONE);
+
                         }else {
                             message=scrifData.getMessage();
                             String[] dataSplitString=data.split("_");
@@ -304,7 +318,7 @@ public class CrifScore extends AppCompatActivity {
                                 textView6.setVisibility(View.GONE);
                                 textView_valueEmi.setVisibility(View.GONE);
                                 textView_emi.setVisibility(View.GONE);
-                                btnSrifScore.setText("CLOSE");
+                                btnSrifScore.setText("TRY AGAIN");
 
                             }
 
@@ -354,29 +368,26 @@ public class CrifScore extends AppCompatActivity {
     }
 
     private JsonObject getJSOnOfCheckDataResponse(CheckCrifData checkCrifData) {
-        JsonObject jsonObject=new JsonObject();
+       JsonObject jsonObject=new JsonObject();
        jsonObject.addProperty("fiCode",checkCrifData.getData().getFiCode());
        jsonObject.addProperty("creator",checkCrifData.getData().getCreator());
        jsonObject.addProperty("err_code",checkCrifData.getData().getErrCode());
        jsonObject.addProperty("is_success",checkCrifData.getData().getIsSuccess());
        jsonObject.addProperty("message",checkCrifData.getData().getMessage());
-       jsonObject.addProperty("bank",checkCrifData.getData().getBank());
+       jsonObject.addProperty("bank",sharedPreferences.getString("Bank",""));
        jsonObject.addProperty("duration",checkCrifData.getData().getDuration());
        jsonObject.addProperty("income",checkCrifData.getData().getIncome());
        jsonObject.addProperty("dob",checkCrifData.getData().getDob());
        jsonObject.addProperty("expense",checkCrifData.getData().getExpense());
        jsonObject.addProperty("loan_amount",checkCrifData.getData().getLoanAmount());
+     //  Log.e("BANK",sharedPreferences.getString("Bank",""));
        return  jsonObject;
     }
 
 
     private JsonObject getJsonOfKyc() {
-        JsonObject jsonObject=new JsonObject();
-
-
-
-
-        jsonObject.addProperty("ficode",ficode);
+       JsonObject jsonObject=new JsonObject();
+       jsonObject.addProperty("ficode",ficode);
        jsonObject.addProperty("full_name",sharedPreferences.getString("Name",""));
        jsonObject.addProperty("dob",sharedPreferences.getString("DOB",""));
        jsonObject.addProperty("co",sharedPreferences.getString("Gur",""));

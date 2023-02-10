@@ -217,12 +217,12 @@ DocumentStore extends BaseModel {
             documentStore.userid = borrower.UserID;
             documentStore.checklistid = checkListId;
             documentStore.remarks = remarks;
-            if (checkListId == 0) {
+            if (checkListId == 0){
                 documentStore.imageTag = EnumImageTags.Borrower.getImageTag();
                 documentStore.fieldname = EnumFieldName.Borrower.getFieldName();
                 documentStore.apiRelativePath = EnumApiPath.BorrowerApiJson.getApiPath();
 
-            } else {
+            }else {
                 documentStore.imageTag = EnumImageTags.Documents.getImageTag();
                 documentStore.fieldname = EnumFieldName.Documents.getFieldName();
                 documentStore.apiRelativePath = EnumApiPath.DocumentApi.getApiPath();

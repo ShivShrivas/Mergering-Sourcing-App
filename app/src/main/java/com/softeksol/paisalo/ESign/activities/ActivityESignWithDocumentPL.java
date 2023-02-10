@@ -125,9 +125,13 @@ public class  ActivityESignWithDocumentPL extends AppCompatActivity implements V
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnESignProcessEsign:
-                //processApkESign(v);
-              showAadharDialog();
+              // showAadharDialog();
+                Intent intent = new Intent(ActivityESignWithDocumentPL.this, CrifScore.class);
+                intent.putExtra("FIcode",String.valueOf(eSigner.FiCode));
+                intent.putExtra("creator",eSigner.Creator);
+                startActivity(intent);
                 //processWebESign("419957856512",getString(R.string.consent_1));
+                //processApkESign(v);
                 break;
         }
     }
