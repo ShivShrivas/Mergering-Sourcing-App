@@ -26,8 +26,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.google.gson.JsonObject;
+import com.softeksol.paisalo.jlgsourcing.Global;
 import com.softeksol.paisalo.jlgsourcing.R;
 import com.softeksol.paisalo.jlgsourcing.WebOperations;
+import com.softeksol.paisalo.jlgsourcing.entities.ESignBorrower;
+import com.softeksol.paisalo.jlgsourcing.entities.ESigner;
 import com.softeksol.paisalo.jlgsourcing.fragments.FragmentCollection;
 import com.softeksol.paisalo.jlgsourcing.handlers.DataAsyncResponseHandler;
 import com.softeksol.paisalo.jlgsourcing.retrofit.ApiClient;
@@ -59,6 +62,7 @@ public class CrifScore extends AppCompatActivity {
     Intent i;
     String ficode,creator;
     CheckCrifData checkCrifData=new CheckCrifData();
+    ESignBorrower eSignerborower;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -72,6 +76,7 @@ public class CrifScore extends AppCompatActivity {
         Log.d("TAG", "onCreate: "+i.getStringExtra("ficode"));
         ficode=i.getStringExtra("FIcode");
         creator=i.getStringExtra("creator");
+        eSignerborower = (ESignBorrower) i.getSerializableExtra("ESIGN_BORROWER");
         sharedPreferences = getSharedPreferences("KYCData",MODE_PRIVATE);
         editor = sharedPreferences.edit();
         progressBar=findViewById(R.id.circular_determinative_pb);
@@ -388,29 +393,28 @@ public class CrifScore extends AppCompatActivity {
     private JsonObject getJsonOfKyc() {
        JsonObject jsonObject=new JsonObject();
        jsonObject.addProperty("ficode",ficode);
-       jsonObject.addProperty("full_name",sharedPreferences.getString("Name",""));
-       jsonObject.addProperty("dob",sharedPreferences.getString("DOB",""));
-       jsonObject.addProperty("co",sharedPreferences.getString("Gur",""));
-       jsonObject.addProperty("address",sharedPreferences.getString("Address",""));
-       jsonObject.addProperty("city",sharedPreferences.getString("City",""));
-       jsonObject.addProperty("state",sharedPreferences.getString("State",""));
-       jsonObject.addProperty("pin",sharedPreferences.getString("PIN",""));
-       jsonObject.addProperty("loan_amount",sharedPreferences.getString("LoanAmount",""));
-       jsonObject.addProperty("mobile",sharedPreferences.getString("Mobile",""));
+       jsonObject.addProperty("full_name",eSignerborower.PartyName);
+       jsonObject.addProperty("dob",eSignerborower.D);
+       jsonObject.addProperty("co",eSignerborower.FatherName);
+       jsonObject.addProperty("address",eSignerborower.Address);
+       jsonObject.addProperty("city",eSignerborower.C);
+       jsonObject.addProperty("state",eSignerborower.S);
+       jsonObject.addProperty("pin",eSignerborower.P);
+       jsonObject.addProperty("loan_amount",eSignerborower.SanctionedAmt);
+       jsonObject.addProperty("mobile",eSignerborower.MobileNo);
        jsonObject.addProperty("creator",creator);
-       jsonObject.addProperty("pancard",sharedPreferences.getString("PAN",""));
-       jsonObject.addProperty("voter_id",sharedPreferences.getString("VoterId",""));
-       jsonObject.addProperty("BrCode","001");
-       jsonObject.addProperty("GrpCode","0001");
-       jsonObject.addProperty("AadharID",sharedPreferences.getString("Adhaar",""));
-       jsonObject.addProperty("Gender",sharedPreferences.getString("Gender",""));
-       jsonObject.addProperty("Bank",sharedPreferences.getString("Bank",""));
-       jsonObject.addProperty("Income",sharedPreferences.getString("Income",""));
-       jsonObject.addProperty("Expense",sharedPreferences.getString("Expense",""));
-       jsonObject.addProperty("LoanReason",sharedPreferences.getString("LoanReason",""));
-       jsonObject.addProperty("Duration",sharedPreferences.getString("Duration",""));
-
-        return jsonObject;
+       jsonObject.addProperty("pancard",eSignerborower.P);
+       jsonObject.addProperty("voter_id",eSignerborower.V);
+       jsonObject.addProperty("BrCode",eSignerborower.FoCode);
+       jsonObject.addProperty("GrpCode",eSignerborower.CityCode);
+       jsonObject.addProperty("AadharID",eSignerborower.AadharNo);
+       jsonObject.addProperty("Gender",eSignerborower.G);
+       jsonObject.addProperty("Bank",eSignerborower.B);
+       jsonObject.addProperty("Income",eSignerborower.I);
+       jsonObject.addProperty("Expense",eSignerborower.E);
+       jsonObject.addProperty("LoanReason",eSignerborower.R);
+       jsonObject.addProperty("Duration",eSignerborower.Period);
+       return jsonObject;
 
     }
     public static String getRandomSixNumberString() {

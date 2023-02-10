@@ -97,6 +97,7 @@ public class  ActivityESignWithDocumentPL extends AppCompatActivity implements V
         if (savedInstanceState != null) {
             eSigner = (ESigner) savedInstanceState.getSerializable(Global.ESIGNER_TAG);
             esignType = savedInstanceState.getInt(ESIGN_TYPE_TAG, 1);
+            eSignerborower = (ESignBorrower) savedInstanceState.getSerializable("ESIGN_BORROWER");
         } else {
             Intent data = getIntent();
             eSigner = (ESigner) data.getSerializableExtra(Global.ESIGNER_TAG);
@@ -432,6 +433,7 @@ public class  ActivityESignWithDocumentPL extends AppCompatActivity implements V
                                     Intent intent = new Intent(ActivityESignWithDocumentPL.this, CrifScore.class);
                                     intent.putExtra("FIcode",String.valueOf(eSigner.FiCode));
                                     intent.putExtra("creator",eSigner.Creator);
+                                    intent.putExtra("ESignerBorower",eSignerborower);
                                     startActivity(intent);
                                     dlg.dismiss();
                                     finish();
