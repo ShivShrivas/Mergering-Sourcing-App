@@ -244,6 +244,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         findViewById(R.id.imgViewAadharPhoto).setVisibility(View.GONE);
 
         acspAadharState = findViewById(R.id.acspAadharState);
+        Log.d("TAG", "onCreate: "+RangeCategory.getRangesByCatKey("state", "DescriptionEn", true));
         acspAadharState.setAdapter(new AdapterListRange(this, RangeCategory.getRangesByCatKey("state", "DescriptionEn", true), false));
 
         tietName = findViewById(R.id.tietName);
@@ -709,10 +710,10 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.Business_Detail = ((RangeCategory) acspBusinessDetail.getSelectedItem()).RangeCode;
             borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
         borrower.bank_ac_no = Utils.getNotNullText(tietBankAccount);
-//        borrower.TotalIncome = Integer.parseInt(Utils.getNotNullText(tietIncome));
-//        borrower.TotalExpense = Integer.parseInt(Utils.getNotNullText(tietExpence));
-//        borrower.LoanDuration= loanDuration.getSelectedItem().toString();
-//        borrower.Bank= banktype.getSelectedItem().toString();
+        borrower.TotalIncome = Integer.parseInt(Utils.getNotNullText(tietIncome));
+        borrower.TotalExpense = Integer.parseInt(Utils.getNotNullText(tietExpence));
+        borrower.LoanDuration= loanDuration.getSelectedItem().toString();
+        borrower.Bank= banktype.getSelectedItem().toString();
 
 //        editor.putString("Name",)
         editor.clear();
@@ -1330,9 +1331,9 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                         //Log.d("Borrower Json",WebOperations.convertToJson(borrower));
                         String borrowerJsonString = WebOperations.convertToJson(borrowerDTO);
                         //Log.d("Borrower Json", borrowerJsonString);
-                        Log.d("TAG", "updateBorrower: "+borrowerJsonString+dataAsyncResponseHandler);
+                        Log.d("TAG", "updateBorrower: "+borrowerJsonString);
 
-                        (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+//                        (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
                     }
                 } else {
                     Utils.alert(this, "There is at least one errors in the Aadhar Data");
