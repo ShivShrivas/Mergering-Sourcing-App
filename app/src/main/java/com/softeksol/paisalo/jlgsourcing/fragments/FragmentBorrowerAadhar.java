@@ -127,7 +127,7 @@ public class FragmentBorrowerAadhar extends AbsFragment implements View.OnClickL
         super.onCreateView(inflater, container, savedInstanceState);
         final View v = inflater.inflate(R.layout.fragment_borrower_aadhar, container, false);
         ImageView imgViewLeft = (ImageView) v.findViewById(R.id.btnNavLeft);
-        //activity.setNavOnClikListner(imgViewLeft);
+        activity.setNavOnClikListner(imgViewLeft);
         imgViewLeft.setVisibility(View.GONE);
 
 

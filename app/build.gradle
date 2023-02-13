@@ -101,8 +101,8 @@ android {
         }
 
         PaisaloLoanApp {
-            versionCode 5
-            versionName "5.0"
+            versionCode 6
+            versionName "5.2"
             applicationId "net.softeksol.seil.paisalo.loan.app"
             resValue("string", "appname", "Paisalo Loan App")
             buildConfigField("String", 'DATABASE_NAME', '"SBIPDLCOL"')

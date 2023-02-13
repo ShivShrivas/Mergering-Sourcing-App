@@ -243,7 +243,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         //acspRelationship.setVisibility(View.GONE);
         //findViewById(R.id.llUidRelationship).setVisibility(View.GONE);
 
-        findViewById(R.id.imgViewAadharPhoto).setVisibility(View.GONE);
+        findViewById(R.id.imgViewAadharPhoto).setVisibility(View.VISIBLE);
 
         acspAadharState = findViewById(R.id.acspAadharState);
         Log.d("TAG", "onCreate: "+RangeCategory.getRangesByCatKey("state", "DescriptionEn", true));
@@ -552,18 +552,18 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                 ArrayList<RangeCategory> arrayListUco=new ArrayList<>();
                 arrayListUco.add(new RangeCategory("loan_purpose","Purchase of Agri implements/equipments","अन्य कृषि ","Purchase of Agri implements/equipments","अन्य कृषि ",4,"Purchase of Agri implements/equipments",0));
 
-//                if (adapterView.getSelectedItem().toString().equals("BOB")){
-//                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListBob, false));
-//                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
-//
-//                }else if (adapterView.getSelectedItem().toString().equals("UCO") || adapterView.getSelectedItem().toString().equals("SBI")){
-//                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListUco, false));
-//                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
-//                }else {
+                if (adapterView.getSelectedItem().toString().equals("BOB")){
+                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListBob, false));
+                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
+
+                }else if (adapterView.getSelectedItem().toString().equals("UCO") || adapterView.getSelectedItem().toString().equals("SBI")){
+                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListUco, false));
+                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
+                }else {
                     acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true), false));
                     Log.d("TAG", "onCreate: "+RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true));
 
-//                }
+                }
 
             }
 
