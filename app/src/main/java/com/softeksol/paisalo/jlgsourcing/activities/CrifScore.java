@@ -390,6 +390,7 @@ public class CrifScore extends AppCompatActivity {
     }
 
 
+
     private JsonObject getJsonOfKyc() {
        JsonObject jsonObject=new JsonObject();
        jsonObject.addProperty("ficode",ficode);
