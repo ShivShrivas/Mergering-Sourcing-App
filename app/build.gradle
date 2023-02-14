@@ -36,7 +36,7 @@ android {
             //buildConfigField("String", 'BASE_URL', '"https://agra.paisalo.in:8445/PLServiceV82/"')
             buildConfigField("String", 'BASE_URL', '"https://agra.seil.in:8444/PLServicev82/"')
          //   buildConfigField("String", 'BASE_URL', '"https://agra.seil.in:8845/PLServiceV82Audit/"')
-       //     buildConfigField("String", 'BASE_URL', '"http://kailash.seil.in:8086/PLService/"')
+           //buildConfigField("String", 'BASE_URL', '"http://kailash.seil.in:8086/PLService/"')
             buildConfigField("String", 'EKYC_FETCH_URL', '"https://esign.paisalo.in:8445/v25/api/KycDataSZenApi/GetEKyc"')
             buildConfigField("String[]", 'AUTH_TYPE', '{"FP"}')
             buildConfigField("String", 'PROC_NAME', '""')
