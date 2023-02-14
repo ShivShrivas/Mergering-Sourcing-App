@@ -70,8 +70,8 @@ public class ActivityESingList extends AppCompatActivity {
                     if (esignType == 1) {
 //                        clientDataDao.deleteESignBorrower();
 //                        clientDataDao.deleteESignGuarantor();
-                                                SQLite.delete().from(ESignBorrower.class).where().execute();
-                                                SQLite.delete().from(ESignGuarantor.class).where().execute();
+                        SQLite.delete().from(ESignBorrower.class).where().execute();
+                        SQLite.delete().from(ESignGuarantor.class).where().execute();
 
                     }
                     try {
