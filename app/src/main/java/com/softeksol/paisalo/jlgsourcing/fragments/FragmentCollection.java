@@ -197,6 +197,7 @@ public class FragmentCollection extends AbsCollectionFragment {
                         tvTotDue.setText(String.valueOf(collectionAmount+ latePmtIntAmt));
                     }
                 });
+
                 chkLatePayment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {

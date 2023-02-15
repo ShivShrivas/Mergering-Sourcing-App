@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
@@ -50,8 +51,8 @@ public class AdapterListESignBorrower extends ArrayAdapter<ESignBorrower> {
             holder.tvFiCode = (TextView) v.findViewById(R.id.itemLayoutCustomerFiId);
             holder.tvMobile = (TextView) v.findViewById(R.id.itemLayoutCustomerMobile);
             holder.tvAddress = (TextView) v.findViewById(R.id.itemLayoutCustomerAddress);
-//            holder.tvAadhar = (TextView) v.findViewById(R.id.itemLayoutCustomer);
-
+            holder.layout_overAll = (LinearLayout) v.findViewById(R.id.layout_overAll);
+         // holder.tvAadhar = (TextView) v.findViewById(R.id.itemLayoutCustomer);
 
             v.setTag(holder);
         } else {
@@ -69,9 +70,9 @@ public class AdapterListESignBorrower extends ArrayAdapter<ESignBorrower> {
 //        holder.tvAadhar.setText(eSignBorrower.AadharNo);
 
         if (eSignBorrower.ESignSucceed.equals("BLK")) {
-            v.setBackgroundColor(Color.RED);
+            holder.layout_overAll.setBackgroundColor(Color.RED);
         }else {
-            v.setBackgroundColor(Color.WHITE);
+            holder.layout_overAll.setBackgroundColor(Color.WHITE);
         }
         return v;
     }

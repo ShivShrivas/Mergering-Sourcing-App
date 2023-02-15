@@ -1,5 +1,6 @@
 package com.softeksol.paisalo.ESign.viewHolder;
 
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -13,5 +14,6 @@ public class ESignBorrowerViewHolder {
     public TextView tvMobile;
     public TextView tvCreator;
     public TextView tvAadhar;
+    public LinearLayout layout_overAll;
 
 }

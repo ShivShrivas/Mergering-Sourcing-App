@@ -70,8 +70,8 @@ public class ActivityESingList extends AppCompatActivity {
                     if (esignType == 1) {
 //                        clientDataDao.deleteESignBorrower();
 //                        clientDataDao.deleteESignGuarantor();
-                                                SQLite.delete().from(ESignBorrower.class).where().execute();
-                                                SQLite.delete().from(ESignGuarantor.class).where().execute();
+                        SQLite.delete().from(ESignBorrower.class).where().execute();
+                        SQLite.delete().from(ESignGuarantor.class).where().execute();
 
                     }
                     try {
@@ -176,14 +176,14 @@ public class ActivityESingList extends AppCompatActivity {
                     if (borrower.ESignSucceed.equals("BLK")) {
                         Utils.showSnakbar(view, "Data Mismatched, contact your Branch...");
                     } else {
-                        downloadUnsignedDoc(view, borrower.getESigners().get(0));
+                        downloadUnsignedDoc(view, borrower.getESigners().get(0),borrower);
                     }
                 }
             }
         });
 
     }
-    private void downloadUnsignedDoc(View v, final ESigner eSigner) {
+    private void downloadUnsignedDoc(View v, final ESigner eSigner, ESignBorrower borrower) {
         final View view = v;
         FileAsyncResponseHandler fileAsyncResponseHandler = new FileAsyncResponseHandler(this, "Loan Financing", "Downloading Document for " + eSigner.FiCode + "(" + eSigner.Creator + ")") {
 
@@ -205,6 +205,7 @@ public class ActivityESingList extends AppCompatActivity {
                     Intent intent = new Intent(ActivityESingList.this, ActivityESignWithDocumentPL.class);
                     intent.putExtra(Global.ESIGNER_TAG, eSigner);
                     intent.putExtra(ESIGN_TYPE_TAG, esignType);
+                    intent.putExtra("ESIGN_BORROWER", borrower);
                     startActivity(intent);
                     //startActivityForResult(intent, Global.ESIGN_REQUEST_CODE);
 

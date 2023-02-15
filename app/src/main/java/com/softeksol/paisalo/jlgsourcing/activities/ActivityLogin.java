@@ -163,12 +163,6 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                 Log.d("TAG",IglPreferences.getPrefString(ActivityLogin.this, SEILIGL.DEVICE_ID, ""));
                 Log.d("TAG",SEILIGL.USER_ID+"");
 
-
-
-
-
-
-
                 (new WebOperations()).getAccessTokenEsign(ActivityLogin.this, UserName, Password, dataAsyncResponseHandler2);
 
                 dataAsyncResponseHandler2 = new DataAsyncResponseHandler(ActivityLogin.this, "Logging in ...") {
@@ -312,7 +306,6 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                                         e.printStackTrace();
                                     }
                                 }
-
                                 @Override
                                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                                     super.onFailure(statusCode, headers, responseBody, error);

@@ -71,6 +71,10 @@ public class ESignBorrower extends BaseModel implements Serializable {
 
     @Column
     public Date DisbRequested;
+
+
+
+
     List<ESignGuarantor> eSignGuarantors;
 
     @OneToMany(methods = {OneToMany.Method.ALL}, variableName = "eSignGuarantors")

@@ -64,7 +64,6 @@ public class ActivityLoanDetails extends AppCompatActivity implements View.OnCli
         lvLoanDetails = (ListView) findViewById(R.id.lvLoanDetails);
         btnDownloadDoc.setVisibility(eSignBorrower.hasSomeSigned() ? View.VISIBLE : View.GONE);
         btnRequestDisb.setVisibility((eSignBorrower.hasAllESigned() && (eSignBorrower.DisbRequested == null)) ? View.VISIBLE : View.GONE);
-
         lvLoanDetails.setAdapter(new AdapterListESigner(this, eSignBorrower.getESigners()));
     }
     @Override
