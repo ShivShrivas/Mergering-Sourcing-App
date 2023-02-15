@@ -369,11 +369,7 @@ public class BorrowerDTO {
     @Expose
     public float Longitude;
 
-    @Expose
-    public int TotalIncome;
 
-    @Expose
-    public int TotalExpense;
 
     @Expose
     public Date GeoDateTime;
@@ -424,8 +420,7 @@ public class BorrowerDTO {
         this.Last_Mod_Date = borrower.Last_Mod_Date;
         this.Latitude = borrower.Latitude;
         this.Longitude = borrower.Longitude;
-        this.TotalIncome = borrower.TotalIncome;
-        this.TotalExpense = borrower.TotalExpense;
+
         this.Age = borrower.Age;
         this.Area_Of_House = borrower.Area_Of_House;
         this.FAmily_member = borrower.FAmily_member;
@@ -699,8 +694,6 @@ public class BorrowerDTO {
                 ", BankAcOpenDt=" + BankAcOpenDt +
                 ", Latitude=" + Latitude +
                 ", Longitude=" + Longitude +
-                ", TotalIncome=" + TotalIncome +
-                ", TotalExpense=" + TotalExpense +
                 ", GeoDateTime=" + GeoDateTime +
                 ", RelationWBorrower='" + RelationWBorrower + '\'' +
                 ", AMApproval='" + AMApproval + '\'' +
