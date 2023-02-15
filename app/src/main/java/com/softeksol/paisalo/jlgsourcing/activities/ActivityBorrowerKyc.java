@@ -551,19 +551,19 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                 arrayListBob.add(new RangeCategory("loan_purpose","MSME","MSME","MSME","MSME",18,"MSME",149));
                 ArrayList<RangeCategory> arrayListUco=new ArrayList<>();
                 arrayListUco.add(new RangeCategory("loan_purpose","Purchase of Agri implements/equipments","अन्य कृषि ","Purchase of Agri implements/equipments","अन्य कृषि ",4,"Purchase of Agri implements/equipments",0));
-
-                if (adapterView.getSelectedItem().toString().equals("BOB")){
-                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListBob, false));
-                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
-
-                }else if (adapterView.getSelectedItem().toString().equals("UCO") || adapterView.getSelectedItem().toString().equals("SBI")){
-                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListUco, false));
-                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
-                }else {
+//
+//                if (adapterView.getSelectedItem().toString().equals("BOB")){
+//                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListBob, false));
+//                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
+//
+//                }else if (adapterView.getSelectedItem().toString().equals("UCO") || adapterView.getSelectedItem().toString().equals("SBI")){
+//                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListUco, false));
+//                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
+//                }else {
                     acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true), false));
                     Log.d("TAG", "onCreate: "+RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true));
 
-                }
+//                }
 
             }
 
@@ -721,7 +721,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.LoanDuration= loanDuration.getSelectedItem().toString();
         Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
         Log.d("TAG", "getDataFromView: "+bankName);
-        borrower.T_ph3= bankName;
+        borrower.BankName= bankName;
         borrower.isAdhaarEntry= isAdhaarEntry;
 
 //     editor.putString("Name",)
