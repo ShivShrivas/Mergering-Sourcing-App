@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,7 +76,7 @@ public class AdapterListDocuments extends ArrayAdapter<DocumentStore> {
             holder.DocThumbnail = (ImageView) view.findViewById(R.id.imgViewKycItemLayout);
             holder.progressBar = (ProgressBar) view.findViewById(R.id.pbKycItemLayoutUploadStatus);
             holder.fiCode = (TextView) view.findViewById(R.id.tvKycItemLayoutFiCode);
-            holder.cardViewForKycCaptureImage = (CardView) view.findViewById(R.id.cardViewForKycCaptureImage);
+            holder.cardViewForKycCaptureImage = (RelativeLayout) view.findViewById(R.id.cardViewForKycCaptureImage);
 
             view.setTag(holder);
         } else {

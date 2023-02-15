@@ -2,6 +2,7 @@ package com.softeksol.paisalo.jlgsourcing.entities.ViewHolders;
 
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -18,5 +19,5 @@ public class DocumentStoreViewHolder {
     public ImageView DocThumbnail;
     public ProgressBar progressBar;
     public TextView fiCode;
-    public CardView cardViewForKycCaptureImage;
+    public RelativeLayout cardViewForKycCaptureImage;
 }

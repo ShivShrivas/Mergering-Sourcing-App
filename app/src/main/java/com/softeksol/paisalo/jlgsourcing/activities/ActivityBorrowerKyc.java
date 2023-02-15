@@ -700,25 +700,24 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.Longitude= (float) gpsTracker.getLongitude();
         borrower.Gender = ((RangeCategory) acspGender.getSelectedItem()).RangeCode.substring(0, 1);
         if (acspRelationship.getVisibility() == View.VISIBLE && acspRelationship.getAdapter().getCount() > 0)
-            borrower.RelationWBorrower = ((RangeCategory) acspRelationship.getSelectedItem()).RangeCode;
+        borrower.RelationWBorrower = ((RangeCategory) acspRelationship.getSelectedItem()).RangeCode;
         borrower.p_state = ((RangeCategory) acspAadharState.getSelectedItem()).RangeCode;
         borrower.P_ph3 = Utils.getNotNullText(tietMobile);
         borrower.PanNO = Utils.getNotNullText(tietPanNo);
         borrower.drivinglic = Utils.getNotNullText(tietDrivingLic);
         borrower.voterid = Utils.getNotNullText(tietVoterId);
         borrower.Loan_Amt = Utils.getSpinnerIntegerValue((AppCompatSpinner) v.findViewById(R.id.acspLoanAppFinanceLoanAmount));
-
         borrower.fiExtraBank.setFatherName(Utils.getNotNullText(tietFather));
         borrower.fiExtraBank.setMotherName(Utils.getNotNullText(tietMother));
         borrower.Enc_Property=Utils.getNotNullText(tietBankCIF);
         String occCode = Utils.getSpinnerStringValue((AppCompatSpinner) v.findViewById(R.id.acspOccupation));
         borrower.fiExtraBank.setCkycOccupationCode(occCode);
         borrower.Business_Detail = ((RangeCategory) acspBusinessDetail.getSelectedItem()).RangeCode;
-            borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
+        borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
         borrower.bank_ac_no = Utils.getNotNullText(tietBankAccount);
         borrower.Income = Integer.parseInt(Utils.getNotNullText(tietIncome));
         borrower.Expense = Integer.parseInt(Utils.getNotNullText(tietExpence));
-        borrower.LoanDuration= loanDuration.getSelectedItem().toString();
+        borrower.LoanDuration= loanDurationData;
         Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
         Log.d("TAG", "getDataFromView: "+bankName);
         borrower.BankName= bankName;
