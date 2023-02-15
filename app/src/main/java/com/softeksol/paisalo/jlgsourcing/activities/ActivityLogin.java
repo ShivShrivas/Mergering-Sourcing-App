@@ -407,7 +407,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
 
         ArrayList<RangeCategory> DatabaseName = new ArrayList<>();
         DatabaseName.add(new RangeCategory("SBI COLENDING", "Database"));
-        DatabaseName.add(new RangeCategory("IGL DIGITAL", "Database"));
+//        DatabaseName.add(new RangeCategory("IGL DIGITAL", "Database"));
 //        DatabaseName.add(new RangeCategory("GROUP FINANCE", "Database"));
 //        DatabaseName.add(new RangeCategory("SBI PDL", "Database"));
 

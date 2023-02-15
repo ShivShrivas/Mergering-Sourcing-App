@@ -766,9 +766,6 @@ public class ActivityFinancing extends AppCompatActivity
                     //borrower=borrowerDto.getBorrower();
                     //borrower=Borrower.getBorrower(borrower.Code,borrower.Creator);
                     borrower = new Borrower(borrowerDto);
-
-
-
                     fetchUploadedGuarantor(borrower);
                 }
             }
@@ -778,6 +775,7 @@ public class ActivityFinancing extends AppCompatActivity
                 Toast.makeText(getBaseContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                 //Log.d("eKYC Response", error.getLocalizedMessage());
             }
+
         };
 
         RequestParams params = new RequestParams();

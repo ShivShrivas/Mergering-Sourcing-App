@@ -140,7 +140,8 @@ public class WebOperations {
         client.addHeader("devid", IglPreferences.getPrefString(context, SEILIGL.DEVICE_ID, "0"));
 //        client.addHeader("devid", "dcf5ed225bca6228");
 //        client.addHeader("dbname", IglPreferences.getPrefString(context, SEILIGL.DATABASE_NAME, BuildConfig.DATABASE_NAME));
-        client.addHeader("dbname", IglPreferences.getPrefString(context, SEILIGL.DATABASE_NAME, ""));
+//        client.addHeader("dbname", IglPreferences.getPrefString(context, SEILIGL.DATABASE_NAME, ""));
+        client.addHeader("dbname", "SBIPDL_TEST");
         client.addHeader("userid", IglPreferences.getPrefString(context, SEILIGL.USER_ID, ""));
         client.addHeader("procname", BuildConfig.PROC_NAME);
 
@@ -162,7 +163,8 @@ public class WebOperations {
         client.addHeader("Content-Encoding", "gzip,deflate,compress");
         client.addHeader("imeino", IglPreferences.getPrefString(context, SEILIGL.DEVICE_IMEI, "0"));
         client.addHeader("devid", IglPreferences.getPrefString(context, SEILIGL.DEVICE_ID, "0"));
-        client.addHeader("dbname", IglPreferences.getPrefString(context, SEILIGL.DATABASE_NAME, BuildConfig.DATABASE_NAME));
+//        client.addHeader("dbname", IglPreferences.getPrefString(context, SEILIGL.DATABASE_NAME, BuildConfig.DATABASE_NAME));
+        client.addHeader("dbname", "SBIPDL_TEST");
 //        client.addHeader("devid", "1319793985785243");
         client.setTimeout(70000);
     }
@@ -182,7 +184,8 @@ public class WebOperations {
 //        headers.add(new BasicHeader("imeino", "354690572942373"));
         headers.add(new BasicHeader("devid", IglPreferences.getPrefString(context, SEILIGL.DEVICE_ID, "0")));
 //        headers.add(new BasicHeader("devid", "dcf5ed225bca6228"));
-        headers.add(new BasicHeader("dbname", IglPreferences.getPrefString(context, SEILIGL.DATABASE_NAME, "")));
+//        headers.add(new BasicHeader("dbname", IglPreferences.getPrefString(context, SEILIGL.DATABASE_NAME, "")));
+        headers.add(new BasicHeader("dbname", "SBIPDL_TEST"));
         headers.add(new BasicHeader("userid", IglPreferences.getPrefString(context, SEILIGL.USER_ID, "")));
         headers.add(new BasicHeader("procname", BuildConfig.PROC_NAME));
         Log.e("TAG", "getHttpHeaders: "+headers);
@@ -232,7 +235,7 @@ public class WebOperations {
             params.add("grant_type", "password");
             params.add("username", userId);
             params.add("password", password);
-            String url = "https://agra.seil.in:8444/ESignSBIAV1/" + "token";
+            String url = "https://agra.seil.in:8444/ESignSBIAV1Test/" + "token";
             client.post(url, params, dataAsyncResponseHandler);
             Log.d("CheckBaseUrl",url+"////"+userId+"////"+password+"////"+"base URL :"+IglPreferences.getPrefString(context, SEILIGL.BASE_URL, ""));
         } catch (Exception e) {
@@ -253,7 +256,7 @@ public class WebOperations {
     public void postEntityESignSubmit(Context context, String controller, String method, String jsonString, ResponseHandlerInterface responseHandler) {
         try {
             //Log.d("Json Data", jsonString);
-            String url = "https://agra.seil.in:8444/ESignSBIAV1/" + "api/" + controller + "/" + method;
+            String url = "https://agra.seil.in:8444/ESignSBIAV1Test/" + "api/" + controller + "/" + method;
             StringEntity entity = new StringEntity(jsonString);
             AsyncHttpClient client = new AsyncHttpClient();
             client.setThreadPool(Executors.newSingleThreadExecutor());
@@ -286,8 +289,8 @@ public class WebOperations {
     public void postEntityESign(Context context, String controller, String method, String jsonString, ResponseHandlerInterface responseHandler) {
         try {
             //Log.d("Json Data",jsonString);
-            String url = "https://agra.seil.in:8444/ESignSBIAV1/" + "api/" + controller + "/" + method;
-            Log.d("TAG", "postEntity: "+ "https://agra.seil.in:8444/ESignSBIAV1/" + "api/" + controller + "/" + method);
+            String url = "https://agra.seil.in:8444/ESignSBIAV1Test/" + "api/" + controller + "/" + method;
+            Log.d("TAG", "postEntity: "+ "https://agra.seil.in:8444/ESignSBIAV1Test/" + "api/" + controller + "/" + method);
             StringEntity entity = new StringEntity(Utils.cleanTextContent(jsonString));
             AsyncHttpClient client = new AsyncHttpClient();
             client.setThreadPool(Executors.newSingleThreadExecutor());
@@ -311,8 +314,8 @@ public class WebOperations {
             client.setThreadPool(Executors.newSingleThreadExecutor());
             client.removeHeader("dbname");
             client.removeHeader("procname");
-            client.addHeader("dbname", dbName);
-            //client.addHeader("dbname", "SBIPDL_TEST");
+//            client.addHeader("dbname", dbName);
+            client.addHeader("dbname", "SBIPDL_TEST");
             client.addHeader("procname", BuildConfig.PROC_NAME);
             Log.d("Response",url);
             setHttpHeaders(context, client, true);
@@ -331,8 +334,8 @@ public class WebOperations {
             client.setThreadPool(Executors.newSingleThreadExecutor());
             client.removeHeader("dbname");
             client.removeHeader("procname");
-            client.addHeader("dbname", dbName);
-            //client.addHeader("dbname", "SBIPDL_TEST");
+//            client.addHeader("dbname", dbName);
+            client.addHeader("dbname", "SBIPDL_TEST");
             client.addHeader("procname", BuildConfig.PROC_NAME);
             Log.d("Response",url);
             setHttpHeadersJson(context, client, true);
@@ -432,7 +435,8 @@ public class WebOperations {
             ArrayList<Header> headers = getHttpHeaders(context, new ArrayList<Header>(), true);
             for (Header header : headers) {
                 if (header.getName().equals("dbname")) {
-                    header = new BasicHeader("dbname", dbname);
+//                    header = new BasicHeader("dbname", dbname);
+                    header = new BasicHeader("dbname", "SBIPDL_TEST");
                 }
                 client.addHeader(header.getName(), header.getValue());
             }
@@ -460,7 +464,7 @@ public class WebOperations {
 
     public void getEntityESign(Context context, String controller, String method, RequestParams params, ResponseHandlerInterface responseHandler) {
         try {
-            String url = "https://agra.seil.in:8444/ESignSBIAV1/"+ "api/" + controller + "/" + method;
+            String url = "https://agra.seil.in:8444/ESignSBIAV1Test/"+ "api/" + controller + "/" + method;
             AsyncHttpClient client = new AsyncHttpClient();
             client.setThreadPool(Executors.newSingleThreadExecutor());
             setHttpHeadersESign(context, client, true);

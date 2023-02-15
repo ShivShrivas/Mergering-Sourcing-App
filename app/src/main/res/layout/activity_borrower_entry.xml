@@ -45,7 +45,7 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:id="@+id/scrollView"
         app:layout_constraintTop_toBottomOf="@id/llTopupDetail"
 
@@ -67,9 +67,20 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@id/tilUidDob"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tilUidDob"
+                    app:cardCornerRadius="@dimen/spacing_middle"
+                    android:layout_margin="@dimen/spacing_medium"
+                    app:cardElevation="5dp">
                 <LinearLayout
                     android:id="@+id/llUidRelationship"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_weight=".65"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -79,18 +90,36 @@
                         android:layout_height="wrap_content"
                         android:text="Relationship of Guardian with Borrower"
                         style="@style/InputLabel" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_margin="3dp"
+    android:background="@drawable/spinner_bggrey"
+    android:layout_height="match_parent">
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/acspRelationship"
+        android:layout_marginStart="@dimen/input_label_horizontal_spacing"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+</LinearLayout>
 
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/acspRelationship"
-                        android:layout_marginStart="@dimen/input_label_horizontal_spacing"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
                 </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_weight="1.2"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@id/tilUidDob"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tilUidDob"
+                    app:cardCornerRadius="@dimen/spacing_middle"
+                    android:layout_margin="@dimen/spacing_medium"
+                    app:cardElevation="5dp">
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_weight=".35"
-                    android:layout_marginStart="@dimen/margin_6dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
@@ -99,13 +128,20 @@
                         android:layout_height="wrap_content"
                         android:text="@string/loan_amount"
                         style="@style/InputLabel" />
+<LinearLayout
+    android:background="@drawable/spinner_bggrey"
+    android:layout_margin="3dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/acspLoanAppFinanceLoanAmount"
+        android:layout_marginStart="@dimen/input_label_horizontal_spacing"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+</LinearLayout>
 
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/acspLoanAppFinanceLoanAmount"
-                        android:layout_marginStart="@dimen/input_label_horizontal_spacing"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
                 </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
@@ -114,8 +150,21 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@id/tilUidDob"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tilUidDob"
+                    app:cardCornerRadius="@dimen/spacing_middle"
+                    android:layout_margin="@dimen/spacing_medium"
+                    app:cardElevation="5dp">
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_weight=".5"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
@@ -125,18 +174,38 @@
                         android:layout_height="wrap_content"
                         android:text="@string/business_details"
                         style="@style/InputLabel" />
+<LinearLayout
+    android:background="@drawable/spinner_bggrey"
+    android:layout_margin="3dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/acspBusinessDetail"
+        android:layout_marginStart="@dimen/input_label_horizontal_spacing"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+</LinearLayout>
 
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/acspBusinessDetail"
-                        android:layout_marginStart="@dimen/input_label_horizontal_spacing"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
                 </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@id/tilUidDob"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tilUidDob"
+                    app:cardCornerRadius="@dimen/spacing_middle"
+                    android:layout_margin="@dimen/spacing_medium"
+                    app:cardElevation="5dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_weight=".5"
-                    android:layout_marginStart="@dimen/margin_6dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
@@ -145,16 +214,35 @@
                         android:layout_height="wrap_content"
                         android:text="@string/loan_purpose"
                         style="@style/InputLabel" />
-
-                    <androidx.appcompat.widget.AppCompatSpinner
-                        android:id="@+id/acspLoanReason"
-                        android:layout_marginStart="@dimen/input_label_horizontal_spacing"
+                    <LinearLayout
+                        android:background="@drawable/spinner_bggrey"
+                        android:layout_margin="3dp"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="match_parent">
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/acspLoanReason"
+                            android:layout_marginStart="@dimen/input_label_horizontal_spacing"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp" />
+                    </LinearLayout>
+
                 </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@id/tilUidDob"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tilUidDob"
+                app:cardCornerRadius="@dimen/spacing_middle"
+                android:layout_margin="@dimen/spacing_medium"
+                app:cardElevation="5dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -165,18 +253,38 @@
                     android:layout_height="wrap_content"
                     android:text="@string/applicant_family_occupation"
                     style="@style/InputLabel" />
+                    <LinearLayout
+                        android:layout_margin="3dp"
+                        android:background="@drawable/spinner_bggrey"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/acspOccupation"
+                            android:layout_marginStart="@dimen/input_label_horizontal_spacing"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp" />
+                    </LinearLayout>
 
-                <androidx.appcompat.widget.AppCompatSpinner
-                    android:id="@+id/acspOccupation"
-                    android:layout_marginStart="@dimen/input_label_horizontal_spacing"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
             </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@id/tilUidDob"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tilUidDob"
+                    app:cardCornerRadius="@dimen/spacing_middle"
+                    android:layout_margin="@dimen/spacing_medium"
+                    app:cardElevation="5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -192,6 +300,7 @@
                         android:text="Loan Duration(month)"
                         style="@style/InputLabel" />
                     <LinearLayout
+                        android:layout_margin="@dimen/margin_3dp"
                         android:background="@drawable/spinner_bggrey"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -203,6 +312,21 @@
                             android:layout_height="40dp" />
                     </LinearLayout>
                 </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@id/tilUidDob"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tilUidDob"
+                    app:cardCornerRadius="@dimen/spacing_middle"
+                    android:layout_margin="@dimen/spacing_medium"
+                    app:cardElevation="5dp">
                 <LinearLayout
                     android:layout_weight="1"
                     android:layout_width="match_parent"
@@ -217,6 +341,7 @@
                         android:text="Select Bank"
                         style="@style/InputLabel" />
                     <LinearLayout
+                        android:layout_margin="@dimen/margin_3dp"
                         android:background="@drawable/spinner_bggrey"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -227,72 +352,107 @@
                             android:layout_width="match_parent"
                             android:layout_height="40dp" /> </LinearLayout>
                 </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/llUidGender"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@id/tilUidDob"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tilUidDob"
+                app:cardCornerRadius="@dimen/spacing_middle"
+                android:layout_margin="@dimen/spacing_medium"
+                app:cardElevation="5dp">
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:padding="4dp"
+                android:layout_height="50dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tietMotherName"
                     android:hint="@string/mother"
                     android:inputType="textCapWords"
+                    android:background="@color/white"
                     android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 /."
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
+            </androidx.cardview.widget.CardView>
 
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="@id/tilUidDob"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tilUidDob"
+                app:cardCornerRadius="@dimen/spacing_middle"
+                android:layout_margin="@dimen/spacing_medium"
+                app:cardElevation="5dp">
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:padding="4dp"
+                android:layout_height="50dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/tietFatherName"
                     android:hint="@string/father"
                     android:inputType="textCapWords"
+                    android:background="@color/white"
                     android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 /."
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
+            </androidx.cardview.widget.CardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:paddingBottom="@dimen/margin_6dp"
                 android:gravity="center"
                 android:layout_height="wrap_content">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:paddingBottom="@dimen/margin_6dp"
                     android:layout_marginEnd="8dp"
                     android:orientation="vertical">
 
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="@id/tilUidDob"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tilUidDob"
+                        app:cardCornerRadius="@dimen/spacing_middle"
+                        android:layout_margin="@dimen/spacing_medium"
+                        app:cardElevation="5dp">
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:padding="4dp"
+                        android:layout_height="50dp">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/tietBankAccount"
                             android:hint="@string/applicant_bank_account_number"
+                            android:background="@color/white"
                             android:inputType="textCapWords"
                             android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>
+                    </androidx.cardview.widget.CardView>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/tietBankCIF"
-                            android:hint="Enter IFCS code"
-                            android:inputType="textCapWords"
-                            android:capitalize="characters"
-                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/."
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-                    </com.google.android.material.textfield.TextInputLayout>
                     <TextView
                         android:id="@+id/tilBankAcHolder_Name"
                         android:layout_width="match_parent"
@@ -301,9 +461,41 @@
                         android:text="Bank Account Holder Name"
                         android:textSize="15dp"
                         android:visibility="visible"
+                        android:textColor="@color/dull_green"
+                        android:layout_marginTop="-8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tilVoter" />
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="@id/tilUidDob"
+                        android:layout_marginBottom="7dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tilUidDob"
+                        app:cardCornerRadius="@dimen/spacing_middle"
+                        android:layout_margin="@dimen/spacing_medium"
+                        app:cardElevation="5dp">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:padding="4dp"
+                        android:layout_height="50dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/tietBankCIF"
+                            android:hint="Enter IFCS code"
+                            android:inputType="textCapWords"
+                            android:capitalize="characters"
+                            android:background="@color/white"
+                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/."
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
                 <ImageView

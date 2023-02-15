@@ -21,9 +21,9 @@
         <TextView
             android:id="@+id/text_cname"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_margin="5dp"
-            android:textSize="15dp"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp"
+            android:textSize="13dp"
             android:fontFamily="@font/scada_regular"
             android:gravity="center"
             android:text="III"
