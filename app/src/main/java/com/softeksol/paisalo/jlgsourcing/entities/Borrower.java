@@ -993,7 +993,6 @@ public class Borrower extends BaseModel implements Serializable {
                 if (this.PanNO.length() != 10){
                     messages.put("Pan No", "PAN Card Number should be of 10 Digits");
                 }
-
 //                docCount += 2;
             }else{
                 if (this.voterid.length() != 10)
@@ -1325,7 +1324,6 @@ public class Borrower extends BaseModel implements Serializable {
         this.Last_Mod_Date = borrowerDTO.Last_Mod_Date;
         this.Latitude = borrowerDTO.Latitude;
         this.Longitude = borrowerDTO.Longitude;
-        this.Income = borrowerDTO.Income;
         this.Expense = borrowerDTO.Expense;
         this.Age = borrowerDTO.Age;
         this.Area_Of_House = borrowerDTO.Area_Of_House;
