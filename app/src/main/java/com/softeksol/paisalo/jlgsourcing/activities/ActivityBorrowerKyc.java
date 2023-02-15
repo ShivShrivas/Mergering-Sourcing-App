@@ -716,8 +716,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.Business_Detail = ((RangeCategory) acspBusinessDetail.getSelectedItem()).RangeCode;
             borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
         borrower.bank_ac_no = Utils.getNotNullText(tietBankAccount);
-        borrower.TotalIncome = Integer.parseInt(Utils.getNotNullText(tietIncome));
-        borrower.TotalExpense = Integer.parseInt(Utils.getNotNullText(tietExpence));
+        borrower.Income = Integer.parseInt(Utils.getNotNullText(tietIncome));
+        borrower.Expense = Integer.parseInt(Utils.getNotNullText(tietExpence));
         borrower.LoanDuration= loanDuration.getSelectedItem().toString();
         Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
         Log.d("TAG", "getDataFromView: "+bankName);
@@ -1293,7 +1293,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                             @Override
                             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                 String jsonString = new String(responseBody);
-                                //Log.d("Response Data",jsonString);
+                                Log.d("Response Data",jsonString);
                                 try {
                                     JSONObject jo = new JSONObject(jsonString);
                                     long FiCode = jo.getLong("FiCode");
@@ -1323,6 +1323,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                                     });
                                     builder.create().show();
                                 } catch (JSONException jo) {
+                                    Log.d("TAG", "onSuccess: "+jo.getMessage());
                                     Utils.showSnakbar(findViewById(android.R.id.content), jo.getMessage());
 
                                 }
@@ -1331,6 +1332,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                             @Override
                             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                                 super.onFailure(statusCode, headers, responseBody, error);
+                                Log.d("TAG", "onFailure: "+error.getMessage());
                                 //btnSubmit.setEnabled(true);
                                 showSubmitBorrowerMenuItem = true;
                                 invalidateOptionsMenu();

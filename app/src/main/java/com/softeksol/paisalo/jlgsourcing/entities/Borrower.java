@@ -1,6 +1,5 @@
 package com.softeksol.paisalo.jlgsourcing.entities;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -518,11 +517,7 @@ public class Borrower extends BaseModel implements Serializable {
 
     @Expose
     @Column
-    public int TotalIncome;
-
-    @Expose
-    @Column
-    public int TotalExpense;
+    public int Expense;
 
 
     @Expose
@@ -1301,8 +1296,8 @@ public class Borrower extends BaseModel implements Serializable {
                 ", BankAcOpenDt=" + BankAcOpenDt +
                 ", Latitude=" + Latitude +
                 ", Longitude=" + Longitude +
-                ", TotalIncome=" + TotalIncome +
-                ", TotalExpense=" + TotalExpense +
+                ", Income=" + Income +
+                ", Expense=" + Expense +
                 ", GeoDateTime=" + GeoDateTime +
                 ", RelationWBorrower='" + RelationWBorrower + '\'' +
                 ", AMApproval='" + AMApproval + '\'' +
@@ -1330,8 +1325,8 @@ public class Borrower extends BaseModel implements Serializable {
         this.Last_Mod_Date = borrowerDTO.Last_Mod_Date;
         this.Latitude = borrowerDTO.Latitude;
         this.Longitude = borrowerDTO.Longitude;
-        this.TotalIncome = borrowerDTO.TotalIncome;
-        this.TotalExpense = borrowerDTO.TotalExpense;
+        this.Income = borrowerDTO.Income;
+        this.Expense = borrowerDTO.Expense;
         this.Age = borrowerDTO.Age;
         this.Area_Of_House = borrowerDTO.Area_Of_House;
         this.FAmily_member = borrowerDTO.FAmily_member;
