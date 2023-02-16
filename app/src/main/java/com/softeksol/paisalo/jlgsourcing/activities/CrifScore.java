@@ -193,8 +193,8 @@ public class CrifScore extends AppCompatActivity {
         JsonObject jsonObject=new JsonObject();
         jsonObject.addProperty("Ficode",ficode);
         jsonObject.addProperty("Creator",creator);
-        jsonObject.addProperty("Loan_Amt",40000);
-        jsonObject.addProperty("Emi",2500);
+        jsonObject.addProperty("Loan_Amt",amount);
+        jsonObject.addProperty("Emi",emi);
         Log.e("TAG",jsonObject.toString());
         return jsonObject;
     }
@@ -457,7 +457,7 @@ public class CrifScore extends AppCompatActivity {
        jsonObject.addProperty("Income",eSignerborower.Income);
        jsonObject.addProperty("Expense",eSignerborower.Expense);
        jsonObject.addProperty("LoanReason",eSignerborower.Loan_Reason);
-       jsonObject.addProperty("Duration","12");
+       jsonObject.addProperty("Duration",eSignerborower.Loan_Duration);
        return jsonObject;
 
     }

@@ -966,7 +966,7 @@ public class Borrower extends BaseModel implements Serializable {
     }
 
     public Map<String, String> validateLoanApplication(Context context) {
-       int docCount = 3;
+        int docCount = 3;
         Map<String, String> messages = new HashMap<>();
         if (this.aadharid == null || this.aadharid.trim().length() == 0) {
             messages.put("Borrower Aadhar", "Aadhar number is missing");
@@ -983,26 +983,21 @@ public class Borrower extends BaseModel implements Serializable {
                 messages.put("Current Address", "Current Address City is not specified");
             }
         }
-        if (this.voterid == null && this.PanNO == null) {
+        if (this.voterid == null && this.drivinglic == null && this.PanNO == null) {
             messages.put("No Document ID", "A valid document ID must be filled in");
         } else {
-            if (this.voterid != null) {
-                if (this.PanNO.length() != 10){
-                    messages.put("Pan No", "PAN Card Number should be of 10 Digits");
-                }
-//                docCount += 2;
-            }else{
-                if (this.voterid.length() != 10)
-                    messages.put("VoterID", "Voter Id Number should be of 10 Digits");
+            if (this.voterid != null && this.voterid.length() > 0 && this.voterid.length() < 10) {
+                messages.put("VoterID", "VoterID Number should be of 10 Digits");
+                docCount += 2;
             }
-//            if (this.drivinglic != null && this.drivinglic.length() > 0 && this.drivinglic.length() < 10) {
-//                messages.put("Driving License", "Driving License Number should be of 10 Digits");
-////                docCount += 2;
-//            }
-//            if (this.PanNO != null && this.PanNO.length() > 0 && this.PanNO.length() != 10) {
-//                messages.put("", "PAN Number should be of 10 Digits");
-////                docCount++;
-//            }
+            if (this.drivinglic != null && this.drivinglic.length() > 0 && this.drivinglic.length() < 10) {
+                messages.put("Driving License", "Driving License Number should be of 10 Digits");
+                docCount += 2;
+            }
+            if (this.PanNO != null && this.PanNO.length() > 0 && this.PanNO.length() != 10) {
+                messages.put("Pan No", "PAN Number should be of 10 Digits");
+                docCount++;
+            }
         }
 
         if (this.P_ph3 == null || this.P_ph3.length() < 10) {
@@ -1024,7 +1019,7 @@ public class Borrower extends BaseModel implements Serializable {
             this.isAadharVerified = "N";
             this.save();
         }
-      if (!this.isAadharVerified.equals("Y")) docCount += 2;
+        if (!this.isAadharVerified.equals("Y")) docCount += 2;
 
         int guarantorCount = this.getFiGuarantors().size();
         if (guarantorCount > 0) {
@@ -1055,7 +1050,7 @@ public class Borrower extends BaseModel implements Serializable {
                     if (!guarantor.getIsAadharVerified().equals("Y")) docCount += 2;
                 }
 
-               if(guarantor.getIsAadharVerified().equals("Y")) docCount=docCount+1; else docCount=docCount+3;
+                //if(guarantor.getIsAadharVerified().equals("Y")) docCount=docCount+1; else docCount=docCount+3;
                 /*if (guarantor.getVoterid()==null || guarantor.getVoterid().length()<10){ messages.put("Guarantor VoterID","Guarantor VoterID Number should be of 10 Digits"+ " for Guarantor #"+String.valueOf(cnt));}
                 if(guarantor.getPicture()==null){
                     messages.put("Guarantor Picture","Picture Must be captured"+ " for Guarantor #"+String.valueOf(cnt));
@@ -1069,7 +1064,7 @@ public class Borrower extends BaseModel implements Serializable {
                     }
                     if (guarantor.getDrivinglic() != null && guarantor.getDrivinglic().length() > 0 && guarantor.getDrivinglic().length() < 10) {
                         messages.put("Guarantor Driving License", "Guarantor Driving License Number should be of 10 Digits");
-                       docCount += 2;
+                        docCount += 2;
                     }
                     if (guarantor.getPANNo() != null && guarantor.getPANNo().length() > 0 && guarantor.getPANNo().length() != 10) {
                         messages.put("Guarantor Pan No", "Guarantor PAN Number should be of 10 Digits");
@@ -1102,48 +1097,49 @@ public class Borrower extends BaseModel implements Serializable {
         if (this.P_ph3 == null || this.P_ph3.length() < 10) {
             messages.put("Mobile", "Mobile Number should be of 10 Digits");
         }
-        if (this.P_Add1 == null || this.P_Add1.length() < 1) {
+        if (this.P_Add1 == null || this.P_Add1.length() < 3) {
             messages.put("Address", "Address 1 is not specified");
         }
-        if (this.P_city == null || this.P_city.length() < 4) {
+        if (this.P_city == null || this.P_city.length() < 2) {
             messages.put("City", "Address City is not specified");
         }
         if (this.p_pin == 0 || String.valueOf(this.p_pin).length() != 6) {
             messages.put("Pin Code", "Address Pin Code is not specified");
         }
 
-//        if (this.voterid == null && this.drivinglic == null && this.PanNO == null) {
-//            messages.put("No Document ID", "At least two valid document IDs must be filled in");
-//        } else {
-//            boolean vid = false, pan = false, dl = false;
-//            if (this.voterid != null) vid = true;
-//            if (this.drivinglic != null) dl = true;
-//            if (this.PanNO != null) pan = true;
-//            if (vid) {
-//                if (this.voterid.length() > 0 && this.voterid.length() < 10) {
-//                    messages.put("VoterID", "VoterID Number should be of 10 Digits");
-//                } else kycIdsCount++;
-//            }
-//            if (dl) {
-//                if (this.drivinglic.length() > 0 && this.drivinglic.length() < 10) {
-//                    messages.put("Driving License", "Driving License Number should be of 10 Digits");
-//                } else kycIdsCount++;
-//            }
-//            if (pan) {
-//                if (this.PanNO.length() > 0 && this.PanNO.length() != 10) {
-//                    messages.put("Pan No", "PAN Number should be of 10 Digits");
-//                } else if (Verhoeff.validatePan(this.PanNO)) kycIdsCount++;
-//            }
-//            if (kycIdsCount < 1) {
-//                messages.put("KYC Documents", "At least two KYC Documents required");
-//            }
-//        }
+        if (this.voterid == null && this.drivinglic == null && this.PanNO == null) {
+            messages.put("No Document ID", "At least two valid document IDs must be filled in");
+        } else {
+            boolean vid = false, pan = false, dl = false;
+            if (this.voterid != null) vid = true;
+            if (this.drivinglic != null) dl = true;
+            if (this.PanNO != null) pan = true;
+            if (vid) {
+                if (this.voterid.length() > 0 && this.voterid.length() < 10) {
+                    messages.put("VoterID", "VoterID Number should be of 10 Digits");
+                } else kycIdsCount++;
+            }
+            if (dl) {
+                if (this.drivinglic.length() > 0 && this.drivinglic.length() < 10) {
+                    messages.put("Driving License", "Driving License Number should be of 10 Digits");
+                } else kycIdsCount++;
+            }
+            if (pan) {
+                if (this.PanNO.length() > 0 && this.PanNO.length() != 10) {
+                    messages.put("Pan No", "PAN Number should be of 10 Digits");
+                } else if (Verhoeff.validatePan(this.PanNO)) kycIdsCount++;
+            }
+            if (kycIdsCount < 2) {
+                messages.put("KYC Documents", "At least two KYC Documents required");
+            }
+        }
 
         if (this.isAadharVerified == null) {
             this.isAadharVerified = "N";
         }
         return messages;
     }
+
 
     public List<DocumentStore> getFiDocuments() {
         ConditionGroup conditionGroup = ConditionGroup.clause();

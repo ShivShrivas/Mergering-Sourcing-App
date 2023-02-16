@@ -563,6 +563,7 @@ public class ActivityFinancing extends AppCompatActivity
         borrower.SEL = String.valueOf(Integer.parseInt(borrower.SEL) + 1);
         if (borrower.Approved != null && borrower.Approved.equals("NPR"))
             borrower.Approved = null;
+        Log.d("TAG", "submitLoanApplication: "+WebOperations.convertToJson(borrower));
         (new WebOperations()).postEntity(context, "posfi", "updatefi", WebOperations.convertToJson(borrower), dataAsyncResponseHandler);
     }
 
