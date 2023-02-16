@@ -176,7 +176,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
         //borrower.fi
         borrower.isAadharVerified = "N";
-
+        Log.d("TAG", "onCreate: "+RangeCategory.getNameById("state","09"));
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(actionBar.getTitle() + "    Borrower KYC");
@@ -699,8 +699,10 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.Latitude= (float) gpsTracker.getLatitude();
         borrower.Longitude= (float) gpsTracker.getLongitude();
         borrower.Gender = ((RangeCategory) acspGender.getSelectedItem()).RangeCode.substring(0, 1);
-        if (acspRelationship.getVisibility() == View.VISIBLE && acspRelationship.getAdapter().getCount() > 0)
-        borrower.RelationWBorrower = ((RangeCategory) acspRelationship.getSelectedItem()).RangeCode;
+        if (acspRelationship.getVisibility() == View.VISIBLE && acspRelationship.getAdapter().getCount() > 0){
+
+            borrower.RelationWBorrower = ((RangeCategory) acspRelationship.getSelectedItem()).RangeCode;
+        }
         borrower.p_state = ((RangeCategory) acspAadharState.getSelectedItem()).RangeCode;
         borrower.P_ph3 = Utils.getNotNullText(tietMobile);
         borrower.PanNO = Utils.getNotNullText(tietPanNo);
@@ -717,7 +719,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.bank_ac_no = Utils.getNotNullText(tietBankAccount);
         borrower.Income = Integer.parseInt(Utils.getNotNullText(tietIncome));
         borrower.Expense = Integer.parseInt(Utils.getNotNullText(tietExpence));
-        borrower.LoanDuration= loanDurationData;
+        Log.d("TAG", "loanDurationData: "+loanDurationData);
+        borrower.Loan_Duration= loanDurationData;
         Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
         Log.d("TAG", "getDataFromView: "+bankName);
         borrower.BankName= bankName;

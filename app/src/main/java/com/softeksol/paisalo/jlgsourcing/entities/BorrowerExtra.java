@@ -259,6 +259,10 @@ public class BorrowerExtra extends BaseModel implements Serializable {
     public String FATHER_LAST_NAME;
 
 
+    @Expose
+    @Column
+    public String Years_In_Business;
+
 
     @Override
     public String toString() {
@@ -320,6 +324,7 @@ public class BorrowerExtra extends BaseModel implements Serializable {
         ", FATHER_FIRST_NAME='"+FATHER_FIRST_NAME+'\''+
                 ", FATHER_MIDDLE_NAME='"+FATHER_MIDDLE_NAME+'\''+
         ", FATHER_LAST_NAME='"+FATHER_LAST_NAME+'\''+
+                ", years_in_business='"+Years_In_Business+'\''+
         '}';
     }
 
@@ -380,7 +385,7 @@ public class BorrowerExtra extends BaseModel implements Serializable {
                borrowerExtraDTO.setFATHER_FIRST_NAME(this.FATHER_FIRST_NAME);
        borrowerExtraDTO.setFATHER_MIDDLE_NAME(this.FATHER_MIDDLE_NAME);
                borrowerExtraDTO.setFATHER_LAST_NAME(this.FATHER_LAST_NAME);
-
+        borrowerExtraDTO.setYears_in_business(this.Years_In_Business);
 
         return borrowerExtraDTO;
     }
@@ -444,5 +449,7 @@ public class BorrowerExtra extends BaseModel implements Serializable {
         this.FATHER_FIRST_NAME=borrowerExtraDTO.getFATHER_FIRST_NAME();
                 this.FATHER_MIDDLE_NAME=borrowerExtraDTO.getFATHER_MIDDLE_NAME();
         this.FATHER_LAST_NAME=borrowerExtraDTO.getFATHER_LAST_NAME();
+        this.Years_In_Business=borrowerExtraDTO.getYears_in_business();
+
     }
 }

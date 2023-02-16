@@ -89,6 +89,7 @@ public class ActivityESingList extends AppCompatActivity {
 //                                    clientDataDao.insertESignBorrower(eSignBorrower);
                                 }
                                 for (ESignBorrower eSignBorrower : eSignBorrowers) {
+
                                     adapterListESignBorrower.addAll(eSignBorrower);
                                 }
 

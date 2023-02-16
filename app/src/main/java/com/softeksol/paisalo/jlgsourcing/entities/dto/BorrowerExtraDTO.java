@@ -140,6 +140,9 @@ public class BorrowerExtraDTO {
     @Expose
     private String FATHER_LAST_NAME;
 
+    @Expose
+    private String years_in_business;
+
 
     public long getCode() {
         return Code;
@@ -579,6 +582,14 @@ public class BorrowerExtraDTO {
 
     public void setFATHER_LAST_NAME(String FATHER_LAST_NAME) {
         this.FATHER_LAST_NAME = FATHER_LAST_NAME;
+    }
+
+    public String getYears_in_business() {
+        return years_in_business;
+    }
+
+    public void setYears_in_business(String years_in_business) {
+        this.years_in_business = years_in_business;
     }
 
     @Override

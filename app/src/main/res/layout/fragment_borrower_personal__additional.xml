@@ -318,10 +318,25 @@
                     android:layout_height="wrap_content"
                     android:text="Form60 Transaction Date" />
 
-                <EditText
-                    android:id="@+id/editFORM60_TNX_DT"
+                <LinearLayout
+                    android:layout_gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <EditText
+                        android:layout_weight="1"
+                        android:inputType="date"
+                        android:id="@+id/editFORM60_TNX_DT"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:id="@+id/imgViewCal"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/calendar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tilUidName" />
+                </LinearLayout>
             </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -343,10 +358,24 @@
                     android:layout_height="wrap_content"
                     android:text="Form60 Submission Date" />
 
-                <EditText
-                    android:id="@+id/editFORM60_SUBMISSIONDATE"
+                <LinearLayout
+                    android:layout_gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:id="@+id/editFORM60_SUBMISSIONDATE"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+                        android:inputType="date"
+                        android:layout_height="wrap_content" />
+                    <ImageView
+                        android:id="@+id/imgViewCal2"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/calendar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tilUidName" />
+                </LinearLayout>
             </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -867,6 +896,33 @@
                 <EditText
                     android:id="@+id/editFATHER_LAST_NAME"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_margin="4dp"
+                app:cardCornerRadius="8dp"
+                android:layout_width="match_parent"
+                app:cardElevation="5dp"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:padding="4dp"
+                    android:textSize="14dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Years in Business" />
+
+                <EditText
+                    android:id="@+id/editYearsInBusiness"
+                    android:layout_width="match_parent"
+                    android:inputType="number"
                     android:layout_height="wrap_content" />
             </LinearLayout>
             </androidx.cardview.widget.CardView>

@@ -1,16 +1,19 @@
 package com.softeksol.paisalo.jlgsourcing.fragments;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -24,7 +27,11 @@ import com.softeksol.paisalo.jlgsourcing.entities.BorrowerExtra;
 import com.softeksol.paisalo.jlgsourcing.entities.RangeCategory;
 import com.softeksol.paisalo.jlgsourcing.entities.RangeCategory_Table;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.MatchResult;
 
 /**
@@ -50,9 +57,12 @@ public class FragmentBorrowerPersonal_Additional extends AbsFragment {
     private ArrayAdapter<String> SOC_ATTR_4_SPL_ABLD,SOC_ATTR_5_SPL_SOC_CTG,VISUALLY_IMPAIRED_YN,FORM60_PAN_APPLIED_YN;
     ArrayList<String> items=new ArrayList<String>();
 
+    private ImageView imgViewCal,ImgViewCal2;
 
 
+    EditText editFORM60_TNX_DT,editFORM60_SUBMISSIONDATE;
 
+    String newDate;
 
 
 
@@ -106,7 +116,13 @@ public class FragmentBorrowerPersonal_Additional extends AbsFragment {
         View v= inflater.inflate(R.layout.fragment_borrower_personal__additional, container, false);
             items.add("YES");
             items.add("NO");
-               Spinner spinAGRICULTURAL_INCOME=v.findViewById(R.id.spinAgriIncome);
+        imgViewCal=v.findViewById(R.id.imgViewCal);
+        ImgViewCal2=v.findViewById(R.id.imgViewCal2);
+        editFORM60_SUBMISSIONDATE=v.findViewById(R.id.editFORM60_SUBMISSIONDATE);
+        editFORM60_TNX_DT=v.findViewById(R.id.editFORM60_TNX_DT);
+        editFORM60_SUBMISSIONDATE.setEnabled(false);
+        editFORM60_TNX_DT.setEnabled(false);
+        Spinner spinAGRICULTURAL_INCOME=v.findViewById(R.id.spinAgriIncome);
         AGRICULTURAL_INCOME = new AdapterListRange(this.getContext(), Utils.getList(1, 30, 1, 1000, "Rupees"), true);
                 spinAGRICULTURAL_INCOME.setAdapter(AGRICULTURAL_INCOME);
         Spinner spinSOC_ATTR_2_INCOME=v.findViewById(R.id.spinIncome);
@@ -162,8 +178,51 @@ public class FragmentBorrowerPersonal_Additional extends AbsFragment {
                EditText FATHER_FIRST_NAME= v.findViewById(R.id.editFather_FIRST_NAME);
                EditText FATHER_MIDDLE_NAME= v.findViewById(R.id.editFATHER_MIDDLE_NAME);
                EditText FATHER_LAST_NAME= v.findViewById(R.id.editFATHER_LAST_NAME);
+        imgViewCal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDatePickerDialog(v);
+            }
+        });
 
+        ImgViewCal2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDatePickerDialog(v);
+                //showDate(year, month+1, day);
+            }
+        });
         return  v;
+    }
+
+    public void openDatePickerDialog(final View v) {
+        // Get Current Date
+        Calendar cal=Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    String selectedDate =year  + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+                    SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+
+                    try {
+                        Date date = dt.parse(selectedDate);
+                        newDate= dt.format(date);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    switch (v.getId()) {
+                        case R.id.imgViewCal:
+                            editFORM60_TNX_DT.setText(newDate);
+                            break;
+                        case R.id.imgViewCal2:
+                            editFORM60_SUBMISSIONDATE.setText(newDate);
+                            break;
+                    }
+                }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+
+
+        datePickerDialog.getDatePicker().setMaxDate(cal.getTimeInMillis());
+        datePickerDialog.show();
     }
     @Override
     public void onAttach(Context context) {
@@ -196,18 +255,29 @@ public class FragmentBorrowerPersonal_Additional extends AbsFragment {
         setDataToView(getView());
     }
 
+
     private void setDataToView(View v) {
 
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinAgriIncome),borrowerExtra.AGRICULTURAL_INCOME);
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinIncome),borrowerExtra.SOC_ATTR_2_INCOME);
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinAnnualIncome),borrowerExtra.ANNUAL_INCOME);
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinOTHER_THAN_AGRICULTURAL_INCOME),borrowerExtra.OTHER_THAN_AGRICULTURAL_INCOME);
-        Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinVisuallyImpaired),borrowerExtra.VISUALLY_IMPAIRED_YN);
-        Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinSpecialSocialCategory),borrowerExtra.SOC_ATTR_5_SPL_SOC_CTG);
-        Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinFORM60_PAN_APPLIED_YN),borrowerExtra.FORM60_PAN_APPLIED_YN);
+        int spinnerPositionVisuallyImpaired= VISUALLY_IMPAIRED_YN.getPosition(borrowerExtra.VISUALLY_IMPAIRED_YN);
+        ((Spinner)v.findViewById(R.id.spinVisuallyImpaired)).setSelection(spinnerPositionVisuallyImpaired);
+
+
+        int spinnerPositionSpecialCategory= SOC_ATTR_5_SPL_SOC_CTG.getPosition(borrowerExtra.SOC_ATTR_5_SPL_SOC_CTG);
+        ((Spinner)v.findViewById(R.id.spinSpecialSocialCategory)).setSelection(spinnerPositionSpecialCategory);
+
+
+        int spinnerPositionPANApplied= FORM60_PAN_APPLIED_YN.getPosition(borrowerExtra.FORM60_PAN_APPLIED_YN);
+        ((Spinner)v.findViewById(R.id.spinFORM60_PAN_APPLIED_YN)).setSelection(spinnerPositionPANApplied);
+
+        int spinnerPositionSpecialAbility= SOC_ATTR_4_SPL_ABLD.getPosition(borrowerExtra.SOC_ATTR_4_SPL_ABLD);
+        ((Spinner)v.findViewById(R.id.spinSpecialAbility)).setSelection(spinnerPositionSpecialAbility);
+
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinMARITAL_STATUS),borrowerExtra.MARITAL_STATUS);
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinRESERVATN_CATEGORY),borrowerExtra.RESERVATN_CATEGORY);
-        Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinSpecialAbility),borrowerExtra.SOC_ATTR_4_SPL_ABLD);
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinOCCUPATION_TYPE),borrowerExtra.OCCUPATION_TYPE);
 
         ((EditText) v.findViewById(R.id.editLandHold)).setText(borrowerExtra.SOC_ATTR_3_LAND_HOLD);
@@ -217,19 +287,20 @@ public class FragmentBorrowerPersonal_Additional extends AbsFragment {
         ((EditText) v.findViewById(R.id.editFORM60_TNX_DT)).setText(borrowerExtra.FORM60_TNX_DT);
         ((EditText) v.findViewById(R.id.editFORM60_SUBMISSIONDATE)).setText(borrowerExtra.FORM60_SUBMISSIONDATE);
         ((EditText) v.findViewById(R.id.editMOTHER_TITLE)).setText(borrowerExtra.MOTHER_TITLE);
-         ((EditText) v.findViewById(R.id.editMOTHER_FIRST_NAME)).setText(borrowerExtra.MOTHER_FIRST_NAME);
+        ((EditText) v.findViewById(R.id.editMOTHER_FIRST_NAME)).setText(borrowerExtra.MOTHER_FIRST_NAME);
         ((EditText) v.findViewById(R.id.editMOTHER_MIDDLE_NAME)).setText(borrowerExtra.MOTHER_MIDDLE_NAME);
-         ((EditText) v.findViewById(R.id.editMOTHER_LAST_NAME)).setText(borrowerExtra.MOTHER_LAST_NAME);
+        ((EditText) v.findViewById(R.id.editMOTHER_LAST_NAME)).setText(borrowerExtra.MOTHER_LAST_NAME);
         ((EditText) v.findViewById(R.id.editMOTHER_MAIDEN_NAME)).setText(borrowerExtra.MOTHER_MAIDEN_NAME);
-         ((EditText) v.findViewById(R.id.editSPOUSE_TITLE)).setText(borrowerExtra.SPOUSE_TITLE);
+        ((EditText) v.findViewById(R.id.editSPOUSE_TITLE)).setText(borrowerExtra.SPOUSE_TITLE);
         ((EditText) v.findViewById(R.id.editSPOUSE_FIRST_NAME)).setText(borrowerExtra.SPOUSE_FIRST_NAME);
-         ((EditText) v.findViewById(R.id.editSPOUSE_MIDDLE_NAME)).setText(borrowerExtra.SPOUSE_MIDDLE_NAME);
+        ((EditText) v.findViewById(R.id.editSPOUSE_MIDDLE_NAME)).setText(borrowerExtra.SPOUSE_MIDDLE_NAME);
         ((EditText) v.findViewById(R.id.editSPOUSE_LAST_NAME)).setText(borrowerExtra.SPOUSE_LAST_NAME);
-         ((EditText) v.findViewById(R.id.editAPPLICNT_TITLE)).setText(borrowerExtra.APPLICNT_TITLE);
+        ((EditText) v.findViewById(R.id.editAPPLICNT_TITLE)).setText(borrowerExtra.APPLICNT_TITLE);
         ((EditText) v.findViewById(R.id.editFATHER_TITLE)).setText(borrowerExtra.FATHER_TITLE);
-         ((EditText) v.findViewById(R.id.editFather_FIRST_NAME)).setText(borrowerExtra.FATHER_FIRST_NAME);
+        ((EditText) v.findViewById(R.id.editFather_FIRST_NAME)).setText(borrowerExtra.FATHER_FIRST_NAME);
         ((EditText) v.findViewById(R.id.editFATHER_MIDDLE_NAME)).setText(borrowerExtra.FATHER_MIDDLE_NAME);
         ((EditText) v.findViewById(R.id.editFATHER_LAST_NAME)).setText(borrowerExtra.FATHER_LAST_NAME);
+        ((EditText) v.findViewById(R.id.editYearsInBusiness)).setText(borrowerExtra.Years_In_Business);
 
     }
 
@@ -254,27 +325,30 @@ public class FragmentBorrowerPersonal_Additional extends AbsFragment {
         borrowerExtra.SOC_ATTR_4_SPL_ABLD=((Spinner) view.findViewById(R.id.spinSpecialAbility)).getSelectedItem().toString();
         borrowerExtra.OCCUPATION_TYPE=Utils.getSpinnerStringValue((Spinner) view.findViewById(R.id.spinOCCUPATION_TYPE));
 
-        borrowerExtra.SOC_ATTR_3_LAND_HOLD=Utils.getNotNullText((EditText) view.findViewById(R.id.editLandHold));
-                borrowerExtra.EDUCATION_CODE=Utils.getNotNullText((EditText) view.findViewById(R.id.editEducationalCode));
-        borrowerExtra.PLACE_OF_BIRTH=Utils.getNotNullText((EditText) view.findViewById(R.id.editPlaceOfBirth));
-                borrowerExtra.EMAIL_ID=Utils.getNotNullText((EditText) view.findViewById(R.id.editMailId));
-        borrowerExtra.FORM60_TNX_DT=Utils.getNotNullText((EditText) view.findViewById(R.id.editFORM60_TNX_DT));
-                borrowerExtra.FORM60_SUBMISSIONDATE=Utils.getNotNullText((EditText) view.findViewById(R.id.editFORM60_SUBMISSIONDATE));
-        borrowerExtra.MOTHER_TITLE=Utils.getNotNullText((EditText) view.findViewById(R.id.editMOTHER_TITLE));
-                borrowerExtra.MOTHER_FIRST_NAME=Utils.getNotNullText((EditText) view.findViewById(R.id.editMOTHER_FIRST_NAME));
-        borrowerExtra.MOTHER_MIDDLE_NAME=Utils.getNotNullText((EditText) view.findViewById(R.id.editMOTHER_MIDDLE_NAME));
-                borrowerExtra.MOTHER_LAST_NAME=Utils.getNotNullText((EditText) view.findViewById(R.id.editMOTHER_LAST_NAME));
-        borrowerExtra.MOTHER_MAIDEN_NAME=Utils.getNotNullText((EditText) view.findViewById(R.id.editMOTHER_MAIDEN_NAME));
-                borrowerExtra.SPOUSE_TITLE=Utils.getNotNullText((EditText) view.findViewById(R.id.editSPOUSE_TITLE));
-        borrowerExtra.SPOUSE_FIRST_NAME=Utils.getNotNullText((EditText) view.findViewById(R.id.editSPOUSE_FIRST_NAME));
-                borrowerExtra.SPOUSE_MIDDLE_NAME=Utils.getNotNullText((EditText) view.findViewById(R.id.editSPOUSE_MIDDLE_NAME));
-        borrowerExtra.SPOUSE_LAST_NAME=Utils.getNotNullText((EditText) view.findViewById(R.id.editSPOUSE_LAST_NAME));
-                borrowerExtra.APPLICNT_TITLE=Utils.getNotNullText((EditText) view.findViewById(R.id.editAPPLICNT_TITLE));
-        borrowerExtra.FATHER_TITLE=Utils.getNotNullText((EditText) view.findViewById(R.id.editFATHER_TITLE));
-                borrowerExtra.FATHER_FIRST_NAME=Utils.getNotNullText((EditText) view.findViewById(R.id.editFather_FIRST_NAME));
-        borrowerExtra.FATHER_MIDDLE_NAME=Utils.getNotNullText((EditText) view.findViewById(R.id.editFATHER_MIDDLE_NAME));
-                borrowerExtra.FATHER_LAST_NAME=Utils.getNotNullText((EditText) view.findViewById(R.id.editFATHER_LAST_NAME));
-
+        borrowerExtra.SOC_ATTR_3_LAND_HOLD=((EditText) view.findViewById(R.id.editLandHold)).getText().toString();
+        borrowerExtra.EDUCATION_CODE=((EditText) view.findViewById(R.id.editEducationalCode)).getText().toString();
+        borrowerExtra.PLACE_OF_BIRTH=((EditText) view.findViewById(R.id.editPlaceOfBirth)).getText().toString();
+        borrowerExtra.EMAIL_ID=((EditText) view.findViewById(R.id.editMailId)).getText().toString();
+        borrowerExtra.FORM60_TNX_DT=((EditText) view.findViewById(R.id.editFORM60_TNX_DT)).getText().toString();
+        borrowerExtra.FORM60_SUBMISSIONDATE=((EditText) view.findViewById(R.id.editFORM60_SUBMISSIONDATE)).getText().toString();
+        borrowerExtra.FORM60SUBMISSIONDATE=((EditText) view.findViewById(R.id.editFORM60_SUBMISSIONDATE)).getText().toString();
+        borrowerExtra.MOTHER_TITLE=((EditText) view.findViewById(R.id.editMOTHER_TITLE)).getText().toString();
+        borrowerExtra.MOTHER_FIRST_NAME=((EditText) view.findViewById(R.id.editMOTHER_FIRST_NAME)).getText().toString();
+        borrowerExtra.MOTHER_MIDDLE_NAME=((EditText) view.findViewById(R.id.editMOTHER_MIDDLE_NAME)).getText().toString();
+        borrowerExtra.MOTHER_LAST_NAME=((EditText) view.findViewById(R.id.editMOTHER_LAST_NAME)).getText().toString();
+        borrowerExtra.MOTHER_MAIDEN_NAME=((EditText) view.findViewById(R.id.editMOTHER_MAIDEN_NAME)).getText().toString();
+        borrowerExtra.SPOUSE_TITLE=((EditText) view.findViewById(R.id.editSPOUSE_TITLE)).getText().toString();
+        borrowerExtra.SPOUSE_FIRST_NAME=((EditText) view.findViewById(R.id.editSPOUSE_FIRST_NAME)).getText().toString();
+        borrowerExtra.SPOUSE_MIDDLE_NAME=((EditText) view.findViewById(R.id.editSPOUSE_MIDDLE_NAME)).getText().toString();
+        borrowerExtra.SPOUSE_LAST_NAME=((EditText) view.findViewById(R.id.editSPOUSE_LAST_NAME)).getText().toString();
+        borrowerExtra.APPLICNT_TITLE=((EditText) view.findViewById(R.id.editAPPLICNT_TITLE)).getText().toString();
+        borrowerExtra.FATHER_TITLE=((EditText) view.findViewById(R.id.editFATHER_TITLE)).getText().toString();
+        borrowerExtra.FATHER_FIRST_NAME=((EditText) view.findViewById(R.id.editFather_FIRST_NAME)).getText().toString();
+        borrowerExtra.FATHER_MIDDLE_NAME=((EditText) view.findViewById(R.id.editFATHER_MIDDLE_NAME)).getText().toString();
+        borrowerExtra.FATHER_LAST_NAME=((EditText) view.findViewById(R.id.editFATHER_LAST_NAME)).getText().toString();
+        borrowerExtra.Years_In_Business=((EditText) view.findViewById(R.id.editYearsInBusiness)).getText().toString();
+        Log.d("TAG", "getDataFromView: yha tk chal rha h 1");
+        borrowerExtra.save();
 
     }
 
