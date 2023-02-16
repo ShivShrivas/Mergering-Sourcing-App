@@ -72,6 +72,36 @@ public class ESignBorrower extends BaseModel implements Serializable {
     @Column
     public Date DisbRequested;
 
+    @Column
+    public String Loan_Reason;
+
+    @Column
+    public String Expense;
+
+    @Column
+    public String Income;
+    @Column
+    public String BankName;
+    @Column
+    public String Gender;
+    @Column
+    public String PanNO;
+    @Column
+    public String P_Pin;
+    @Column
+    public String P_City;
+    @Column
+    public String Loan_Duration;
+    @Column
+    public String DOB;
+    @Column
+    public String Loan_Amt;
+    @Column
+    public String VoterID;
+    @Column
+    public String P_State;
+
+
 
 
 
@@ -114,6 +144,19 @@ public class ESignBorrower extends BaseModel implements Serializable {
         eSigner.docPath = documentPath;
         eSigner.FatherName = FatherName;
         eSigner.KycUuid = KycUuid;
+        eSigner.Loan_Reason = Loan_Reason;
+        eSigner.Expense = Expense;
+        eSigner.Income = Income;
+        eSigner.BankName = BankName;
+        eSigner.Gender = Gender;
+        eSigner.PanNO = PanNO;
+        eSigner.P_Pin = P_Pin;
+        eSigner.FoCode = FoCode;
+        eSigner.Loan_Duration = Loan_Duration;
+        eSigner.DOB = DOB;
+        eSigner.Loan_Amt = Loan_Amt;
+        eSigner.VoterID = VoterID;
+        eSigner.P_State = P_State;
 
         return eSigner;
     }

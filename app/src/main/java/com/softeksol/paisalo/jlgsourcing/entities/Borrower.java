@@ -525,9 +525,6 @@ public class Borrower extends BaseModel implements Serializable {
     public String Bank;
 
 
-    @Expose
-    @Column
-    public String LoanDuration;
 
 
     @Expose

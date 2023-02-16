@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
@@ -472,6 +473,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 loanDurationData=adapterView.getSelectedItem().toString();
+                Toast.makeText(ActivityBorrowerKyc.this, loanDurationData, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -718,7 +720,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.bank_ac_no = Utils.getNotNullText(tietBankAccount);
         borrower.Income = Integer.parseInt(Utils.getNotNullText(tietIncome));
         borrower.Expense = Integer.parseInt(Utils.getNotNullText(tietExpence));
-        borrower.LoanDuration= loanDurationData;
+        borrower.Loan_Duration= loanDurationData;
         Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
         Log.d("TAG", "getDataFromView: "+bankName);
         borrower.BankName= bankName;

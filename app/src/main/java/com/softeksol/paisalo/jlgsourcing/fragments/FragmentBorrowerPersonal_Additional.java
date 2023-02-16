@@ -195,19 +195,28 @@ public class FragmentBorrowerPersonal_Additional extends AbsFragment {
         }
         setDataToView(getView());
     }
-
     private void setDataToView(View v) {
 
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinAgriIncome),borrowerExtra.AGRICULTURAL_INCOME);
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinIncome),borrowerExtra.SOC_ATTR_2_INCOME);
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinAnnualIncome),borrowerExtra.ANNUAL_INCOME);
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinOTHER_THAN_AGRICULTURAL_INCOME),borrowerExtra.OTHER_THAN_AGRICULTURAL_INCOME);
-        Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinVisuallyImpaired),borrowerExtra.VISUALLY_IMPAIRED_YN);
-        Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinSpecialSocialCategory),borrowerExtra.SOC_ATTR_5_SPL_SOC_CTG);
-        Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinFORM60_PAN_APPLIED_YN),borrowerExtra.FORM60_PAN_APPLIED_YN);
+        int spinnerPositionVisuallyImpaired= VISUALLY_IMPAIRED_YN.getPosition(borrowerExtra.VISUALLY_IMPAIRED_YN);
+        ((Spinner)v.findViewById(R.id.spinVisuallyImpaired)).setSelection(spinnerPositionVisuallyImpaired);
+
+
+        int spinnerPositionSpecialCategory= SOC_ATTR_5_SPL_SOC_CTG.getPosition(borrowerExtra.SOC_ATTR_5_SPL_SOC_CTG);
+        ((Spinner)v.findViewById(R.id.spinSpecialSocialCategory)).setSelection(spinnerPositionSpecialCategory);
+
+
+        int spinnerPositionPANApplied= FORM60_PAN_APPLIED_YN.getPosition(borrowerExtra.FORM60_PAN_APPLIED_YN);
+        ((Spinner)v.findViewById(R.id.spinFORM60_PAN_APPLIED_YN)).setSelection(spinnerPositionPANApplied);
+
+        int spinnerPositionSpecialAbility= SOC_ATTR_4_SPL_ABLD.getPosition(borrowerExtra.SOC_ATTR_4_SPL_ABLD);
+        ((Spinner)v.findViewById(R.id.spinSpecialAbility)).setSelection(spinnerPositionSpecialAbility);
+
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinMARITAL_STATUS),borrowerExtra.MARITAL_STATUS);
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinRESERVATN_CATEGORY),borrowerExtra.RESERVATN_CATEGORY);
-        Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinSpecialAbility),borrowerExtra.SOC_ATTR_4_SPL_ABLD);
         Utils.setSpinnerPosition((Spinner) v.findViewById(R.id.spinOCCUPATION_TYPE),borrowerExtra.OCCUPATION_TYPE);
 
         ((EditText) v.findViewById(R.id.editLandHold)).setText(borrowerExtra.SOC_ATTR_3_LAND_HOLD);
@@ -217,19 +226,20 @@ public class FragmentBorrowerPersonal_Additional extends AbsFragment {
         ((EditText) v.findViewById(R.id.editFORM60_TNX_DT)).setText(borrowerExtra.FORM60_TNX_DT);
         ((EditText) v.findViewById(R.id.editFORM60_SUBMISSIONDATE)).setText(borrowerExtra.FORM60_SUBMISSIONDATE);
         ((EditText) v.findViewById(R.id.editMOTHER_TITLE)).setText(borrowerExtra.MOTHER_TITLE);
-         ((EditText) v.findViewById(R.id.editMOTHER_FIRST_NAME)).setText(borrowerExtra.MOTHER_FIRST_NAME);
+        ((EditText) v.findViewById(R.id.editMOTHER_FIRST_NAME)).setText(borrowerExtra.MOTHER_FIRST_NAME);
         ((EditText) v.findViewById(R.id.editMOTHER_MIDDLE_NAME)).setText(borrowerExtra.MOTHER_MIDDLE_NAME);
-         ((EditText) v.findViewById(R.id.editMOTHER_LAST_NAME)).setText(borrowerExtra.MOTHER_LAST_NAME);
+        ((EditText) v.findViewById(R.id.editMOTHER_LAST_NAME)).setText(borrowerExtra.MOTHER_LAST_NAME);
         ((EditText) v.findViewById(R.id.editMOTHER_MAIDEN_NAME)).setText(borrowerExtra.MOTHER_MAIDEN_NAME);
-         ((EditText) v.findViewById(R.id.editSPOUSE_TITLE)).setText(borrowerExtra.SPOUSE_TITLE);
+        ((EditText) v.findViewById(R.id.editSPOUSE_TITLE)).setText(borrowerExtra.SPOUSE_TITLE);
         ((EditText) v.findViewById(R.id.editSPOUSE_FIRST_NAME)).setText(borrowerExtra.SPOUSE_FIRST_NAME);
-         ((EditText) v.findViewById(R.id.editSPOUSE_MIDDLE_NAME)).setText(borrowerExtra.SPOUSE_MIDDLE_NAME);
+        ((EditText) v.findViewById(R.id.editSPOUSE_MIDDLE_NAME)).setText(borrowerExtra.SPOUSE_MIDDLE_NAME);
         ((EditText) v.findViewById(R.id.editSPOUSE_LAST_NAME)).setText(borrowerExtra.SPOUSE_LAST_NAME);
-         ((EditText) v.findViewById(R.id.editAPPLICNT_TITLE)).setText(borrowerExtra.APPLICNT_TITLE);
+        ((EditText) v.findViewById(R.id.editAPPLICNT_TITLE)).setText(borrowerExtra.APPLICNT_TITLE);
         ((EditText) v.findViewById(R.id.editFATHER_TITLE)).setText(borrowerExtra.FATHER_TITLE);
-         ((EditText) v.findViewById(R.id.editFather_FIRST_NAME)).setText(borrowerExtra.FATHER_FIRST_NAME);
+        ((EditText) v.findViewById(R.id.editFather_FIRST_NAME)).setText(borrowerExtra.FATHER_FIRST_NAME);
         ((EditText) v.findViewById(R.id.editFATHER_MIDDLE_NAME)).setText(borrowerExtra.FATHER_MIDDLE_NAME);
         ((EditText) v.findViewById(R.id.editFATHER_LAST_NAME)).setText(borrowerExtra.FATHER_LAST_NAME);
+        ((EditText) v.findViewById(R.id.editYearsInBusiness)).setText(borrowerExtra.Years_In_Business);
 
     }
 
@@ -274,7 +284,7 @@ public class FragmentBorrowerPersonal_Additional extends AbsFragment {
                 borrowerExtra.FATHER_FIRST_NAME=Utils.getNotNullText((EditText) view.findViewById(R.id.editFather_FIRST_NAME));
         borrowerExtra.FATHER_MIDDLE_NAME=Utils.getNotNullText((EditText) view.findViewById(R.id.editFATHER_MIDDLE_NAME));
                 borrowerExtra.FATHER_LAST_NAME=Utils.getNotNullText((EditText) view.findViewById(R.id.editFATHER_LAST_NAME));
-
+        borrowerExtra.save();
 
     }
 

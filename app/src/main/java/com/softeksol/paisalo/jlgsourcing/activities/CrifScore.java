@@ -28,9 +28,11 @@ import androidx.core.content.ContextCompat;
 import com.google.gson.JsonObject;
 import com.softeksol.paisalo.jlgsourcing.Global;
 import com.softeksol.paisalo.jlgsourcing.R;
+import com.softeksol.paisalo.jlgsourcing.Utilities.Utils;
 import com.softeksol.paisalo.jlgsourcing.WebOperations;
 import com.softeksol.paisalo.jlgsourcing.entities.ESignBorrower;
 import com.softeksol.paisalo.jlgsourcing.entities.ESigner;
+import com.softeksol.paisalo.jlgsourcing.entities.RangeCategory;
 import com.softeksol.paisalo.jlgsourcing.fragments.FragmentCollection;
 import com.softeksol.paisalo.jlgsourcing.handlers.DataAsyncResponseHandler;
 import com.softeksol.paisalo.jlgsourcing.retrofit.ApiClient;
@@ -39,6 +41,9 @@ import com.softeksol.paisalo.jlgsourcing.retrofit.BorrowerData;
 import com.softeksol.paisalo.jlgsourcing.retrofit.CheckCrifData;
 import com.softeksol.paisalo.jlgsourcing.retrofit.ScrifData;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 import cz.msebera.android.httpclient.Header;
@@ -52,10 +57,10 @@ public class CrifScore extends AppCompatActivity {
     ProgressBar progressBar,progressBarsmall;
     TextView textView7,textView8,textView13,textView6,text_srifScore,textView5,text_serverMessage,textView_valueEmi,text_wait;
     GifImageView gifImageView;
-    String amount,emi,score,message;
+    String amount="0",emi="0",score,message;
     int scrifScore=0;
     LinearLayout layout_design,layout_design_pending;
-    Button btnTryAgain,btnSrifScore;
+    Button btnTryAgain,btnSrifScore,btnSrifScoreSave;
     TextView textView_emi;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
@@ -63,6 +68,7 @@ public class CrifScore extends AppCompatActivity {
     String ficode,creator;
     CheckCrifData checkCrifData=new CheckCrifData();
     ESignBorrower eSignerborower;
+    String stateName;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -76,7 +82,7 @@ public class CrifScore extends AppCompatActivity {
         Log.d("TAG", "onCreate: "+i.getStringExtra("ficode"));
         ficode=i.getStringExtra("FIcode");
         creator=i.getStringExtra("creator");
-        eSignerborower = (ESignBorrower) i.getSerializableExtra("ESIGN_BORROWER");
+        eSignerborower = (ESignBorrower) i.getSerializableExtra("ESignerBorower");
         sharedPreferences = getSharedPreferences("KYCData",MODE_PRIVATE);
         editor = sharedPreferences.edit();
         progressBar=findViewById(R.id.circular_determinative_pb);
@@ -99,39 +105,25 @@ public class CrifScore extends AppCompatActivity {
         btnTryAgain.setVisibility(View.GONE);
         layout_design_pending.setVisibility(View.VISIBLE);
 
+        Log.e("LOG", eSignerborower.P_State);
+        stateName= RangeCategory.getRangesByCatKeyName("state", eSignerborower.P_State, true);
 
-        //Toast.makeText(this,borrowerdata.getTietAadhar(), Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(this,stateName, Toast.LENGTH_SHORT).show();
 
+        btnSrifScoreSave=findViewById(R.id.btnSrifScoreSave);
+        btnSrifScoreSave.setVisibility(View.GONE);
+        btnSrifScoreSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialogBreEligibility();
+            }
+        });
         btnSrifScore=findViewById(R.id.btnSrifScore);
         btnSrifScore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(btnSrifScore.getText().toString().equals("CLOSE")){
                     finish();
-                }else if(btnSrifScore.getText().toString().equals("PROCEED")){
-                    DataAsyncResponseHandler asyncResponseHandler = new DataAsyncResponseHandler(CrifScore.this, "Data Submitting", "Saving Loan Details") {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                            if (statusCode == 200) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(CrifScore.this);
-                            builder.setTitle("Thanks for choosing us!!");
-                            builder.setMessage("Submitted Loan Request has been submitted");
-                            builder.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    finish();
-                                }
-                            });
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                            Toast.makeText(CrifScore.this, error.getMessage() , Toast.LENGTH_LONG).show();
-                        }
-                    };
-                    (new WebOperations()).postEntity(CrifScore.this, "BreEligibility", "SaveBreEligibility" ,String.valueOf(getJsonForCrif(ficode,creator,amount,emi)), asyncResponseHandler);
-
                 }else{
                     text_wait.setVisibility(View.VISIBLE);
                     text_serverMessage.setText("");
@@ -201,9 +193,52 @@ public class CrifScore extends AppCompatActivity {
         JsonObject jsonObject=new JsonObject();
         jsonObject.addProperty("Ficode",ficode);
         jsonObject.addProperty("Creator",creator);
-        jsonObject.addProperty("Loan_Amt",amount);
-        jsonObject.addProperty("Emi",emi);
+        jsonObject.addProperty("Loan_Amt",40000);
+        jsonObject.addProperty("Emi",2500);
+        Log.e("TAG",jsonObject.toString());
         return jsonObject;
+    }
+
+    private void AlertDialogBreEligibility(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(CrifScore.this);
+        builder.setMessage("Do you want to Proceed to Loan?");
+        builder.setTitle("Alert !");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Yes", (DialogInterface.OnClickListener) (dialog, which) -> {
+
+            DataAsyncResponseHandler asyncResponseHandler = new DataAsyncResponseHandler(CrifScore.this, "Data Submitting", "Saving Loan Details") {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.e("TAG",statusCode+"");
+                    if (statusCode == 200) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(CrifScore.this);
+                        builder.setTitle("Thanks for choosing us!!");
+                        builder.setMessage("Your Loan Request has been Submitted");
+                        builder.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finish();
+                            }
+                        });
+                        builder.show();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Toast.makeText(CrifScore.this, error.getMessage() , Toast.LENGTH_LONG).show();
+                }
+            };
+            (new WebOperations()).postEntity(CrifScore.this, "BreEligibility", "SaveBreEligibility" ,String.valueOf(getJsonForCrif(ficode,creator,amount,emi)), asyncResponseHandler);
+
+        });
+        builder.setNegativeButton("No", (DialogInterface.OnClickListener) (dialog, which) -> {
+            dialog.cancel();
+            finish();
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
     }
 
     private void checkCrifScore(){
@@ -286,11 +321,16 @@ public class CrifScore extends AppCompatActivity {
                             textView6.setVisibility(View.GONE);
                             textView_valueEmi.setVisibility(View.GONE);
                             textView_emi.setVisibility(View.GONE);
-                            btnSrifScore.setText("TRY AGAIN");
                             layout_design.setVisibility(View.VISIBLE);
                             layout_design_pending.setVisibility(View.GONE);
+                            text_srifScore.setText("0");
+                            textView5.setText("0");
+                            scrifScore=0;
+                            btnSrifScoreSave.setVisibility(View.GONE);
+                            btnSrifScore.setVisibility(View.VISIBLE);
+                            btnSrifScore.setText("TRY AGAIN");
 
-                        }else {
+                        }else{
                             message=scrifData.getMessage();
                             String[] dataSplitString=data.split("_");
                             amount=dataSplitString[0];
@@ -313,7 +353,8 @@ public class CrifScore extends AppCompatActivity {
                                 textView_valueEmi.setVisibility(View.VISIBLE);
                                 textView6.setText(amount+" ₹");
                                 textView_valueEmi.setText(emi+" ₹");
-                                btnSrifScore.setText("PROCEED");
+                                btnSrifScoreSave.setVisibility(View.VISIBLE);
+                                btnSrifScore.setVisibility(View.GONE);
                             }else{
                                 gifImageView.setImageResource(R.drawable.crosssign);
                                 textView8.setText("Sorry!!");
@@ -323,6 +364,8 @@ public class CrifScore extends AppCompatActivity {
                                 textView6.setVisibility(View.GONE);
                                 textView_valueEmi.setVisibility(View.GONE);
                                 textView_emi.setVisibility(View.GONE);
+                                btnSrifScoreSave.setVisibility(View.GONE);
+                                btnSrifScore.setVisibility(View.VISIBLE);
                                 btnSrifScore.setText("TRY AGAIN");
 
                             }
@@ -395,28 +438,46 @@ public class CrifScore extends AppCompatActivity {
        JsonObject jsonObject=new JsonObject();
        jsonObject.addProperty("ficode",ficode);
        jsonObject.addProperty("full_name",eSignerborower.PartyName);
-      // jsonObject.addProperty("dob",eSignerborower.D);
+       jsonObject.addProperty("dob",parseDateToddMMyyyy(eSignerborower.DOB));
        jsonObject.addProperty("co",eSignerborower.FatherName);
        jsonObject.addProperty("address",eSignerborower.Address);
-     //  jsonObject.addProperty("city",eSignerborower.C);
-     //  jsonObject.addProperty("state",eSignerborower.S);
-      // jsonObject.addProperty("pin",eSignerborower.P);
-       jsonObject.addProperty("loan_amount",eSignerborower.SanctionedAmt);
+       jsonObject.addProperty("city",eSignerborower.P_City);
+       jsonObject.addProperty("state",stateName);
+       jsonObject.addProperty("pin",eSignerborower.P_Pin);
+       jsonObject.addProperty("loan_amount",eSignerborower.Loan_Amt);
        jsonObject.addProperty("mobile",eSignerborower.MobileNo);
        jsonObject.addProperty("creator",creator);
-      // jsonObject.addProperty("pancard",eSignerborower.P);
-      // jsonObject.addProperty("voter_id",eSignerborower.V);
+       jsonObject.addProperty("pancard",eSignerborower.PanNO);
+       jsonObject.addProperty("voter_id",eSignerborower.VoterID);
        jsonObject.addProperty("BrCode",eSignerborower.FoCode);
        jsonObject.addProperty("GrpCode",eSignerborower.CityCode);
-     //  jsonObject.addProperty("AadharID",eSignerborower.AadharNo);
-     //  jsonObject.addProperty("Gender",eSignerborower.G);
-     //  jsonObject.addProperty("Bank",eSignerborower.B);
-     //  jsonObject.addProperty("Income",eSignerborower.I);
-     //  jsonObject.addProperty("Expense",eSignerborower.E);
-     //  jsonObject.addProperty("LoanReason",eSignerborower.R);
-       jsonObject.addProperty("Duration",eSignerborower.Period);
+       jsonObject.addProperty("AadharID",eSignerborower.AadharNo);
+       jsonObject.addProperty("Gender",eSignerborower.Gender);
+       jsonObject.addProperty("Bank",eSignerborower.BankName);
+       jsonObject.addProperty("Income",eSignerborower.Income);
+       jsonObject.addProperty("Expense",eSignerborower.Expense);
+       jsonObject.addProperty("LoanReason",eSignerborower.Loan_Reason);
+       jsonObject.addProperty("Duration","12");
        return jsonObject;
 
+    }
+    public String parseDateToddMMyyyy(String time) {
+        String inputPattern = "yyyy-MM-dd";
+        String outputPattern = "dd-MM-yyyy";
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern);
+
+        Date date = null;
+        String str = null;
+
+        try {
+            date = inputFormat.parse(time);
+            str = outputFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Log.e("TAG",str);
+        return str;
     }
     public static String getRandomSixNumberString() {
         // It will generate 6 digit random Number.

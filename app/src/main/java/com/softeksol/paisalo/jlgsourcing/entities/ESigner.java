@@ -21,12 +21,26 @@ public class ESigner implements Serializable {
     public String Address;
     public String MobileNo;
     public String KycUuid;
+    public String Loan_Reason;
 
     public double Latitude;
     public double Longitude;
     public Date GeoDate;
 
     public String docPath;
+    public String Expense;
+    public String Income;
+    public String BankName;
+    public String Gender;
+    public String PanNO;
+    public String P_Pin;
+    public String P_City;
+    public String FoCode;
+    public String Loan_Duration;
+    public String DOB;
+    public String Loan_Amt;
+    public String VoterID;
+    public String P_State;
 
 
 }
