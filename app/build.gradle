@@ -36,7 +36,7 @@ android {
             //buildConfigField("String", 'BASE_URL', '"https://agra.paisalo.in:8445/PLServiceV82/"')
             buildConfigField("String", 'BASE_URL', '"https://agra.seil.in:8444/PLServicev82/"')
          //   buildConfigField("String", 'BASE_URL', '"https://agra.seil.in:8845/PLServiceV82Audit/"')
-       //     buildConfigField("String", 'BASE_URL', '"http://kailash.seil.in:8086/PLService/"')
+           //buildConfigField("String", 'BASE_URL', '"http://kailash.seil.in:8086/PLService/"')
             buildConfigField("String", 'EKYC_FETCH_URL', '"https://esign.paisalo.in:8445/v25/api/KycDataSZenApi/GetEKyc"')
             buildConfigField("String[]", 'AUTH_TYPE', '{"FP"}')
             buildConfigField("String", 'PROC_NAME', '""')
@@ -47,12 +47,11 @@ android {
         debug {
             minifyEnabled false
             //buildConfigField("String", 'BASE_URL', '"http://agra.seil.in:8087/PLServicev82/"')
-//            buildConfigField("String", 'BASE_URL', '"https://agra.seil.in:8444/PLServiceV82Test/"')
-            buildConfigField("String", 'BASE_URL', '"https://agra.seil.in:8444/PLServicev82/"')
+           // buildConfigField("String", 'BASE_URL', '"https://agra.seil.in:8444/PLServiceV82Test/"')
+           // buildConfigField("String", 'BASE_URL', '"https://agra.seil.in:8444/PLServicev82/"')
             //buildConfigField("String", 'BASE_URL', '"https://agra.paisalo.in:8445/PLServiceV82/"')
-            //buildConfigField("String", 'BASE_URL', '"http://kailash.seil.in:8086/PLService/"')
+            buildConfigField("String", 'BASE_URL', '"http://kailash.seil.in:8086/PLService/"')
             buildConfigField("String", 'EKYC_FETCH_URL', '"http://agra.seil.in:8085/SeilKycESign/api/KycDataSZenApi/GetEKyc"')
-
             buildConfigField("String[]", 'AUTH_TYPE', '{"FP","OTP"}')
             buildConfigField("String", 'PROC_NAME', '""')
             //buildConfigField("String", 'PROC_NAME', '"test"')
@@ -84,8 +83,8 @@ android {
         SBI {
             applicationId "net.softeksol.seil.groupfin.coorigin"
             resValue("string", "appname", "Coorigination")
-            buildConfigField("String", 'DATABASE_NAME', '"SBIPDL"')
-            //buildConfigField("String", 'DATABASE_NAME', '"SBIPDL_TEST"')
+          //  buildConfigField("String", 'DATABASE_NAME', '"SBIPDL"')
+            buildConfigField("String", 'DATABASE_NAME', '"SBIPDL_TEST"')
             buildConfigField("String",'ESIGN_APP','"net.softeksol.seil.esignseil.coorigin"')
             dimension = 'sourcing'
         }
@@ -95,7 +94,7 @@ android {
             versionName "11.0"
             applicationId "net.softeksol.seil.groupfin.sbicolending"
             resValue("string", "appname", "SBI-CoLending")
-//            buildConfigField("String", 'DATABASE_NAME', '"SBIPDLCOL"')
+            //buildConfigField("String", 'DATABASE_NAME', '"SBIPDLCOL"')
             buildConfigField("String", 'DATABASE_NAME', '"SBIPDL_TEST"')
             buildConfigField("String",'ESIGN_APP','"net.softeksol.seil.esignseil.sbicolending"')
             dimension = 'sourcing'
@@ -106,8 +105,8 @@ android {
             versionName "5.2"
             applicationId "net.softeksol.seil.paisalo.loan.app"
             resValue("string", "appname", "Paisalo Loan App")
-//            buildConfigField("String", 'DATABASE_NAME', '"SBIPDLCOL"')
-            buildConfigField("String", 'DATABASE_NAME', '"SBIPDL_TEST"')
+             buildConfigField("String", 'DATABASE_NAME', '"SBIPDLCOL"')
+            //buildConfigField("String", 'DATABASE_NAME', '"SBIPDL_TEST"')
             buildConfigField("String",'ESIGN_APP','"net.s0ofteksol.seil.esignseil.paisalo"')
             dimension = 'sourcing'
         }
@@ -183,7 +182,5 @@ dependencies {
     implementation 'com.google.zxing:core:3.3.0'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
     implementation project(':mupdf-viewer-library')
-
-    implementation 'com.karumi:dexter:6.2.2'
 
 }

@@ -167,7 +167,7 @@ public class ActivityESingList extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ESignBorrower borrower = (ESignBorrower) adapterView.getAdapter().getItem(i);
                 Intent intent;
-                Log.d("TAG", "onItemClick: "+borrower.AadharNo+esignType);
+                Log.d("TAG", "onItemClick: "+borrower.P_State);
                 if (esignType == 1) {
                     intent = new Intent(ActivityESingList.this, ActivityLoanDetails.class);
                     Log.d("TAG", "onItemClick: "+borrower.AadharNo);

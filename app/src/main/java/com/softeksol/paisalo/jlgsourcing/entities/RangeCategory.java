@@ -131,13 +131,12 @@ public class RangeCategory extends BaseModel {
                 .orderBy(RangeCategory_Table.getProperty(sortField), ascending)
                 .queryList();
     }
-    public static String getNameById(String categoryKey, String code) {
-        return (SQLite.select(RangeCategory_Table.DescriptionEn)
+
+    public static String getRangesByCatKeyName(String categoryKey, String sortField, boolean ascending) {
+        return (SQLite.select()
                 .from(RangeCategory.class)
                 .where(RangeCategory_Table.cat_key.eq(categoryKey))
-                .and(RangeCategory_Table.RangeCode.eq(code))
+                .and(RangeCategory_Table.RangeCode.eq(sortField))
                 .querySingle()).DescriptionEn;
     }
-
-
 }

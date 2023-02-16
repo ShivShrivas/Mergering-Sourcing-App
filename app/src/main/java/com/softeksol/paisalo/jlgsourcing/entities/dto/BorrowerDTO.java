@@ -45,6 +45,7 @@ public class BorrowerDTO {
     @Expose
     public String Loan_Duration;
 
+
     @Expose
     public String Loan_Reason;
 

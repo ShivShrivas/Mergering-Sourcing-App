@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
@@ -176,7 +177,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
         //borrower.fi
         borrower.isAadharVerified = "N";
-        Log.d("TAG", "onCreate: "+RangeCategory.getNameById("state","09"));
+
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(actionBar.getTitle() + "    Borrower KYC");
@@ -472,6 +473,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 loanDurationData=adapterView.getSelectedItem().toString();
+                Toast.makeText(ActivityBorrowerKyc.this, loanDurationData, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -551,19 +553,19 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                 arrayListBob.add(new RangeCategory("loan_purpose","MSME","MSME","MSME","MSME",18,"MSME",149));
                 ArrayList<RangeCategory> arrayListUco=new ArrayList<>();
                 arrayListUco.add(new RangeCategory("loan_purpose","Purchase of Agri implements/equipments","अन्य कृषि ","Purchase of Agri implements/equipments","अन्य कृषि ",4,"Purchase of Agri implements/equipments",0));
-//
-//                if (adapterView.getSelectedItem().toString().equals("BOB")){
-//                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListBob, false));
-//                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
-//
-//                }else if (adapterView.getSelectedItem().toString().equals("UCO") || adapterView.getSelectedItem().toString().equals("SBI")){
-//                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListUco, false));
-//                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
-//                }else {
+
+              /*  if (adapterView.getSelectedItem().toString().equals("BOB")){
+                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListBob, false));
+                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
+
+                }else if (adapterView.getSelectedItem().toString().equals("UCO") || adapterView.getSelectedItem().toString().equals("SBI")){
+                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListUco, false));
+                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
+                }else {*/
                     acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true), false));
                     Log.d("TAG", "onCreate: "+RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true));
 
-//                }
+               // }
 
             }
 
@@ -699,27 +701,25 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.Latitude= (float) gpsTracker.getLatitude();
         borrower.Longitude= (float) gpsTracker.getLongitude();
         borrower.Gender = ((RangeCategory) acspGender.getSelectedItem()).RangeCode.substring(0, 1);
-        if (acspRelationship.getVisibility() == View.VISIBLE && acspRelationship.getAdapter().getCount() > 0){
-
+        if (acspRelationship.getVisibility() == View.VISIBLE && acspRelationship.getAdapter().getCount() > 0)
             borrower.RelationWBorrower = ((RangeCategory) acspRelationship.getSelectedItem()).RangeCode;
-        }
         borrower.p_state = ((RangeCategory) acspAadharState.getSelectedItem()).RangeCode;
         borrower.P_ph3 = Utils.getNotNullText(tietMobile);
         borrower.PanNO = Utils.getNotNullText(tietPanNo);
         borrower.drivinglic = Utils.getNotNullText(tietDrivingLic);
         borrower.voterid = Utils.getNotNullText(tietVoterId);
         borrower.Loan_Amt = Utils.getSpinnerIntegerValue((AppCompatSpinner) v.findViewById(R.id.acspLoanAppFinanceLoanAmount));
+
         borrower.fiExtraBank.setFatherName(Utils.getNotNullText(tietFather));
         borrower.fiExtraBank.setMotherName(Utils.getNotNullText(tietMother));
         borrower.Enc_Property=Utils.getNotNullText(tietBankCIF);
         String occCode = Utils.getSpinnerStringValue((AppCompatSpinner) v.findViewById(R.id.acspOccupation));
         borrower.fiExtraBank.setCkycOccupationCode(occCode);
         borrower.Business_Detail = ((RangeCategory) acspBusinessDetail.getSelectedItem()).RangeCode;
-        borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
+            borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
         borrower.bank_ac_no = Utils.getNotNullText(tietBankAccount);
         borrower.Income = Integer.parseInt(Utils.getNotNullText(tietIncome));
         borrower.Expense = Integer.parseInt(Utils.getNotNullText(tietExpence));
-        Log.d("TAG", "loanDurationData: "+loanDurationData);
         borrower.Loan_Duration= loanDurationData;
         Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
         Log.d("TAG", "getDataFromView: "+bankName);
@@ -1278,6 +1278,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                     if (messages.size() > 0) {
                         String combineMessage = Arrays.toString(messages.values().toArray());
                         combineMessage = combineMessage.replace("[", "->").replace(", ", "\n->").replace("]", "");
+                        Log.e("combineMessage",combineMessage);
                         Utils.alert(this, combineMessage);
                     } else {
                         showSubmitBorrowerMenuItem = false;
