@@ -85,6 +85,9 @@ public class CrifScore extends AppCompatActivity {
         eSignerborower = (ESignBorrower) i.getSerializableExtra("ESignerBorower");
         sharedPreferences = getSharedPreferences("KYCData",MODE_PRIVATE);
         editor = sharedPreferences.edit();
+
+        editor.putString("Bank",eSignerborower.BankName);
+        editor.apply();
         progressBar=findViewById(R.id.circular_determinative_pb);
         progressBarsmall=findViewById(R.id.progressBar);
         textView7=findViewById(R.id.textView7);
@@ -131,7 +134,8 @@ public class CrifScore extends AppCompatActivity {
                     btnTryAgain.setVisibility(View.GONE);
                     layout_design_pending.setVisibility(View.VISIBLE);
                     layout_design.setVisibility(View.GONE);
-                    getCrifScore(checkCrifData);
+//                    getCrifScore(checkCrifData);
+                    checkCrifScore();
                 }
 
                /* text_wait.setVisibility(View.VISIBLE);
@@ -178,6 +182,7 @@ public class CrifScore extends AppCompatActivity {
                 editor.putString("Bank",parent.getSelectedItem().toString());
                 editor.apply();
                 btnSrifScore.setText("TRY AGAIN");
+                Log.d("TAG", "onItemSelected: "+sharedPreferences.getString("Bank",""));
             }
 
             @Override
@@ -250,22 +255,43 @@ public class CrifScore extends AppCompatActivity {
             @Override
             public void onResponse(Call<CheckCrifData> call, Response<CheckCrifData> response) {
                 Log.d("TAG", "onResponse: "+response.body());
-                if(response.body() != null){
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            checkCrifData=response.body();
-                            getCrifScore(checkCrifData);
-                        }
-                    },25000);
-                }else{
-                    layout_design.setVisibility(View.GONE);
-                    layout_design_pending.setVisibility(View.VISIBLE);
-                    text_serverMessage.setText("Server Error!!");
-                    btnTryAgain.setVisibility(View.VISIBLE);
-                    text_wait.setVisibility(View.GONE);
+                if (response.body().getStatus()!=false){
+                    if(response.body() != null){
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                checkCrifData=response.body();
+                                getCrifScore(checkCrifData);
+                            }
+                        },25000);
+                    }else{
+                        layout_design.setVisibility(View.GONE);
+                        layout_design_pending.setVisibility(View.VISIBLE);
+                        text_serverMessage.setText("Server Error!!");
+                        btnTryAgain.setVisibility(View.VISIBLE);
+                        text_wait.setVisibility(View.GONE);
 
+                    }
+                }else{
+                    message=response.body().getMessage();
+                    gifImageView.setImageResource(R.drawable.crosssign);
+                    textView8.setText("Sorry!!");
+                    textView8.setTextColor(ContextCompat.getColor(CrifScore.this,R.color.red));
+                    textView7.setText(message);
+                    textView13.setVisibility(View.GONE);
+                    textView6.setVisibility(View.GONE);
+                    textView_valueEmi.setVisibility(View.GONE);
+                    textView_emi.setVisibility(View.GONE);
+                    layout_design.setVisibility(View.VISIBLE);
+                    layout_design_pending.setVisibility(View.GONE);
+                    text_srifScore.setText("0");
+                    textView5.setText("0");
+                    scrifScore=0;
+                    btnSrifScoreSave.setVisibility(View.GONE);
+                    btnSrifScore.setVisibility(View.VISIBLE);
+                    btnSrifScore.setText("TRY AGAIN");
                 }
+
 
 
 
@@ -341,20 +367,22 @@ public class CrifScore extends AppCompatActivity {
                             textView5.setText(score);
 
 
-                            if(Double.parseDouble(amount)>0){
-                                gifImageView.setImageResource(R.drawable.checksign);
-                                textView8.setText("Congrats!!");
-                                textView8.setTextColor(ContextCompat.getColor(CrifScore.this,R.color.green));
-                                textView7.setText(message);
-                                textView13.setVisibility(View.VISIBLE);
-                                textView6.setVisibility(View.VISIBLE);
 
-                                textView_emi.setVisibility(View.VISIBLE);
-                                textView_valueEmi.setVisibility(View.VISIBLE);
-                                textView6.setText(amount+" ₹");
-                                textView_valueEmi.setText(emi+" ₹");
-                                btnSrifScoreSave.setVisibility(View.VISIBLE);
-                                btnSrifScore.setVisibility(View.GONE);
+                                if (Double.parseDouble(amount)>0 && response.body().getStatus()==true){
+                                    gifImageView.setImageResource(R.drawable.checksign);
+                                    textView8.setText("Congrats!!");
+                                    textView8.setTextColor(ContextCompat.getColor(CrifScore.this,R.color.green));
+                                    textView7.setText(message);
+                                    textView13.setVisibility(View.VISIBLE);
+                                    textView6.setVisibility(View.VISIBLE);
+                                    textView_emi.setVisibility(View.VISIBLE);
+                                    textView_valueEmi.setVisibility(View.VISIBLE);
+                                    textView6.setText(amount+" ₹");
+                                    textView_valueEmi.setText(emi+" ₹");
+                                    btnSrifScoreSave.setVisibility(View.VISIBLE);
+                                    btnSrifScore.setVisibility(View.GONE);
+
+
                             }else{
                                 gifImageView.setImageResource(R.drawable.crosssign);
                                 textView8.setText("Sorry!!");
@@ -453,7 +481,7 @@ public class CrifScore extends AppCompatActivity {
        jsonObject.addProperty("GrpCode",eSignerborower.CityCode);
        jsonObject.addProperty("AadharID",eSignerborower.AadharNo);
        jsonObject.addProperty("Gender",eSignerborower.Gender);
-       jsonObject.addProperty("Bank",eSignerborower.BankName);
+       jsonObject.addProperty("Bank",sharedPreferences.getString("Bank",""));
        jsonObject.addProperty("Income",eSignerborower.Income);
        jsonObject.addProperty("Expense",eSignerborower.Expense);
        jsonObject.addProperty("LoanReason",eSignerborower.Loan_Reason);
