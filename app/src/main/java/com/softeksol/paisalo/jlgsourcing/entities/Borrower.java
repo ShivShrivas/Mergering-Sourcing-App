@@ -854,8 +854,13 @@ public class Borrower extends BaseModel implements Serializable {
 //    }
 
     public boolean getPictureUpdated() {
-        DocumentStore documentStore = getPictureStore();
-        return documentStore.updateStatus;
+        try {
+            DocumentStore documentStore = getPictureStore();
+            return documentStore.updateStatus;
+        }catch (Exception e){
+            return false;
+        }
+
     }
 
     public Uri getPicture(Context context) {

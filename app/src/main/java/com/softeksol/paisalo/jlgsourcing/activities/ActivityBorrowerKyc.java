@@ -746,7 +746,6 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
        editor.putString("Expense", String.valueOf(Utils.getNotNullInt(tietExpence)));
        editor.putString("Duration", loanDurationData);
        editor.putString("VoterId", Utils.getNotNullText(tietVoterId));
-
        editor.putString("DOB", parseDateToddMMyyyy(tietDob.getText().toString()));
        editor.putString("LoanReason", borrower.Loan_Reason);
        editor.apply();
