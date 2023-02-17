@@ -172,6 +172,7 @@ public class FragmentKycScanning extends AbsFragment implements AdapterView.OnIt
         Log.e("Success0", "Data Aaya hai Image kaa");
         if (requestCode == CameraUtils.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             if (data != null) {
+
                 Log.e("Success", "Data Aaya hai Image kaa");
                 Log.e("SuccessCam", data.getData() + "");
                 uriPicture = data.getData();
