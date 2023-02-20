@@ -55,6 +55,7 @@ import com.softeksol.paisalo.jlgsourcing.adapters.AdapterListRange;
 import com.softeksol.paisalo.jlgsourcing.adapters.AdapterRecViewListDocuments;
 import com.softeksol.paisalo.jlgsourcing.entities.AadharData;
 import com.softeksol.paisalo.jlgsourcing.entities.Borrower;
+import com.softeksol.paisalo.jlgsourcing.entities.BorrowerExtra;
 import com.softeksol.paisalo.jlgsourcing.entities.BorrowerExtraBank;
 import com.softeksol.paisalo.jlgsourcing.entities.DocumentStore;
 import com.softeksol.paisalo.jlgsourcing.entities.Manager;
@@ -732,8 +733,6 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
         Log.d("TAG", "getDataFromView: "+bankName);
         borrower.BankName= bankName;
-        borrower.fiExtra.getExtraDTO().setIsAadharEntry(isAdhaarEntry);
-        borrower.fiExtra.getExtraDTO().setIsNameMatched(isNameMatched);
 
 //     editor.putString("Name",)
         editor.clear();
@@ -1362,14 +1361,18 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                                 if (tilVoterId_Name.getText().toString().trim().equals("") || tilVoterId_Name.getText().toString().trim().equals("")){
                                     Toast.makeText(activity, "Please Verify the Voter Id", Toast.LENGTH_SHORT).show();
                                 }else{
-                                    if (!tietName.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tilBankAcHolder_Name.getText().toString().trim().split(" ")[0]) || !tietName.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tilVoterId_Name.getText().toString().trim().split(" ")[0])){
+                                    if (!tietName.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tilBankAcHolder_Name.getText().toString().trim().split(" ")[0]) || !tietName.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tilVoterId_Name.getText().toString().trim().split(" ")[0]))
+                                    {
+
                                         AlertDialog.Builder builder = new AlertDialog.Builder(ActivityBorrowerKyc.this);
                                         builder.setTitle("Caution!!");
                                         builder.setMessage("want to save data without PAN card Name, Bank Account holder Name and Aadhaar Name matching");
                                         builder.setPositiveButton("Save data Forcefully", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                Toast.makeText(activity, "At this time please enter correct details", Toast.LENGTH_SHORT).show();
+                                                isNameMatched="0";
+                                                (new WebOperations()).postEntity(getApplicationContext(), "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+                                              //  Toast.makeText(activity, "At this time please enter correct details", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -1381,6 +1384,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                                         builder.create().show();
 
                                     }else{
+                                        isNameMatched="1";
                                         (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
 
                                     }

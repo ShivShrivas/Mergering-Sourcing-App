@@ -143,28 +143,7 @@ public class BorrowerExtraDTO {
     @Expose
     private String years_in_business;
 
-    @Expose
-    private String isAadharEntry;
 
-    @Expose
-    private String isNameMatched;
-
-
-    public String getIsAadharEntry() {
-        return isAadharEntry;
-    }
-
-    public void setIsAadharEntry(String isAadharEntry) {
-        this.isAadharEntry = isAadharEntry;
-    }
-
-    public String getIsNameMatched() {
-        return isNameMatched;
-    }
-
-    public void setIsNameMatched(String isNameMatched) {
-        this.isNameMatched = isNameMatched;
-    }
 
     public long getCode() {
         return Code;

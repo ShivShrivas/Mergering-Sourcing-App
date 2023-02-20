@@ -32,9 +32,6 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * Created by sachindra on 2015-10-01.
- */
 @ModelContainer
 @Table(database = DbIGL.class)
 public class Borrower extends BaseModel implements Serializable {

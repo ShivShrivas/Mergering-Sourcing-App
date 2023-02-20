@@ -69,6 +69,7 @@ public class CrifScore extends AppCompatActivity {
     CheckCrifData checkCrifData=new CheckCrifData();
     ESignBorrower eSignerborower;
     String stateName;
+    Spinner spinner;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -85,9 +86,9 @@ public class CrifScore extends AppCompatActivity {
         eSignerborower = (ESignBorrower) i.getSerializableExtra("ESignerBorower");
         sharedPreferences = getSharedPreferences("KYCData",MODE_PRIVATE);
         editor = sharedPreferences.edit();
-
         editor.putString("Bank",eSignerborower.BankName);
         editor.apply();
+
         progressBar=findViewById(R.id.circular_determinative_pb);
         progressBarsmall=findViewById(R.id.progressBar);
         textView7=findViewById(R.id.textView7);
@@ -166,17 +167,17 @@ public class CrifScore extends AppCompatActivity {
         };
 
 
-        Spinner s = (Spinner) findViewById(R.id.spinSelectBank);
+        spinner = (Spinner) findViewById(R.id.spinSelectBank);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, arraySpinner);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        s.setAdapter(adapter);
+        spinner.setAdapter(adapter);
 
         int spinnerBankPos=adapter.getPosition(sharedPreferences.getString("Bank",""));
-        s.setSelection(spinnerBankPos);
+        spinner.setSelection(spinnerBankPos);
 
 
-        s.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 editor.putString("Bank",parent.getSelectedItem().toString());
@@ -255,8 +256,8 @@ public class CrifScore extends AppCompatActivity {
             @Override
             public void onResponse(Call<CheckCrifData> call, Response<CheckCrifData> response) {
                 Log.d("TAG", "onResponse: "+response.body());
-                if (response.body().getStatus()!=false){
-                    if(response.body() != null){
+                if(response.body() != null){
+                    if (response.body().getStatus()!=false){
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -265,35 +266,33 @@ public class CrifScore extends AppCompatActivity {
                             }
                         },25000);
                     }else{
-                        layout_design.setVisibility(View.GONE);
-                        layout_design_pending.setVisibility(View.VISIBLE);
-                        text_serverMessage.setText("Server Error!!");
-                        btnTryAgain.setVisibility(View.VISIBLE);
-                        text_wait.setVisibility(View.GONE);
-
+                        message=response.body().getMessage();
+                        gifImageView.setImageResource(R.drawable.crosssign);
+                        textView8.setText("Sorry!!");
+                        textView8.setTextColor(ContextCompat.getColor(CrifScore.this,R.color.red));
+                        textView7.setText(message);
+                        textView13.setVisibility(View.GONE);
+                        textView6.setVisibility(View.GONE);
+                        textView_valueEmi.setVisibility(View.GONE);
+                        textView_emi.setVisibility(View.GONE);
+                        layout_design.setVisibility(View.VISIBLE);
+                        layout_design_pending.setVisibility(View.GONE);
+                        text_srifScore.setText("0");
+                        textView5.setText("0");
+                        scrifScore=0;
+                        btnSrifScoreSave.setVisibility(View.GONE);
+                        btnSrifScore.setVisibility(View.VISIBLE);
+                        btnSrifScore.setText("TRY AGAIN");
                     }
+
                 }else{
-                    message=response.body().getMessage();
-                    gifImageView.setImageResource(R.drawable.crosssign);
-                    textView8.setText("Sorry!!");
-                    textView8.setTextColor(ContextCompat.getColor(CrifScore.this,R.color.red));
-                    textView7.setText(message);
-                    textView13.setVisibility(View.GONE);
-                    textView6.setVisibility(View.GONE);
-                    textView_valueEmi.setVisibility(View.GONE);
-                    textView_emi.setVisibility(View.GONE);
-                    layout_design.setVisibility(View.VISIBLE);
-                    layout_design_pending.setVisibility(View.GONE);
-                    text_srifScore.setText("0");
-                    textView5.setText("0");
-                    scrifScore=0;
-                    btnSrifScoreSave.setVisibility(View.GONE);
-                    btnSrifScore.setVisibility(View.VISIBLE);
-                    btnSrifScore.setText("TRY AGAIN");
+                    layout_design.setVisibility(View.GONE);
+                    layout_design_pending.setVisibility(View.VISIBLE);
+                    text_serverMessage.setText("Server Error!!.Please try again!!");
+                    btnTryAgain.setVisibility(View.VISIBLE);
+                    text_wait.setVisibility(View.GONE);
+
                 }
-
-
-
 
             }
 
@@ -381,7 +380,7 @@ public class CrifScore extends AppCompatActivity {
                                     textView_valueEmi.setText(emi+" ₹");
                                     btnSrifScoreSave.setVisibility(View.VISIBLE);
                                     btnSrifScore.setVisibility(View.GONE);
-
+                                    spinner.setEnabled(false);
 
                             }else{
                                 gifImageView.setImageResource(R.drawable.crosssign);
