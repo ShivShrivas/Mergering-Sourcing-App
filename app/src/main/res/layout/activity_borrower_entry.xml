@@ -489,8 +489,9 @@
                             android:hint="Enter IFCS code"
                             android:inputType="textCapWords"
                             android:capitalize="characters"
+                            android:textAllCaps="true"
                             android:background="@color/white"
-                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/."
+                            android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" />
                     </com.google.android.material.textfield.TextInputLayout>

@@ -1355,44 +1355,109 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                         String borrowerJsonString = WebOperations.convertToJson(borrowerDTO);
                         //Log.d("Borrower Json", borrowerJsonString);
                         Log.d("TAG", "updateBorrower: "+borrowerJsonString);
-                        if (!tietBankAccount.getText().toString().equals("") && !tietBankAccount.getText().toString().trim().equals(null) && !tietBankCIF.getText().toString().equals("") && !tietBankCIF.getText().toString().trim().equals(null))
-                        {
-                            if (tilBankAcHolder_Name.getText().toString().equals(null) && tilBankAcHolder_Name.getText().toString().equals("")){
-                                Toast.makeText(activity, "Please Verify Bank account first", Toast.LENGTH_SHORT).show();
-                            }else{
-                                if (!tietName.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tilBankAcHolder_Name.getText().toString().trim().split(" ")[0])){
-                                    Toast.makeText(activity, "Bank Account Holder Name Not matched with Aadhaar Holder Name", Toast.LENGTH_SHORT).show();
+
+                        if (tilBankAcHolder_Name.getText().toString().equals(null) || tilBankAcHolder_Name.getText().toString().equals("")){
+                            Toast.makeText(activity, "Please Verify Bank account first", Toast.LENGTH_SHORT).show();
+                        }else {
+                            if (tietPanNo.getText().toString().equals("") || tietPanNo.getText().toString().equals(null)){
+                                if (tilVoterId_Name.getText().toString().trim().equals("") || tilVoterId_Name.getText().toString().trim().equals("")){
+                                    Toast.makeText(activity, "Please Verify the Voter Id", Toast.LENGTH_SHORT).show();
                                 }else{
-                                    if (tietPanNo.getText().toString().equals("") || tietPanNo.getText().toString().equals(null)){
-                                        if (tilVoterId_Name.getText().toString().trim().equals("") || tilVoterId_Name.getText().toString().trim().equals("")){
-                                            Toast.makeText(activity, "Please Verify the Voter Id", Toast.LENGTH_SHORT).show();
-                                        }else{
-                                            if (!tilVoterId_Name.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tietName.getText().toString().trim().split(" ")[0])){
-                                                Toast.makeText(activity, "Voter Id Holder Name Not matched with Aadhaar Holder Name", Toast.LENGTH_SHORT).show();
-                                            }else{
-                                                showSubmitBorrowerMenuItem = false;
-                                                (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+                                    if (!tietName.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tilBankAcHolder_Name.getText().toString().trim().split(" ")[0]) || !tietName.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tilVoterId_Name.getText().toString().trim().split(" ")[0])){
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(ActivityBorrowerKyc.this);
+                                        builder.setTitle("Caution!!");
+                                        builder.setMessage("want to save data without PAN card Name, Bank Account holder Name and Aadhaar Name matching");
+                                        builder.setPositiveButton("Save data Forcefully", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Toast.makeText(activity, "At this time please enter correct details", Toast.LENGTH_SHORT).show();
                                             }
-                                        }
-                                    }else if(tietVoterId.getText().toString().equals("") || tietVoterId.getText().toString().equals(null)){
-                                        if (tilPAN_Name.getText().toString().trim().equals("") || tilPAN_Name.getText().toString().trim().equals("")){
-                                            Toast.makeText(activity, "Please Verify the PAN Card", Toast.LENGTH_SHORT).show();
-                                        }else{
-                                            if (!tilPAN_Name.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tietName.getText().toString().trim().split(" ")[0])){
-                                                Toast.makeText(activity, "PAN Card Holder Name Not matched with Aadhaar Holder Name", Toast.LENGTH_SHORT).show();
-                                            }else{
-                                                showSubmitBorrowerMenuItem = false;
-                                                (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+                                        });
+                                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                Toast.makeText(activity, "Kindly verify all details", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                        builder.create().show();
+
+                                    }else{
+                                        (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+
+                                    }
+                                }
+                            }else if(tietVoterId.getText().toString().equals("") || tietVoterId.getText().toString().equals(null)){
+                                if (tilPAN_Name.getText().toString().trim().equals("") || tilPAN_Name.getText().toString().trim().equals(null)){
+                                    Toast.makeText(activity, "Please Verify the PAN Card", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    if (!tietName.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tilBankAcHolder_Name.getText().toString().trim().split(" ")[0]) || !tietName.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tilPAN_Name.getText().toString().trim().split(" ")[0])){
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(ActivityBorrowerKyc.this);
+                                        builder.setTitle("Caution!!");
+                                        builder.setMessage("want to save  data without PAN card Name, Bank Account holder Name and Aadhaar Name matching");
+                                        builder.setPositiveButton("Save data Forcefully", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Toast.makeText(activity, "At this time please enter correct details", Toast.LENGTH_SHORT).show();
 
                                             }
-                                        }
+                                        });
+                                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                Toast.makeText(activity, "Kindly verify all details", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                        builder.create().show();
+                                    }else{
+                                     (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+
                                     }
                                 }
                             }
-                        }else {
-                            Toast.makeText(activity, "Please enter bank account number and it's IFSC code", Toast.LENGTH_SHORT).show();
                         }
-                        
+
+
+
+
+
+//                        if (!tietBankAccount.getText().toString().equals("") && !tietBankAccount.getText().toString().trim().equals(null) && !tietBankCIF.getText().toString().equals("") && !tietBankCIF.getText().toString().trim().equals(null))
+//                        {
+//                            if (tilBankAcHolder_Name.getText().toString().equals(null) && tilBankAcHolder_Name.getText().toString().equals("")){
+//                                Toast.makeText(activity, "Please Verify Bank account first", Toast.LENGTH_SHORT).show();
+//                            }else{
+//                                if (!tietName.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tilBankAcHolder_Name.getText().toString().trim().split(" ")[0])){
+//                                    Toast.makeText(activity, "Bank Account Holder Name Not matched with Aadhaar Holder Name", Toast.LENGTH_SHORT).show();
+//                                }else{
+//                                    if (tietPanNo.getText().toString().equals("") || tietPanNo.getText().toString().equals(null)){
+//                                        if (tilVoterId_Name.getText().toString().trim().equals("") || tilVoterId_Name.getText().toString().trim().equals("")){
+//                                            Toast.makeText(activity, "Please Verify the Voter Id", Toast.LENGTH_SHORT).show();
+//                                        }else{
+//                                            if (!tilVoterId_Name.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tietName.getText().toString().trim().split(" ")[0])){
+//                                                Toast.makeText(activity, "Voter Id Holder Name Not matched with Aadhaar Holder Name", Toast.LENGTH_SHORT).show();
+//                                            }else{
+//                                                showSubmitBorrowerMenuItem = false;
+//                                                (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+//                                            }
+//                                        }
+//                                    }else if(tietVoterId.getText().toString().equals("") || tietVoterId.getText().toString().equals(null)){
+//                                        if (tilPAN_Name.getText().toString().trim().equals("") || tilPAN_Name.getText().toString().trim().equals("")){
+//                                            Toast.makeText(activity, "Please Verify the PAN Card", Toast.LENGTH_SHORT).show();
+//                                        }else{
+//                                            if (!tilPAN_Name.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tietName.getText().toString().trim().split(" ")[0])){
+//                                                Toast.makeText(activity, "PAN Card Holder Name Not matched with Aadhaar Holder Name", Toast.LENGTH_SHORT).show();
+//                                            }else{
+//                                                showSubmitBorrowerMenuItem = false;
+//                                                (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+//
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }else {
+//                            Toast.makeText(activity, "Please enter bank account number and it's IFSC code", Toast.LENGTH_SHORT).show();
+//                        }
+//
 
                     }
                 } else {
