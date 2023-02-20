@@ -112,8 +112,12 @@ public class BorrowerExtra extends BaseModel implements Serializable {
     @Column
     long FiID;
 
+    @Column
+    String isAadharEntry;
+    @Column
+    String isNameMatched;
 
-//////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
 
     @Expose
     @Column
@@ -233,23 +237,23 @@ public class BorrowerExtra extends BaseModel implements Serializable {
     public String OCCUPATION_TYPE;
 
 
-       @Expose
+    @Expose
     @Column
     public String RESERVATN_CATEGORY;
 
 
 
-      @Expose
+    @Expose
     @Column
     public String FATHER_TITLE;
 
 
-     @Expose
+    @Expose
     @Column
     public String FATHER_FIRST_NAME;
 
 
-      @Expose
+    @Expose
     @Column
     public String FATHER_MIDDLE_NAME;
 
@@ -291,6 +295,8 @@ public class BorrowerExtra extends BaseModel implements Serializable {
                 ", IMEINO='" + IMEINO + '\'' +
                 ", id=" + id +
                 ", FiID=" + FiID +
+                ", isAadharEntry=" + isAadharEntry +
+                ", isNameMatched=" + isNameMatched +
         ", AGRICULTURAL_INCOME='"+AGRICULTURAL_INCOME+'\''+
                 ", SOC_ATTR_2_INCOME='"+SOC_ATTR_2_INCOME+'\''+
         ", SOC_ATTR_3_LAND_HOLD='"+SOC_ATTR_3_LAND_HOLD+'\''+
@@ -352,6 +358,8 @@ public class BorrowerExtra extends BaseModel implements Serializable {
         borrowerExtraDTO.setSchoolingChildren(this.SchoolingChildren);
         borrowerExtraDTO.setSpendOnChildren(this.SpendOnChildren);
         borrowerExtraDTO.setTag(this.Tag);
+        borrowerExtraDTO.setIsAadharEntry(this.isAadharEntry);
+        borrowerExtraDTO.setIsNameMatched(this.isNameMatched);
                borrowerExtraDTO.setAGRICULTURAL_INCOME(this.AGRICULTURAL_INCOME);
        borrowerExtraDTO.setSOC_ATTR_2_INCOME(this.SOC_ATTR_2_INCOME);
                borrowerExtraDTO.setSOC_ATTR_3_LAND_HOLD(this.SOC_ATTR_3_LAND_HOLD);
@@ -416,6 +424,8 @@ public class BorrowerExtra extends BaseModel implements Serializable {
         this.SchoolingChildren = borrowerExtraDTO.getSchoolingChildren();
         this.SpendOnChildren = borrowerExtraDTO.getSpendOnChildren();
         this.Tag = borrowerExtraDTO.getTag();
+        this.isAadharEntry= borrowerExtraDTO.getIsAadharEntry();
+        this.isNameMatched= borrowerExtraDTO.getIsNameMatched();
         this.AGRICULTURAL_INCOME=borrowerExtraDTO.getAGRICULTURAL_INCOME();
                 this.SOC_ATTR_2_INCOME=borrowerExtraDTO.getSOC_ATTR_2_INCOME();
         this.SOC_ATTR_3_LAND_HOLD=borrowerExtraDTO.getSOC_ATTR_3_LAND_HOLD();

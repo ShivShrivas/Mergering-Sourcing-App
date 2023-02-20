@@ -5,9 +5,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class CheckCrifData {
 
+
     @SerializedName("data")
     @Expose
-    private Data data;
+    private Data data ;
+
     @SerializedName("message")
     @Expose
     private String message;
@@ -163,3 +165,4 @@ public class CheckCrifData {
         }
     }
 }
+

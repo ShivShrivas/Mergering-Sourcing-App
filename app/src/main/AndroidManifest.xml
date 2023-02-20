@@ -37,21 +37,26 @@
         tools:ignore="LockedOrientationActivity"
         tools:replace="android:allowBackup,android:supportsRtl">
         <activity
+            android:name=".DelearOnBoard"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name="com.softeksol.paisalo.ESign.activities.ActivityLoanDetails"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
- <activity
+        <activity
             android:name="com.softeksol.paisalo.jlgsourcing.activities.CrifScore"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name="com.softeksol.paisalo.ESign.activities.ActivityESignWithDocumentPL"
             android:exported="false">
