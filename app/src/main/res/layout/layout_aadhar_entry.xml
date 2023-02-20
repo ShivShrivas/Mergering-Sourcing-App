@@ -571,7 +571,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_marginTop="-5dp"
-        android:text="Voter Id Holder Name"
         android:textColor="@color/dull_green"
         android:textSize="15dp"
 
@@ -629,7 +628,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
-        android:text="PAN Card Holder Name"
         android:layout_marginTop="-5dp"
         android:textColor="@color/dull_green"
         android:textSize="15dp"

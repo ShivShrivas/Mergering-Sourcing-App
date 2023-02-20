@@ -718,8 +718,19 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         borrower.Business_Detail = ((RangeCategory) acspBusinessDetail.getSelectedItem()).RangeCode;
             borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
         borrower.bank_ac_no = Utils.getNotNullText(tietBankAccount);
-        borrower.Income = Integer.parseInt(Utils.getNotNullText(tietIncome));
-        borrower.Expense = Integer.parseInt(Utils.getNotNullText(tietExpence));
+        try {
+
+            borrower.Income = Integer.parseInt(Utils.getNotNullText(tietIncome));
+        }catch (Exception e){
+            tietIncome.setError("Please enter income");
+        }
+
+        try {
+
+            borrower.Expense = Integer.parseInt(Utils.getNotNullText(tietExpence));
+        }catch (Exception e){
+            tietExpence.setError("Please enter expense");
+        }
         borrower.Loan_Duration= loanDurationData;
         Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
         Log.d("TAG", "getDataFromView: "+bankName);
@@ -1280,7 +1291,6 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                         Log.e("combineMessage",combineMessage);
                         Utils.alert(this, combineMessage);
                     } else {
-                        showSubmitBorrowerMenuItem = false;
                         invalidateOptionsMenu();
                         if (!chkTvTopup.isChecked()) borrower.OldCaseCode = null;
                         borrower.Oth_Prop_Det = null;
@@ -1346,8 +1356,45 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                         String borrowerJsonString = WebOperations.convertToJson(borrowerDTO);
                         //Log.d("Borrower Json", borrowerJsonString);
                         Log.d("TAG", "updateBorrower: "+borrowerJsonString);
+                        if (!tietBankAccount.getText().toString().equals("") && !tietBankAccount.getText().toString().trim().equals(null) && !tietBankCIF.getText().toString().equals("") && !tietBankCIF.getText().toString().trim().equals(null))
+                        {
+                            if (tilBankAcHolder_Name.getText().toString().equals(null) && tilBankAcHolder_Name.getText().toString().equals("")){
+                                Toast.makeText(activity, "Please Verify Bank account first", Toast.LENGTH_SHORT).show();
+                            }else{
+                                if (!tietName.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tilBankAcHolder_Name.getText().toString().trim().split(" ")[0])){
+                                    Toast.makeText(activity, "Bank Account Holder Name Not matched with Aadhaar Holder Name", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    if (tietPanNo.getText().toString().equals("") || tietPanNo.getText().toString().equals(null)){
+                                        if (tilVoterId_Name.getText().toString().trim().equals("") || tilVoterId_Name.getText().toString().trim().equals("")){
+                                            Toast.makeText(activity, "Please Verify the Voter Id", Toast.LENGTH_SHORT).show();
+                                        }else{
+                                            if (!tilVoterId_Name.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tietName.getText().toString().trim().split(" ")[0])){
+                                                Toast.makeText(activity, "Voter Id Holder Name Not matched with Aadhaar Holder Name", Toast.LENGTH_SHORT).show();
+                                            }else{
+                                                showSubmitBorrowerMenuItem = false;
+                                                (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+                                            }
+                                        }
+                                    }else if(tietVoterId.getText().toString().equals("") || tietVoterId.getText().toString().equals(null)){
+                                        if (tilPAN_Name.getText().toString().trim().equals("") || tilPAN_Name.getText().toString().trim().equals("")){
+                                            Toast.makeText(activity, "Please Verify the PAN Card", Toast.LENGTH_SHORT).show();
+                                        }else{
+                                            if (!tilPAN_Name.getText().toString().trim().split(" ")[0].equalsIgnoreCase(tietName.getText().toString().trim().split(" ")[0])){
+                                                Toast.makeText(activity, "PAN Card Holder Name Not matched with Aadhaar Holder Name", Toast.LENGTH_SHORT).show();
+                                            }else{
+                                                showSubmitBorrowerMenuItem = false;
+                                                (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
 
-                        (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }else {
+                            Toast.makeText(activity, "Please enter bank account number and it's IFSC code", Toast.LENGTH_SHORT).show();
+                        }
+                        
+
                     }
                 } else {
                     Utils.alert(this, "There is at least one errors in the Aadhar Data");
