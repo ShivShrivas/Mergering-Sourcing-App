@@ -557,7 +557,6 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
               /*  if (adapterView.getSelectedItem().toString().equals("BOB")){
                     acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListBob, false));
-                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
 
                 }else if (adapterView.getSelectedItem().toString().equals("UCO") || adapterView.getSelectedItem().toString().equals("SBI")){
                     acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListUco, false));
