@@ -1791,7 +1791,6 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         };
 
         String jsonString = WebOperations.convertToJson(documentStore.getDocumentDTO());
-        //Log.d("Document Json",jsonString);
         String apiPath = documentStore.checklistid == 0 ? "/api/uploaddocs/savefipicjson" : "/api/uploaddocs/savefidocsjson";
         (new WebOperations()).postEntity(activity, BuildConfig.BASE_URL + apiPath, jsonString, responseHandler);
     }
