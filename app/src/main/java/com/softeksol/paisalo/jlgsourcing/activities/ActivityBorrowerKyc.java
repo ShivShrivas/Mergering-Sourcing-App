@@ -155,6 +155,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     String loanDurationData,stateData,genderData;
     boolean aadharNumberentry=false;
     String isAdhaarEntry ="M";
+    String isNameMatched ="0";
     String bankName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -718,14 +719,11 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
         borrower.bank_ac_no = Utils.getNotNullText(tietBankAccount);
         try {
-
             borrower.Income = Integer.parseInt(Utils.getNotNullText(tietIncome));
         }catch (Exception e){
             tietIncome.setError("Please enter income");
         }
-
         try {
-
             borrower.Expense = Integer.parseInt(Utils.getNotNullText(tietExpence));
         }catch (Exception e){
             tietExpence.setError("Please enter expense");
@@ -734,7 +732,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
         Log.d("TAG", "getDataFromView: "+bankName);
         borrower.BankName= bankName;
-        borrower.isAdhaarEntry= isAdhaarEntry;
+        borrower.fiExtra.getExtraDTO().setIsAadharEntry(isAdhaarEntry);
+        borrower.fiExtra.getExtraDTO().setIsNameMatched(isNameMatched);
 
 //     editor.putString("Name",)
         editor.clear();
@@ -852,7 +851,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                 Log.d("CheckXMLDATA3","AadharData:->" + scanContent);
                 if (scanFormat != null) {
                     try {
-                        isAdhaarEntry ="A";
+                        isAdhaarEntry ="S";
                         setAadharContent(scanContent);
                     } catch (Exception e) {
                         e.printStackTrace();
