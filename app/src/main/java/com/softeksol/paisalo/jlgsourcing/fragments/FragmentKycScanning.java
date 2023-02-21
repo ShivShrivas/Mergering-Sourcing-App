@@ -136,6 +136,7 @@ public class FragmentKycScanning extends AbsFragment implements AdapterView.OnIt
         mDocumentStore = (DocumentStore) adapterView.getItemAtPosition(i);
         //Utils.showSnakbar(getView(),String.valueOf(mDocumentStore.checklistid));
         //Log.d("Document Store", mDocumentStore.toString());
+
         if (mDocumentStore.updateStatus == true) {
             Utils.showSnakbar(getView(), "This Document Already uploaded");
         } else {
@@ -213,6 +214,7 @@ public class FragmentKycScanning extends AbsFragment implements AdapterView.OnIt
                                     Log.e("CroppedImageMyBitmap", bitmap+ "");
 
                                     mDocumentStore.imagePath = croppedImage.getPath();
+
                                     //mDocumentStore.imageshow = ImageString;
                                     mDocumentStore.save();
 

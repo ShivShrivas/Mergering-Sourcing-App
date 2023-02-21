@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -55,10 +56,8 @@ import com.softeksol.paisalo.jlgsourcing.adapters.AdapterListRange;
 import com.softeksol.paisalo.jlgsourcing.adapters.AdapterRecViewListDocuments;
 import com.softeksol.paisalo.jlgsourcing.entities.AadharData;
 import com.softeksol.paisalo.jlgsourcing.entities.Borrower;
-import com.softeksol.paisalo.jlgsourcing.entities.BorrowerExtra;
 import com.softeksol.paisalo.jlgsourcing.entities.BorrowerExtraBank;
 import com.softeksol.paisalo.jlgsourcing.entities.DocumentStore;
-import com.softeksol.paisalo.jlgsourcing.entities.FiDocGeoLoc;
 import com.softeksol.paisalo.jlgsourcing.entities.Manager;
 import com.softeksol.paisalo.jlgsourcing.entities.RangeCategory;
 import com.softeksol.paisalo.jlgsourcing.entities.dto.BorrowerDTO;
@@ -121,7 +120,7 @@ import java.time.ZonedDateTime;
 public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnClickListener,AdapterRecViewListDocuments.ItemListener, CameraUtils.OnCameraCaptureUpdate { //, CameraUtils.OnCameraCaptureUpdate
     private final AppCompatActivity activity = this;
     private Borrower borrower;
-    private FiDocGeoLoc fiDocGeoLoc;
+//    private FiDocGeoLoc fiDocGeoLoc;
     //private BorrowerExtraBank borrowerExtraBank;
     private Uri uriPicture;
     private ImageView imgViewScanQR;
@@ -141,7 +140,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     private TextWatcher ageTextWatcher;
     private Calendar myCalendar;
     private DatePickerDialog.OnDateSetListener dateSetListner;
-    ImageView voterIdCheckSign,panCheckSign,bankAcCheckSign;
+    Button voterIdCheckSign,panCheckSign,bankAcCheckSign;
     private MyTextWatcher aadharTextChangeListner;
     private RecyclerView recyclerView;
     private AdapterRecViewListDocuments adapterRecViewListDocuments;
@@ -160,6 +159,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     String isAdhaarEntry ="M";
     String isNameMatched ="0";
     String bankName;
+    String PANHolderName, VoterIdName, BankAccountHolderName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,10 +167,10 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         manager = (Manager) getIntent().getSerializableExtra(Global.MANAGER_TAG);
 
 // Storing data into SharedPreferences
-         sharedPreferences = getSharedPreferences("KYCData",MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("KYCData",MODE_PRIVATE);
 
 // Creating an Editor object to edit(write to the file)
-      editor = sharedPreferences.edit();
+        editor = sharedPreferences.edit();
 
         //borrower = new Borrower();
         borrower = new Borrower(manager.Creator, manager.TAG, manager.FOCode, manager.AreaCd, IglPreferences.getPrefString(ActivityBorrowerKyc.this, SEILIGL.USER_ID, ""));
@@ -520,6 +520,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                     cardValidate(tietPanNo.getText().toString().trim(),"pancard","");
                 } else {
                     tilPAN_Name.setVisibility(View.GONE);
+
                     tietPanNo.setError("Enter PAN");
                 }
             }
@@ -564,15 +565,89 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                     acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListUco, false));
                     Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
                 }else {*/
-                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true), false));
-                    Log.d("TAG", "onCreate: "+RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true));
+                acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true), false));
+                Log.d("TAG", "onCreate: "+RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true));
 
-               // }
+                // }
 
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        tietPanNo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                panCheckSign.setEnabled(true);
+                panCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+        tietBankAccount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                bankAcCheckSign.setEnabled(true);
+                bankAcCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        tietBankCIF.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                bankAcCheckSign.setEnabled(true);
+                bankAcCheckSign .setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        tietVoterId.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                voterIdCheckSign.setEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
 
             }
         });
@@ -718,7 +793,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         String occCode = Utils.getSpinnerStringValue((AppCompatSpinner) v.findViewById(R.id.acspOccupation));
         borrower.fiExtraBank.setCkycOccupationCode(occCode);
         borrower.Business_Detail = ((RangeCategory) acspBusinessDetail.getSelectedItem()).RangeCode;
-            borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
+        borrower.Loan_Reason = ((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode;
         borrower.bank_ac_no = Utils.getNotNullText(tietBankAccount);
         try {
             borrower.Income = Integer.parseInt(Utils.getNotNullText(tietIncome));
@@ -735,30 +810,29 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         Log.d("TAG", "getDataFromView: "+bankName);
         borrower.BankName= bankName;
 
-
 //     editor.putString("Name",)
         editor.clear();
         editor.apply();
-       editor.putString("Adhaar",tietAadharId.getText().toString());
-       editor.putString("Name", Utils.getNotNullText(tietName));
-       editor.putString("Age", String.valueOf(Utils.getNotNullInt(tietAge)));
-       editor.putString("Gur", Utils.getNotNullText(tietGuardian));
-       editor.putString("Address", Utils.getNotNullText(tietAddress1)+Utils.getNotNullText(tietAddress2)+Utils.getNotNullText(tietAddress3));
-       editor.putString("City", Utils.getNotNullText(tietCity));
-       editor.putString("PIN", tietPinCode.getText().toString());
-       editor.putString("LoanAmount", String.valueOf(borrower.Loan_Amt));
-       editor.putString("State",stateData);
-       editor.putString("Mobile",tietMobile.getText().toString());
-       editor.putString("PAN",tietPanNo.getText().toString());
-       editor.putString("Gender", genderData);
-       editor.putString("Bank", banktype.getSelectedItem().toString());
-       editor.putString("Income", String.valueOf(Utils.getNotNullInt(tietIncome)));
-       editor.putString("Expense", String.valueOf(Utils.getNotNullInt(tietExpence)));
-       editor.putString("Duration", loanDurationData);
-       editor.putString("VoterId", Utils.getNotNullText(tietVoterId));
-       editor.putString("DOB", parseDateToddMMyyyy(tietDob.getText().toString()));
-       editor.putString("LoanReason", borrower.Loan_Reason);
-       editor.apply();
+        editor.putString("Adhaar",tietAadharId.getText().toString());
+        editor.putString("Name", Utils.getNotNullText(tietName));
+        editor.putString("Age", String.valueOf(Utils.getNotNullInt(tietAge)));
+        editor.putString("Gur", Utils.getNotNullText(tietGuardian));
+        editor.putString("Address", Utils.getNotNullText(tietAddress1)+Utils.getNotNullText(tietAddress2)+Utils.getNotNullText(tietAddress3));
+        editor.putString("City", Utils.getNotNullText(tietCity));
+        editor.putString("PIN", tietPinCode.getText().toString());
+        editor.putString("LoanAmount", String.valueOf(borrower.Loan_Amt));
+        editor.putString("State",stateData);
+        editor.putString("Mobile",tietMobile.getText().toString());
+        editor.putString("PAN",tietPanNo.getText().toString());
+        editor.putString("Gender", genderData);
+        editor.putString("Bank", banktype.getSelectedItem().toString());
+        editor.putString("Income", String.valueOf(Utils.getNotNullInt(tietIncome)));
+        editor.putString("Expense", String.valueOf(Utils.getNotNullInt(tietExpence)));
+        editor.putString("Duration", loanDurationData);
+        editor.putString("VoterId", Utils.getNotNullText(tietVoterId));
+        editor.putString("DOB", parseDateToddMMyyyy(tietDob.getText().toString()));
+        editor.putString("LoanReason", borrower.Loan_Reason);
+        editor.apply();
 
     }
     public String parseDateToddMMyyyy(String time) {
@@ -905,88 +979,88 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
     private void setAadharContent(String aadharDataString) throws Exception {
 //        try {
-            Log.d("CheckXMLDATA2", "AadharData:->" + aadharDataString);
-            if (aadharDataString.toUpperCase().contains("XML")) {
+        Log.d("CheckXMLDATA2", "AadharData:->" + aadharDataString);
+        if (aadharDataString.toUpperCase().contains("XML")) {
 
-                Log.d("XML printing", "AadharData:->" + aadharDataString);
-                //AadharData aadharData = AadharUtils.getAadhar(aadharDataString);
-                AadharData aadharData = AadharUtils.getAadhar(AadharUtils.ParseAadhar(aadharDataString));
+            Log.d("XML printing", "AadharData:->" + aadharDataString);
+            //AadharData aadharData = AadharUtils.getAadhar(aadharDataString);
+            AadharData aadharData = AadharUtils.getAadhar(AadharUtils.ParseAadhar(aadharDataString));
 
-                if (aadharData.AadharId != null) {
+            if (aadharData.AadharId != null) {
 
-                    Borrower borrower1 = Borrower.getBorrower(aadharData.AadharId);
-                    if (borrower1 != null) {
-                        borrower = borrower1;
-                        setDataToView(activity.findViewById(android.R.id.content).getRootView());
-                        tietAadharId.setEnabled(false);
+                Borrower borrower1 = Borrower.getBorrower(aadharData.AadharId);
+                if (borrower1 != null) {
+                    borrower = borrower1;
+                    setDataToView(activity.findViewById(android.R.id.content).getRootView());
+                    tietAadharId.setEnabled(false);
+                    return;
+                }
+                Log.d("TAG", "setAadharContent: done1");
+                if (chkTvTopup.isChecked()) {
+                    if (tietAadharId.getText().toString().equals(aadharData.AadharId)) {
+                        Utils.alert(this, "Aadhar ID did not match with Topup Case");
                         return;
                     }
-                    Log.d("TAG", "setAadharContent: done1");
-                    if (chkTvTopup.isChecked()) {
-                        if (tietAadharId.getText().toString().equals(aadharData.AadharId)) {
-                            Utils.alert(this, "Aadhar ID did not match with Topup Case");
-                            return;
-                        }
-                    }
-                    borrower.aadharid = aadharData.AadharId;
-                    Log.d("TAG", "setAadharContent: done2");
-
                 }
+                borrower.aadharid = aadharData.AadharId;
+                Log.d("TAG", "setAadharContent: done2");
 
-                if (aadharData.Address2 == null) {
-                    aadharData.Address2 = aadharData.Address3;
-                    aadharData.Address3 = null;
-                } else if (aadharData.Address2.trim().equals("")) {
-                    aadharData.Address2 = aadharData.Address3;
-                    aadharData.Address3 = null;
-                }
-                if (aadharData.Address1 == null) {
-                    aadharData.Address1 = aadharData.Address2;
-                    aadharData.Address2 = aadharData.Address3;
-                    aadharData.Address3 = null;
-                } else if (aadharData.Address1.trim().equals("")) {
-                    aadharData.Address1 = aadharData.Address2;
-                    aadharData.Address2 = aadharData.Address3;
-                    aadharData.Address3 = null;
-                }                    Log.d("TAG", "setAadharContent: done3");
-
-                borrower.isAadharVerified = aadharData.isAadharVerified;
-                borrower.setNames(aadharData.Name);
-                borrower.DOB = aadharData.DOB;
-                borrower.Age = aadharData.Age;
-                borrower.Gender = aadharData.Gender;
-                borrower.setGuardianNames(aadharData.GurName==null?"":aadharData.GurName);
-                borrower.P_city = aadharData.City;
-                borrower.p_pin = aadharData.Pin;
-                borrower.P_Add1 = aadharData.Address1;
-                borrower.P_add2 = aadharData.Address2;
-                borrower.P_add3 = aadharData.Address3;
-                borrower.p_state = AadharUtils.getStateCode(aadharData.State);
-                setDataToView(this.findViewById(android.R.id.content).getRootView());
-                validateBorrower();
-                tietAge.setEnabled(false);
-                tietDob.setEnabled(false);
-                aadharNumberentry=true;
-
-            }  else {
-
-                final BigInteger bigIntScanData = new BigInteger(aadharDataString, 10);
-                Log.e("testbigin======", "AadharData:->" + bigIntScanData);
-                // 2. Convert BigInt to Byte Array
-                final byte byteScanData[] = bigIntScanData.toByteArray();
-
-                // 3. Decompress Byte Array
-                final byte[] decompByteScanData = decompressData(byteScanData);
-
-                // 4. Split the byte array using delimiter
-                List<byte[]> parts = separateData(decompByteScanData);
-                // Throw error if there are no parts
-                Log.e("Parts======11======> ", "part data =====> " + parts.toString());
-                decodeData(parts);
-                decodeSignature(decompByteScanData);
-                decodeMobileEmail(decompByteScanData);
-                 aadharNumberentry=true;
             }
+
+            if (aadharData.Address2 == null) {
+                aadharData.Address2 = aadharData.Address3;
+                aadharData.Address3 = null;
+            } else if (aadharData.Address2.trim().equals("")) {
+                aadharData.Address2 = aadharData.Address3;
+                aadharData.Address3 = null;
+            }
+            if (aadharData.Address1 == null) {
+                aadharData.Address1 = aadharData.Address2;
+                aadharData.Address2 = aadharData.Address3;
+                aadharData.Address3 = null;
+            } else if (aadharData.Address1.trim().equals("")) {
+                aadharData.Address1 = aadharData.Address2;
+                aadharData.Address2 = aadharData.Address3;
+                aadharData.Address3 = null;
+            }                    Log.d("TAG", "setAadharContent: done3");
+
+            borrower.isAadharVerified = aadharData.isAadharVerified;
+            borrower.setNames(aadharData.Name);
+            borrower.DOB = aadharData.DOB;
+            borrower.Age = aadharData.Age;
+            borrower.Gender = aadharData.Gender;
+            borrower.setGuardianNames(aadharData.GurName==null?"":aadharData.GurName);
+            borrower.P_city = aadharData.City;
+            borrower.p_pin = aadharData.Pin;
+            borrower.P_Add1 = aadharData.Address1;
+            borrower.P_add2 = aadharData.Address2;
+            borrower.P_add3 = aadharData.Address3;
+            borrower.p_state = AadharUtils.getStateCode(aadharData.State);
+            setDataToView(this.findViewById(android.R.id.content).getRootView());
+            validateBorrower();
+            tietAge.setEnabled(false);
+            tietDob.setEnabled(false);
+            aadharNumberentry=true;
+
+        }  else {
+
+            final BigInteger bigIntScanData = new BigInteger(aadharDataString, 10);
+            Log.e("testbigin======", "AadharData:->" + bigIntScanData);
+            // 2. Convert BigInt to Byte Array
+            final byte byteScanData[] = bigIntScanData.toByteArray();
+
+            // 3. Decompress Byte Array
+            final byte[] decompByteScanData = decompressData(byteScanData);
+
+            // 4. Split the byte array using delimiter
+            List<byte[]> parts = separateData(decompByteScanData);
+            // Throw error if there are no parts
+            Log.e("Parts======11======> ", "part data =====> " + parts.toString());
+            decodeData(parts);
+            decodeSignature(decompByteScanData);
+            decodeMobileEmail(decompByteScanData);
+            aadharNumberentry=true;
+        }
 //            } catch(Exception ex) {
 //            Utils.alert(this, ex.getMessage());
 //        }
@@ -1065,7 +1139,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             Log.e("signature======>","signature===> "+signature);
         } catch (UnsupportedEncodingException e) {
             Log.e("Exception", "Decoding Signature of QRcode, ISO-8859-1 not supported: " + e.toString());
-           // throw new QrCodeException("Decoding Signature of QRcode, ISO-8859-1 not supported",e);
+            // throw new QrCodeException("Decoding Signature of QRcode, ISO-8859-1 not supported",e);
         }
 
     }
@@ -1157,7 +1231,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         }
 
         if (decodedData.get(7-inc).equals("")||decodedData.get(7-inc).equals(null)){
-           // tietCity.setEnabled(true);
+            // tietCity.setEnabled(true);
         }else{
             borrower.P_city = decodedData.get(7-inc);
         }
@@ -1169,7 +1243,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
 
         if (decodedData.get(10-inc).equals("")||decodedData.get(10-inc).equals(null)){
-          //  tietAddress3.setEnabled(true);
+            //  tietAddress3.setEnabled(true);
         }else{
             borrower.P_add3 = decodedData.get(10-inc);
         }
@@ -1189,9 +1263,9 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
         //borrower.P_city = decodedData.get(7);
 
-       // borrower.P_Add1 = decodedData.get(9);
-       // borrower.P_add2 = decodedData.get(8);
-       // borrower.P_add3 = decodedData.get(10);
+        // borrower.P_Add1 = decodedData.get(9);
+        // borrower.P_add2 = decodedData.get(8);
+        // borrower.P_add3 = decodedData.get(10);
 
         setDataToView(this.findViewById(android.R.id.content).getRootView());
         validateBorrower();
@@ -1312,10 +1386,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                                     borrower.updateFiCode(FiCode, borrower.Tag);
                                     borrower.Oth_Prop_Det = null;
                                     borrower.save();
-                                    fiDocGeoLoc=new FiDocGeoLoc(borrower.Code,borrower.Creator);
-                                    fiDocGeoLoc.IsAadhaarEntry=isAdhaarEntry;
-                                    fiDocGeoLoc.IsNameVerify=isNameMatched;
-                                    fiDocGeoLoc.save();
+//                                    fiDocGeoLoc=new FiDocGeoLoc(FiCode,borrower.Creator,isAdhaarEntry,isNameMatched);
+//                                    fiDocGeoLoc.save();
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(ActivityBorrowerKyc.this);
                                     builder.setTitle("Borrower KYC");
@@ -1379,7 +1451,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                                             public void onClick(DialogInterface dialog, int which) {
                                                 isNameMatched="0";
                                                 (new WebOperations()).postEntity(getApplicationContext(), "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
-                                              //  Toast.makeText(activity, "At this time please enter correct details", Toast.LENGTH_SHORT).show();
+                                                //  Toast.makeText(activity, "At this time please enter correct details", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -1419,7 +1491,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                                         });
                                         builder.create().show();
                                     }else{
-                                     (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
+                                        (new WebOperations()).postEntity(this, "posfi", "savefi", borrowerJsonString, dataAsyncResponseHandler);
 
                                     }
                                 }
@@ -1543,7 +1615,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                     //JSONObject jo = null;
                     //Type listType = new TypeToken<List<OldFIById>>() {}.getType();
                     List<OldFIById> oldFIByIds = WebOperations.convertToObjectArray(jsonString);
-                    
+
 
                     /*try {
                         jo = (new JSONArray(jsonString)).getJSONObject(0);
@@ -1581,7 +1653,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         };
         RequestParams params = new RequestParams();
         params.add("Aadharid", aadharId);
-            (new WebOperations()).getEntity(this, "posdb", "getaadharstatus", params, dataAsyncResponseHandler);
+        (new WebOperations()).getEntity(this, "posdb", "getaadharstatus", params, dataAsyncResponseHandler);
 
     }
 
@@ -1657,10 +1729,10 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
 
             case R.id.tietExpence:
-                    if (editText.getText().toString().trim().length() < 1) {
-                        editText.setError("Enter Expense");
-                        retVal = false;
-                    }else {
+                if (editText.getText().toString().trim().length() < 1) {
+                    editText.setError("Enter Expense");
+                    retVal = false;
+                }else {
                     retVal = true;
                     editText.setError(null);
                 }
@@ -1692,8 +1764,10 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     }
 
     private void cardValidate(String id,String type,String bankIfsc) {
+
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setCanceledOnTouchOutside(false);
+
         progressDialog.setIndeterminate(false);
         progressDialog.setTitle("Fetching Details");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -1708,48 +1782,66 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                     try {
                         tilPAN_Name.setVisibility(View.VISIBLE);
                         tilPAN_Name.setText(response.body().get("data").getAsJsonObject().get("name").getAsString());
-                        panCheckSign.setImageResource(R.drawable.check_sign_ic_green);
+                        panCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic_green));
+                        panCheckSign.setEnabled(false);
                     }catch (Exception e){
                         tilPAN_Name.setVisibility(View.VISIBLE);
                         tilPAN_Name.setText("Card Holder Name Not Found");
-                        panCheckSign.setImageResource(R.drawable.check_sign_ic);
+                        panCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
+                        panCheckSign.setEnabled(true);
+
                     }
                     progressDialog.cancel();
                 }else if(type.equals("voterid")){
                     try {
                         tilVoterId_Name.setVisibility(View.VISIBLE);
+
                         tilVoterId_Name.setText(response.body().get("data").getAsJsonObject().get("name").getAsString());
-                        voterIdCheckSign.setImageResource(R.drawable.check_sign_ic_green);
+                        voterIdCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic_green));
+                        voterIdCheckSign.setEnabled(false);
                     }catch (Exception e){
                         tilVoterId_Name.setVisibility(View.VISIBLE);
+
                         tilVoterId_Name.setText("Card Holder Name Not Found");
-                        voterIdCheckSign.setImageResource(R.drawable.check_sign_ic);
+                        voterIdCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
+                        voterIdCheckSign.setEnabled(true);
+
                     }
                     progressDialog.cancel();
 
                 }else if(type.equals("bankaccount")){
                     try {
                         tilBankAcHolder_Name.setVisibility(View.VISIBLE);
+
                         tilBankAcHolder_Name.setText(response.body().get("data").getAsJsonObject().get("full_name").getAsString());
-                        bankAcCheckSign.setImageResource(R.drawable.check_sign_ic_green);
+                        bankAcCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic_green));
+                        bankAcCheckSign.setEnabled(false);
                     }catch (Exception e){
                         tilBankAcHolder_Name.setVisibility(View.VISIBLE);
                         tilBankAcHolder_Name.setText("Account Holder Name Not Found");
-                        bankAcCheckSign.setImageResource(R.drawable.check_sign_ic);
+                        bankAcCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
+                        bankAcCheckSign.setEnabled(true);
+
                     }
                     progressDialog.cancel();
+
                 }
             }
+
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 if (type.equals("pancard")){
                     tilPAN_Name.setText(t.getMessage());
-                    panCheckSign.setImageResource(R.drawable.check_sign_ic);
+                    panCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
+
                     progressDialog.cancel();
+
                 }else{
                     tilVoterId_Name.setText(t.getMessage());
                     progressDialog.cancel();
-                    voterIdCheckSign.setImageResource(R.drawable.check_sign_ic);
+                    voterIdCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
+
+
                 }
             }
         });
