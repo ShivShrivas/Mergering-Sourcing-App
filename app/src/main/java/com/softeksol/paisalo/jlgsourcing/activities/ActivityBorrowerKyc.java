@@ -174,7 +174,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
         //borrower = new Borrower();
         borrower = new Borrower(manager.Creator, manager.TAG, manager.FOCode, manager.AreaCd, IglPreferences.getPrefString(ActivityBorrowerKyc.this, SEILIGL.USER_ID, ""));
-        fiDocGeoLoc=new FiDocGeoLoc();
+
         borrower.fiExtra = null;
         //borrowerExtraBank=new BorrowerExtraBank(manager.Creator,manager.TAG);
         borrower.associateExtraBank(new BorrowerExtraBank(manager.Creator, manager.TAG));
@@ -734,10 +734,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
         Log.d("TAG", "getDataFromView: "+bankName);
         borrower.BankName= bankName;
-        fiDocGeoLoc.FiCode=borrower.FiID;
-        fiDocGeoLoc.Creator=borrower.Creator;
-        fiDocGeoLoc.IsAadhaarEntry=isAdhaarEntry;
-        fiDocGeoLoc.IsNameVerify=isNameMatched;
+
 
 //     editor.putString("Name",)
         editor.clear();
@@ -1314,6 +1311,10 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                                     borrower.updateFiCode(FiCode, borrower.Tag);
                                     borrower.Oth_Prop_Det = null;
                                     borrower.save();
+                                    fiDocGeoLoc=new FiDocGeoLoc(borrower.Code,borrower.Creator);
+                                    fiDocGeoLoc.IsAadhaarEntry=isAdhaarEntry;
+                                    fiDocGeoLoc.IsNameVerify=isNameMatched;
+                                    fiDocGeoLoc.save();
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(ActivityBorrowerKyc.this);
                                     builder.setTitle("Borrower KYC");

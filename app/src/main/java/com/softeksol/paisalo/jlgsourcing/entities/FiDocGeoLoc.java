@@ -85,6 +85,11 @@ public class FiDocGeoLoc extends BaseModel implements Serializable {
     public Float PassBook_Longitude_Last;
 
 
+    public FiDocGeoLoc(long Code,String creator) {
+        this.FiCode = Code;
+        this.Creator = creator;
+    }
+
     @Override
     public String toString() {
         return "FiDocGeoLoc{" +
