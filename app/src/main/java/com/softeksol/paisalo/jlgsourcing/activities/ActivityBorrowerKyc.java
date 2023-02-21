@@ -17,7 +17,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -59,6 +58,7 @@ import com.softeksol.paisalo.jlgsourcing.entities.Borrower;
 import com.softeksol.paisalo.jlgsourcing.entities.BorrowerExtra;
 import com.softeksol.paisalo.jlgsourcing.entities.BorrowerExtraBank;
 import com.softeksol.paisalo.jlgsourcing.entities.DocumentStore;
+import com.softeksol.paisalo.jlgsourcing.entities.FiDocGeoLoc;
 import com.softeksol.paisalo.jlgsourcing.entities.Manager;
 import com.softeksol.paisalo.jlgsourcing.entities.RangeCategory;
 import com.softeksol.paisalo.jlgsourcing.entities.dto.BorrowerDTO;
@@ -121,6 +121,7 @@ import java.time.ZonedDateTime;
 public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnClickListener,AdapterRecViewListDocuments.ItemListener, CameraUtils.OnCameraCaptureUpdate { //, CameraUtils.OnCameraCaptureUpdate
     private final AppCompatActivity activity = this;
     private Borrower borrower;
+    private FiDocGeoLoc fiDocGeoLoc;
     //private BorrowerExtraBank borrowerExtraBank;
     private Uri uriPicture;
     private ImageView imgViewScanQR;
@@ -140,7 +141,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     private TextWatcher ageTextWatcher;
     private Calendar myCalendar;
     private DatePickerDialog.OnDateSetListener dateSetListner;
-    Button voterIdCheckSign,panCheckSign,bankAcCheckSign;
+    ImageView voterIdCheckSign,panCheckSign,bankAcCheckSign;
     private MyTextWatcher aadharTextChangeListner;
     private RecyclerView recyclerView;
     private AdapterRecViewListDocuments adapterRecViewListDocuments;
@@ -159,7 +160,6 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     String isAdhaarEntry ="M";
     String isNameMatched ="0";
     String bankName;
-    String PANHolderName, VoterIdName, BankAccountHolderName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -520,7 +520,6 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                     cardValidate(tietPanNo.getText().toString().trim(),"pancard","");
                 } else {
                     tilPAN_Name.setVisibility(View.GONE);
-
                     tietPanNo.setError("Enter PAN");
                 }
             }
@@ -574,74 +573,6 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-        tietPanNo.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                panCheckSign.setEnabled(true);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-
-        tietBankAccount.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                bankAcCheckSign.setEnabled(true);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-        tietBankCIF.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                bankAcCheckSign.setEnabled(true);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
-        tietVoterId.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    voterIdCheckSign.setEnabled(true);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
 
             }
         });
@@ -803,6 +734,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
         Log.d("TAG", "getDataFromView: "+bankName);
         borrower.BankName= bankName;
+
 
 //     editor.putString("Name",)
         editor.clear();
@@ -1379,6 +1311,10 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                                     borrower.updateFiCode(FiCode, borrower.Tag);
                                     borrower.Oth_Prop_Det = null;
                                     borrower.save();
+                                    fiDocGeoLoc=new FiDocGeoLoc(borrower.Code,borrower.Creator);
+                                    fiDocGeoLoc.IsAadhaarEntry=isAdhaarEntry;
+                                    fiDocGeoLoc.IsNameVerify=isNameMatched;
+                                    fiDocGeoLoc.save();
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(ActivityBorrowerKyc.this);
                                     builder.setTitle("Borrower KYC");
@@ -1755,10 +1691,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     }
 
     private void cardValidate(String id,String type,String bankIfsc) {
-
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setCanceledOnTouchOutside(false);
-
         progressDialog.setIndeterminate(false);
         progressDialog.setTitle("Fetching Details");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -1773,66 +1707,48 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                     try {
                         tilPAN_Name.setVisibility(View.VISIBLE);
                         tilPAN_Name.setText(response.body().get("data").getAsJsonObject().get("name").getAsString());
-                        panCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic_green));
-                        panCheckSign.setEnabled(false);
+                        panCheckSign.setImageResource(R.drawable.check_sign_ic_green);
                     }catch (Exception e){
                         tilPAN_Name.setVisibility(View.VISIBLE);
                         tilPAN_Name.setText("Card Holder Name Not Found");
-                        panCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
-                        panCheckSign.setEnabled(true);
-
+                        panCheckSign.setImageResource(R.drawable.check_sign_ic);
                     }
                     progressDialog.cancel();
                 }else if(type.equals("voterid")){
                     try {
                         tilVoterId_Name.setVisibility(View.VISIBLE);
-
                         tilVoterId_Name.setText(response.body().get("data").getAsJsonObject().get("name").getAsString());
-                        voterIdCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic_green));
-                        voterIdCheckSign.setEnabled(false);
+                        voterIdCheckSign.setImageResource(R.drawable.check_sign_ic_green);
                     }catch (Exception e){
                         tilVoterId_Name.setVisibility(View.VISIBLE);
-
                         tilVoterId_Name.setText("Card Holder Name Not Found");
-                        voterIdCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
-                        voterIdCheckSign.setEnabled(true);
-
+                        voterIdCheckSign.setImageResource(R.drawable.check_sign_ic);
                     }
                     progressDialog.cancel();
 
                 }else if(type.equals("bankaccount")){
                     try {
                         tilBankAcHolder_Name.setVisibility(View.VISIBLE);
-
                         tilBankAcHolder_Name.setText(response.body().get("data").getAsJsonObject().get("full_name").getAsString());
-                        bankAcCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic_green));
-                        bankAcCheckSign.setEnabled(false);
+                        bankAcCheckSign.setImageResource(R.drawable.check_sign_ic_green);
                     }catch (Exception e){
                         tilBankAcHolder_Name.setVisibility(View.VISIBLE);
                         tilBankAcHolder_Name.setText("Account Holder Name Not Found");
-                        bankAcCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
-                        bankAcCheckSign.setEnabled(true);
-
+                        bankAcCheckSign.setImageResource(R.drawable.check_sign_ic);
                     }
                     progressDialog.cancel();
-
                 }
             }
-
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 if (type.equals("pancard")){
                     tilPAN_Name.setText(t.getMessage());
-                    panCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
-
+                    panCheckSign.setImageResource(R.drawable.check_sign_ic);
                     progressDialog.cancel();
-
                 }else{
                     tilVoterId_Name.setText(t.getMessage());
                     progressDialog.cancel();
-                    voterIdCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
-
-
+                    voterIdCheckSign.setImageResource(R.drawable.check_sign_ic);
                 }
             }
         });
