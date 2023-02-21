@@ -644,6 +644,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 voterIdCheckSign.setEnabled(true);
+                voterIdCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
+
             }
 
             @Override
