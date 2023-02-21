@@ -58,6 +58,7 @@ import com.softeksol.paisalo.jlgsourcing.entities.Borrower;
 import com.softeksol.paisalo.jlgsourcing.entities.BorrowerExtra;
 import com.softeksol.paisalo.jlgsourcing.entities.BorrowerExtraBank;
 import com.softeksol.paisalo.jlgsourcing.entities.DocumentStore;
+import com.softeksol.paisalo.jlgsourcing.entities.FiDocGeoLoc;
 import com.softeksol.paisalo.jlgsourcing.entities.Manager;
 import com.softeksol.paisalo.jlgsourcing.entities.RangeCategory;
 import com.softeksol.paisalo.jlgsourcing.entities.dto.BorrowerDTO;
@@ -120,6 +121,7 @@ import java.time.ZonedDateTime;
 public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnClickListener,AdapterRecViewListDocuments.ItemListener, CameraUtils.OnCameraCaptureUpdate { //, CameraUtils.OnCameraCaptureUpdate
     private final AppCompatActivity activity = this;
     private Borrower borrower;
+    private FiDocGeoLoc fiDocGeoLoc;
     //private BorrowerExtraBank borrowerExtraBank;
     private Uri uriPicture;
     private ImageView imgViewScanQR;
@@ -172,7 +174,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
         //borrower = new Borrower();
         borrower = new Borrower(manager.Creator, manager.TAG, manager.FOCode, manager.AreaCd, IglPreferences.getPrefString(ActivityBorrowerKyc.this, SEILIGL.USER_ID, ""));
-
+        fiDocGeoLoc=new FiDocGeoLoc();
         borrower.fiExtra = null;
         //borrowerExtraBank=new BorrowerExtraBank(manager.Creator,manager.TAG);
         borrower.associateExtraBank(new BorrowerExtraBank(manager.Creator, manager.TAG));
@@ -518,7 +520,6 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                     cardValidate(tietPanNo.getText().toString().trim(),"pancard","");
                 } else {
                     tilPAN_Name.setVisibility(View.GONE);
-
                     tietPanNo.setError("Enter PAN");
                 }
             }
@@ -733,6 +734,10 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
         Log.d("TAG", "getDataFromView: "+bankName);
         borrower.BankName= bankName;
+        fiDocGeoLoc.FiCode=borrower.FiID;
+        fiDocGeoLoc.Creator=borrower.Creator;
+        fiDocGeoLoc.IsAadhaarEntry=isAdhaarEntry;
+        fiDocGeoLoc.IsNameVerify=isNameMatched;
 
 //     editor.putString("Name",)
         editor.clear();
@@ -1685,10 +1690,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     }
 
     private void cardValidate(String id,String type,String bankIfsc) {
-
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setCanceledOnTouchOutside(false);
-
         progressDialog.setIndeterminate(false);
         progressDialog.setTitle("Fetching Details");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -1708,58 +1711,43 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                         tilPAN_Name.setVisibility(View.VISIBLE);
                         tilPAN_Name.setText("Card Holder Name Not Found");
                         panCheckSign.setImageResource(R.drawable.check_sign_ic);
-
                     }
                     progressDialog.cancel();
                 }else if(type.equals("voterid")){
                     try {
                         tilVoterId_Name.setVisibility(View.VISIBLE);
-
                         tilVoterId_Name.setText(response.body().get("data").getAsJsonObject().get("name").getAsString());
                         voterIdCheckSign.setImageResource(R.drawable.check_sign_ic_green);
-
                     }catch (Exception e){
                         tilVoterId_Name.setVisibility(View.VISIBLE);
-
                         tilVoterId_Name.setText("Card Holder Name Not Found");
                         voterIdCheckSign.setImageResource(R.drawable.check_sign_ic);
-
                     }
                     progressDialog.cancel();
 
                 }else if(type.equals("bankaccount")){
                     try {
                         tilBankAcHolder_Name.setVisibility(View.VISIBLE);
-
                         tilBankAcHolder_Name.setText(response.body().get("data").getAsJsonObject().get("full_name").getAsString());
                         bankAcCheckSign.setImageResource(R.drawable.check_sign_ic_green);
-
                     }catch (Exception e){
                         tilBankAcHolder_Name.setVisibility(View.VISIBLE);
-
                         tilBankAcHolder_Name.setText("Account Holder Name Not Found");
                         bankAcCheckSign.setImageResource(R.drawable.check_sign_ic);
-
                     }
                     progressDialog.cancel();
-
                 }
             }
-
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 if (type.equals("pancard")){
                     tilPAN_Name.setText(t.getMessage());
                     panCheckSign.setImageResource(R.drawable.check_sign_ic);
-
                     progressDialog.cancel();
-
                 }else{
                     tilVoterId_Name.setText(t.getMessage());
                     progressDialog.cancel();
                     voterIdCheckSign.setImageResource(R.drawable.check_sign_ic);
-
-
                 }
             }
         });
