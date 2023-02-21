@@ -58,6 +58,7 @@ import com.softeksol.paisalo.jlgsourcing.entities.AadharData;
 import com.softeksol.paisalo.jlgsourcing.entities.Borrower;
 import com.softeksol.paisalo.jlgsourcing.entities.BorrowerExtraBank;
 import com.softeksol.paisalo.jlgsourcing.entities.DocumentStore;
+import com.softeksol.paisalo.jlgsourcing.entities.FiDocGeoLoc;
 import com.softeksol.paisalo.jlgsourcing.entities.Manager;
 import com.softeksol.paisalo.jlgsourcing.entities.RangeCategory;
 import com.softeksol.paisalo.jlgsourcing.entities.dto.BorrowerDTO;
@@ -120,7 +121,7 @@ import java.time.ZonedDateTime;
 public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnClickListener,AdapterRecViewListDocuments.ItemListener, CameraUtils.OnCameraCaptureUpdate { //, CameraUtils.OnCameraCaptureUpdate
     private final AppCompatActivity activity = this;
     private Borrower borrower;
-//    private FiDocGeoLoc fiDocGeoLoc;
+    private DocumentStore documentStore;
     //private BorrowerExtraBank borrowerExtraBank;
     private Uri uriPicture;
     private ImageView imgViewScanQR;
@@ -181,8 +182,12 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
         //borrower.fi
         borrower.isAadharVerified = "N";
+        documentPic=new DocumentStore("KANPUR",222333,"","",100,"hii",211,"userid","fieldName",null,23.23445F,23.4556F,43,3434,"qwertyuio",false,"qwertyuio","M","0");
 
+//        documentStore=new DocumentStore(222333,"KANPUR");
+        documentPic.save();
 
+        Log.d("TAG", "onCreate233: "+DocumentStore.getFiData(222333));
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(actionBar.getTitle() + "    Borrower KYC");
 
@@ -1390,6 +1395,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                                     borrower.save();
 //                                    fiDocGeoLoc=new FiDocGeoLoc(FiCode,borrower.Creator,isAdhaarEntry,isNameMatched);
 //                                    fiDocGeoLoc.save();
+
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(ActivityBorrowerKyc.this);
                                     builder.setTitle("Borrower KYC");

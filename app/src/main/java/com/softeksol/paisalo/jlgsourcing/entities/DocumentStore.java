@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 import static com.softeksol.paisalo.jlgsourcing.Utilities.DateUtils.formatdateTimeStrings;
@@ -104,6 +105,12 @@ DocumentStore extends BaseModel {
     @Column
     public String imagePath;
 
+    @Expose
+    @Column
+    public String IsAadhaarEntry;
+    @Expose
+    @Column
+    public String IsNameVerify;
 //    @Column
 //    public String imageshow;
 
@@ -121,6 +128,34 @@ DocumentStore extends BaseModel {
     }
 
     public DocumentStore() {
+    }
+
+    public DocumentStore( String Creator,long ficode,String fitag,String imageTag,int GuarantorSerial,String remarks,long checklistid,String userid,String fieldname,Date creationDate,float latitude,float longitude,long DocI,long FiID,String apiRelativePath,boolean updateStatus,String imagePath,String IsAadhaarEntry,String IsNameVerify) {
+        this.Creator=Creator;
+        this.ficode=ficode;
+        this.fitag=fitag;
+        this.imageTag=imageTag;
+        this.GuarantorSerial=GuarantorSerial;
+        this.remarks=remarks;
+        this.checklistid=checklistid;
+        this.userid=userid;
+        this.fieldname=fieldname;
+        this.creationDate=creationDate;
+        this.latitude=latitude;
+        this.longitude=longitude;
+        this.DocId=DocI;
+        this.FiID=FiID;
+        this.apiRelativePath=apiRelativePath;
+        this.updateStatus=updateStatus;
+        this.imagePath=imagePath;
+        this.IsAadhaarEntry=IsAadhaarEntry;
+        this.IsNameVerify=IsNameVerify;
+
+    }
+
+    public DocumentStore(long fiCode,String creator) {
+        this.ficode=ficode;
+        this.Creator=creator;
     }
 
     public DocumentStore(DocumentStoreDTO dto) {
@@ -234,6 +269,9 @@ DocumentStore extends BaseModel {
         return documentStore;
     }
 
+
+
+
     public DocumentStore getDocumentStore(Guarantor guarantor, int checkListId, String remarks) {
         DocumentStore documentStore;
         documentStore = SQLite.select().from(DocumentStore.class)
@@ -295,6 +333,14 @@ DocumentStore extends BaseModel {
                 ", apiRelativePath='" + apiRelativePath + '\'' +
                 ", updateStatus=" + updateStatus +
                 ", imagePath='" + imagePath + '\'' +
+                ", IsAadhaarEntry='" + IsAadhaarEntry + '\'' +
+                ", IsNameVerify='" + IsNameVerify + '\'' +
                 '}';
+    }
+   public static DocumentStore getFiData(long fiCode){
+       return SQLite.select()
+                .from(DocumentStore.class)
+                .where(DocumentStore_Table.ficode.eq(fiCode))
+                .querySingle();
     }
 }

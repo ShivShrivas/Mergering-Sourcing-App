@@ -14,6 +14,7 @@ import com.softeksol.paisalo.jlgsourcing.entities.BorrowerExtra;
 import com.softeksol.paisalo.jlgsourcing.entities.BorrowerFamilyExpenses;
 import com.softeksol.paisalo.jlgsourcing.entities.BorrowerFamilyLoan;
 import com.softeksol.paisalo.jlgsourcing.entities.BorrowerFamilyMember;
+import com.softeksol.paisalo.jlgsourcing.entities.FiDocGeoLoc;
 
 
 /**
@@ -26,7 +27,7 @@ public class DbIGL {
     //public static final String NAME = BuildConfig.DATABASE_NAME;
    //public static final String NAME = IglPreferences.getPrefString(, SEILIGL.DATABASE_NAME, "");
 
-    public static final int VERSION = 13;
+    public static final int VERSION = 14;
 
     /*@Migration(version = 5, database = DbIGL.class)
     public static class Migration5 extends AlterTableMigration<Guarantor> {
@@ -177,4 +178,6 @@ public class DbIGL {
             addColumn(SQLiteType.TEXT,"FATHER_LAST_NAME");
         }
     }
+
+
 }

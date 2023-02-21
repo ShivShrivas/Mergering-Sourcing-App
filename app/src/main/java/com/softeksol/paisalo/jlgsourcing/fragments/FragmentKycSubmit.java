@@ -247,7 +247,7 @@ public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemCli
         };
 
         String jsonString = WebOperations.convertToJson(documentStore.getDocumentDTO());
-        //Log.d("Document Json",jsonString);
+        Log.d("Document Json",jsonString);
         String apiPath = documentStore.checklistid == 0 ? "/api/uploaddocs/savefipicjson" : "/api/uploaddocs/savefidocsjson";
         (new WebOperations()).postEntity(getContext(), BuildConfig.BASE_URL + apiPath, jsonString, responseHandler);
     }
