@@ -1306,6 +1306,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                                 String jsonString = new String(responseBody);
                                 Log.d("Response Data",jsonString);
                                 try {
+
                                     JSONObject jo = new JSONObject(jsonString);
                                     long FiCode = jo.getLong("FiCode");
                                     borrower.updateFiCode(FiCode, borrower.Tag);
