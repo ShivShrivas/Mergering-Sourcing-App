@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -139,7 +140,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     private TextWatcher ageTextWatcher;
     private Calendar myCalendar;
     private DatePickerDialog.OnDateSetListener dateSetListner;
-    ImageView voterIdCheckSign,panCheckSign,bankAcCheckSign;
+    Button voterIdCheckSign,panCheckSign,bankAcCheckSign;
     private MyTextWatcher aadharTextChangeListner;
     private RecyclerView recyclerView;
     private AdapterRecViewListDocuments adapterRecViewListDocuments;
@@ -158,6 +159,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
     String isAdhaarEntry ="M";
     String isNameMatched ="0";
     String bankName;
+    String PANHolderName, VoterIdName, BankAccountHolderName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -572,6 +574,74 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        tietPanNo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                panCheckSign.setEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+
+        tietBankAccount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                bankAcCheckSign.setEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        tietBankCIF.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                bankAcCheckSign.setEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        tietVoterId.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    voterIdCheckSign.setEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
 
             }
         });
@@ -1703,11 +1773,13 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                     try {
                         tilPAN_Name.setVisibility(View.VISIBLE);
                         tilPAN_Name.setText(response.body().get("data").getAsJsonObject().get("name").getAsString());
-                        panCheckSign.setImageResource(R.drawable.check_sign_ic_green);
+                        panCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic_green));
+                        panCheckSign.setEnabled(false);
                     }catch (Exception e){
                         tilPAN_Name.setVisibility(View.VISIBLE);
                         tilPAN_Name.setText("Card Holder Name Not Found");
-                        panCheckSign.setImageResource(R.drawable.check_sign_ic);
+                        panCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
+                        panCheckSign.setEnabled(true);
 
                     }
                     progressDialog.cancel();
@@ -1716,13 +1788,14 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                         tilVoterId_Name.setVisibility(View.VISIBLE);
 
                         tilVoterId_Name.setText(response.body().get("data").getAsJsonObject().get("name").getAsString());
-                        voterIdCheckSign.setImageResource(R.drawable.check_sign_ic_green);
-
+                        voterIdCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic_green));
+                        voterIdCheckSign.setEnabled(false);
                     }catch (Exception e){
                         tilVoterId_Name.setVisibility(View.VISIBLE);
 
                         tilVoterId_Name.setText("Card Holder Name Not Found");
-                        voterIdCheckSign.setImageResource(R.drawable.check_sign_ic);
+                        voterIdCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
+                        voterIdCheckSign.setEnabled(true);
 
                     }
                     progressDialog.cancel();
@@ -1732,13 +1805,13 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                         tilBankAcHolder_Name.setVisibility(View.VISIBLE);
 
                         tilBankAcHolder_Name.setText(response.body().get("data").getAsJsonObject().get("full_name").getAsString());
-                        bankAcCheckSign.setImageResource(R.drawable.check_sign_ic_green);
-
+                        bankAcCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic_green));
+                        bankAcCheckSign.setEnabled(false);
                     }catch (Exception e){
                         tilBankAcHolder_Name.setVisibility(View.VISIBLE);
-
                         tilBankAcHolder_Name.setText("Account Holder Name Not Found");
-                        bankAcCheckSign.setImageResource(R.drawable.check_sign_ic);
+                        bankAcCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
+                        bankAcCheckSign.setEnabled(true);
 
                     }
                     progressDialog.cancel();
@@ -1750,14 +1823,14 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 if (type.equals("pancard")){
                     tilPAN_Name.setText(t.getMessage());
-                    panCheckSign.setImageResource(R.drawable.check_sign_ic);
+                    panCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
 
                     progressDialog.cancel();
 
                 }else{
                     tilVoterId_Name.setText(t.getMessage());
                     progressDialog.cancel();
-                    voterIdCheckSign.setImageResource(R.drawable.check_sign_ic);
+                    voterIdCheckSign.setBackground(getResources().getDrawable(R.drawable.check_sign_ic));
 
 
                 }
