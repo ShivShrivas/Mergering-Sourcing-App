@@ -105,12 +105,7 @@ DocumentStore extends BaseModel {
     @Column
     public String imagePath;
 
-    @Expose
-    @Column
-    public String IsAadhaarEntry;
-    @Expose
-    @Column
-    public String IsNameVerify;
+
 //    @Column
 //    public String imageshow;
 
@@ -148,9 +143,6 @@ DocumentStore extends BaseModel {
         this.apiRelativePath=apiRelativePath;
         this.updateStatus=updateStatus;
         this.imagePath=imagePath;
-        this.IsAadhaarEntry=IsAadhaarEntry;
-        this.IsNameVerify=IsNameVerify;
-
     }
 
     public DocumentStore(long fiCode,String creator) {
@@ -333,8 +325,6 @@ DocumentStore extends BaseModel {
                 ", apiRelativePath='" + apiRelativePath + '\'' +
                 ", updateStatus=" + updateStatus +
                 ", imagePath='" + imagePath + '\'' +
-                ", IsAadhaarEntry='" + IsAadhaarEntry + '\'' +
-                ", IsNameVerify='" + IsNameVerify + '\'' +
                 '}';
     }
    public static DocumentStore getFiData(long fiCode){

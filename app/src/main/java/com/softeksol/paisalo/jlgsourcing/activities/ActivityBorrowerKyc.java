@@ -182,10 +182,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
 
         //borrower.fi
         borrower.isAadharVerified = "N";
-        documentPic=new DocumentStore("KANPUR",222333,"","",100,"hii",211,"userid","fieldName",null,23.23445F,23.4556F,43,3434,"qwertyuio",false,"qwertyuio","M","0");
 
-//        documentStore=new DocumentStore(222333,"KANPUR");
-        documentPic.save();
 
         Log.d("TAG", "onCreate233: "+DocumentStore.getFiData(222333));
         ActionBar actionBar = getSupportActionBar();
@@ -1392,6 +1389,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                                     long FiCode = jo.getLong("FiCode");
                                     borrower.updateFiCode(FiCode, borrower.Tag);
                                     borrower.Oth_Prop_Det = null;
+                                    borrower.IsNameVerify=isNameMatched;
+                                    borrower.isAdhaarEntry=isAdhaarEntry;
                                     borrower.save();
 //                                    fiDocGeoLoc=new FiDocGeoLoc(FiCode,borrower.Creator,isAdhaarEntry,isNameMatched);
 //                                    fiDocGeoLoc.save();

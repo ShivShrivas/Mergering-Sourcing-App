@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.softeksol.paisalo.jlgsourcing.BuildConfig;
 import com.softeksol.paisalo.jlgsourcing.Global;
@@ -45,6 +46,7 @@ import cz.msebera.android.httpclient.Header;
  */
 public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemClickListener {
     private List<DocumentStore> documentStores = new ArrayList<>();
+    JsonObject jsonObject;
     private Borrower borrower;
 
 
@@ -85,6 +87,7 @@ public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemCli
 
         }
         adapterListDocuments = new AdapterListDocuments(getActivity(), R.layout.layout_item_loan_app_kyc_capture, documentStores);
+        jsonObject=new JsonObject();
         setHasOptionsMenu(true);
         /* client.setThreadPool(Executors.newSingleThreadExecutor());
         client.setTimeout(70000);
@@ -98,6 +101,7 @@ public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemCli
         listView = (ListView) view.findViewById(R.id.lvList);
         listView.setAdapter(adapterListDocuments);
         listView.setOnItemClickListener(this);
+
         Log.e("KYCSUBMIT","DONE");
         return view;
     }
@@ -148,6 +152,7 @@ public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemCli
 
 //        Log.e("DOCUMENTStoreChecking2",borrower.getPicture()+"");
         if (borrower == null) {
+
             documentStores.addAll(SQLite.select().from(DocumentStore.class)
                     .where(DocumentStore_Table.updateStatus.eq(false))
                     .and(DocumentStore_Table.ficode.greaterThan(0))
@@ -193,7 +198,8 @@ public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemCli
         documentStore.apiRelativePath = mDocumentStore.apiRelativePath;
         documentStore.updateStatus = mDocumentStore.updateStatus;
 
-
+//        Log.d("TAG", "onResume: "+  Borrower.getBorrowerIsNameVerifyEntryType(mDocumentStore.ficode, mDocumentStore.Creator));
+//        Log.d("TAG", "onResume: "+  Borrower.getBorrowerIsAdharEntryEntryType(mDocumentStore.ficode, mDocumentStore.Creator));
 
         if (mDocumentStore.imagePath!=null){
             Log.e("KycSubmitImagePath",mDocumentStore.imagePath+"");
@@ -201,6 +207,10 @@ public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemCli
             //documentStore.imagePath = mDocumentStore.imagePath;
             //documentStore.imagePath = "file:" + mDocumentStore.imagePath;
             documentStore.imagePath = mDocumentStore.imagePath;
+            jsonObject.addProperty("FiCode",mDocumentStore.ficode);
+            jsonObject.addProperty("Creator",mDocumentStore.Creator);
+            jsonObject.addProperty("IsAadhaarEntry",Borrower.getBorrowerIsAdharEntryEntryType(mDocumentStore.ficode, mDocumentStore.Creator));
+            jsonObject.addProperty("IsNameVerify",Borrower.getBorrowerIsNameVerifyEntryType(mDocumentStore.ficode, mDocumentStore.Creator));
             uploadKycJson(documentStore, view);
         }else {
             Toast.makeText(getContext(), "ImagePath_Null", Toast.LENGTH_SHORT).show();
@@ -218,6 +228,7 @@ public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemCli
 
 
     private void uploadKycJson(final DocumentStore documentStore, final View view) {
+        
 
         DataAsyncResponseHandler responseHandler = new DataAsyncResponseHandler(getContext(), "Loan Financing", "Uploading " + DocumentStore.getDocumentName(documentStore.checklistid)) {
             @Override
@@ -225,6 +236,50 @@ public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemCli
                 String responseString = new String(responseBody);
                 Utils.showSnakbar(getActivity().findViewById(android.R.id.content).getRootView(), responseString);
                 //if(responseString.equals("")) {
+
+                switch (documentStore.remarks){
+                    case "AadharFront":
+                        jsonObject.addProperty("Aadhaar_Latitude_front",documentStore.latitude);
+                        jsonObject.addProperty("Aadhaar_Longitude_front",documentStore.longitude);
+                        break;
+
+                    case "AadharBack":
+                        jsonObject.addProperty("Aadhaar_Latitude_Back",documentStore.latitude);
+                        jsonObject.addProperty("Aadhaar_Longitude_Back",documentStore.longitude);
+                        break;
+
+
+                    case "VoterFront":
+                        jsonObject.addProperty("Voterid_Latitude_front",documentStore.latitude);
+                        jsonObject.addProperty("Voterid_Longitude_front",documentStore.longitude);
+                        break;
+
+                    case "VoterBack":
+                        jsonObject.addProperty("Voterid_Latitude_Back",documentStore.latitude);
+                        jsonObject.addProperty("Voterid_Longitude_Back",documentStore.longitude);
+                        break;
+
+                    case "PANCard":
+                        jsonObject.addProperty("Pan_Latitude_front",documentStore.latitude);
+                        jsonObject.addProperty("Pan_Longitude_front",documentStore.longitude);
+                        break;
+
+                    case "PassbookFirst":
+                        jsonObject.addProperty("PassBook_Latitude_front",documentStore.latitude);
+                        jsonObject.addProperty("PassBook_Longitude_front",documentStore.longitude);
+                        break;
+
+                    case "PassbookLast":
+                        jsonObject.addProperty("PassBook_Latitude_Last",documentStore.latitude);
+                        jsonObject.addProperty("PassBook_Longitude_Last",documentStore.longitude);
+                        break;
+
+
+                }
+                Log.d("TAG", "onSuccess: "+jsonObject);
+
+
+
                 view.setEnabled(false);
                 view.setOnClickListener(null);
                 view.setActivated(false);
@@ -234,7 +289,16 @@ public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemCli
                 documentStore.update();
                 (new File(documentStore.imagePath)).delete();
 
+
                 onResume();
+                Log.d("TAG", "onSuccess: "+jsonObject);
+
+                if (documentStores.size()==0){
+                    Log.d("TAG", "onSuccess: "+jsonObject);
+
+                    // TODO: 22-02-2023 Add api here for lat long of documents
+                }
+
             }
 
             @Override

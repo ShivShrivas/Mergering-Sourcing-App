@@ -79,7 +79,7 @@ import java.util.List;
         @Override
         public String toString() {
             return "FiDocGeoLoc{" +
-                    "FiCode=" + FiCode +
+                    "  FiCode=" + FiCode +
                     ", Creator='" + Creator + '\'' +
                     ", IsAadhaarEntry='" + IsAadhaarEntry + '\'' +
                     ", IsNameVerify='" + IsNameVerify + '\'' +

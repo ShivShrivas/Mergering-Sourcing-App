@@ -571,7 +571,9 @@ public class Borrower extends BaseModel implements Serializable {
     @Expose
     @Column
     public String isAdhaarEntry;
-
+    @Expose
+    @Column
+    public String IsNameVerify;
 
     public Borrower(String creator, String tag, String groupCode, String cityCode, String userId) {
         this.Creator = creator;
@@ -1166,6 +1168,23 @@ public class Borrower extends BaseModel implements Serializable {
                 .queryList();
     }
 
+
+   public static String getBorrowerIsAdharEntryEntryType(long ficode,String creator) {
+        return SQLite.select().from(Borrower.class)
+                .where(Borrower_Table.Code.eq(ficode))
+                .querySingle().isAdhaarEntry;
+    }
+
+
+   public static String getBorrowerIsNameVerifyEntryType(long ficode,String creator) {
+        return SQLite.select().from(Borrower.class)
+                .where(Borrower_Table.Code.eq(ficode)).and(Borrower_Table.Creator.eq(creator))
+                .querySingle().IsNameVerify;
+    }
+
+
+
+
     public void associateBorrowerFamilyExpenses(BorrowerFamilyExpenses familyExpenses) {
         familyExpenses.setCode(this.Code);
         familyExpenses.setCreator(this.Creator);
@@ -1311,7 +1330,6 @@ public class Borrower extends BaseModel implements Serializable {
                 ", fiFamLoans=" + fiFamLoans +
                 ", fiFamExpenses=" + fiFamExpenses +
                 ", isCurrentAddressDifferent='" + isCurrentAddressDifferent + '\'' +
-                ", isAdhaarEntry='" + isAdhaarEntry + '\'' +
                 '}';
     }
 
@@ -1443,6 +1461,7 @@ public class Borrower extends BaseModel implements Serializable {
         this.Verified_phone = borrowerDTO.Verified_phone;
         this.voterid = borrowerDTO.VoterID;
         this.isAdhaarEntry = borrowerDTO.isAdhaarEntry;
+        this.IsNameVerify = borrowerDTO.IsNameVerify;
 
         this.save();
 

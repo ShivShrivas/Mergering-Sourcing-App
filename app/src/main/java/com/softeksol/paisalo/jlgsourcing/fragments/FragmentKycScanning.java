@@ -27,11 +27,13 @@ import com.softeksol.paisalo.jlgsourcing.BuildConfig;
 import com.softeksol.paisalo.jlgsourcing.R;
 import com.softeksol.paisalo.jlgsourcing.Utilities.CameraUtils;
 import com.softeksol.paisalo.jlgsourcing.Utilities.Utils;
+import com.softeksol.paisalo.jlgsourcing.activities.ActivityBorrowerKyc;
 import com.softeksol.paisalo.jlgsourcing.activities.ActivityLoanApplication;
 import com.softeksol.paisalo.jlgsourcing.adapters.AdapterListDocuments;
 import com.softeksol.paisalo.jlgsourcing.entities.Borrower;
 import com.softeksol.paisalo.jlgsourcing.entities.DocumentStore;
 import com.softeksol.paisalo.jlgsourcing.entities.Guarantor;
+import com.softeksol.paisalo.jlgsourcing.location.GpsTracker;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -136,6 +138,9 @@ public class FragmentKycScanning extends AbsFragment implements AdapterView.OnIt
         mDocumentStore = (DocumentStore) adapterView.getItemAtPosition(i);
         //Utils.showSnakbar(getView(),String.valueOf(mDocumentStore.checklistid));
         //Log.d("Document Store", mDocumentStore.toString());
+            Borrower b=new Borrower();
+        Log.d("TAG", "onItemClick: "+  b.getBorrowerIsAdharEntryEntryType(mDocumentStore.ficode,mDocumentStore.Creator));
+        Log.d("TAG", "onItemClick: "+  b.getBorrowerIsNameVerifyEntryType(mDocumentStore.ficode,mDocumentStore.Creator));
 
         if (mDocumentStore.updateStatus == true) {
             Utils.showSnakbar(getView(), "This Document Already uploaded");
@@ -188,6 +193,7 @@ public class FragmentKycScanning extends AbsFragment implements AdapterView.OnIt
             Exception error = null;
 
             if (data != null) {
+                GpsTracker gpsTracker=new GpsTracker(this.getContext());
                 Log.e("SuccessCrop", "Data Aaya hai Crop Image kaa");
                 Uri imageUri = CameraUtils.finaliseImageCropUri(resultCode, data, 1000, error, true);
                 File tempCroppedImage = new File(imageUri.getPath());
@@ -212,7 +218,8 @@ public class FragmentKycScanning extends AbsFragment implements AdapterView.OnIt
                                     //bitmap = BitmapFactory.decodeFile(croppedImage.getAbsolutePath());
 
                                     Log.e("CroppedImageMyBitmap", bitmap+ "");
-
+                                    mDocumentStore.latitude= (float) gpsTracker.getLatitude();
+                                    mDocumentStore.longitude= (float) gpsTracker.getLongitude();
                                     mDocumentStore.imagePath = croppedImage.getPath();
 
                                     //mDocumentStore.imageshow = ImageString;

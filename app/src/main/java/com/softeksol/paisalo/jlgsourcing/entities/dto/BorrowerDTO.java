@@ -409,6 +409,11 @@ public class BorrowerDTO {
     public String isAdhaarEntry;
 
 
+
+    @Expose
+    public String IsNameVerify;
+
+
     public BorrowerDTO() {
     }
 
@@ -541,6 +546,7 @@ public class BorrowerDTO {
         this.Verified_phone = borrower.Verified_phone;
         this.VoterID = borrower.voterid;
         this.isAdhaarEntry = borrower.isAdhaarEntry;
+        this.IsNameVerify = borrower.IsNameVerify;
 
         BorrowerExtraBank borrowerExtraBank = borrower.getBorrowerExtraBank();
         if (borrowerExtraBank == null) {
