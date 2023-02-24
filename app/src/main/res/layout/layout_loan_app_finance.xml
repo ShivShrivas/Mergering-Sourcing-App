@@ -136,7 +136,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <Spinner
-                android:id="@+id/spinLoanAppFinancePurposePrimary"
+                android:id="@+id/spinLoanAppFinanceAccountType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             </LinearLayout>
@@ -192,7 +192,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <Spinner
-                android:id="@+id/spinLoanAppFinanceAccountType"
+                android:id="@+id/spinLoanAppFinancePurposePrimary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             </LinearLayout>

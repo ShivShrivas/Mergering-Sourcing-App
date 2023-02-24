@@ -169,7 +169,6 @@ public class FragmentKycScanning extends AbsFragment implements AdapterView.OnIt
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         Log.e("Success0", "Data Aaya hai Image kaa");
         if (requestCode == CameraUtils.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             if (data != null) {

@@ -254,6 +254,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         Log.d("TAG", "onCreate: "+RangeCategory.getRangesByCatKey("state", "DescriptionEn", true));
         acspAadharState.setAdapter(new AdapterListRange(this, RangeCategory.getRangesByCatKey("state", "DescriptionEn", true), false));
 
+
         tietName = findViewById(R.id.tietName);
         tietName.addTextChangedListener(new MyTextWatcher(tietName) {
             @Override
@@ -453,7 +454,14 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
         acspBusinessDetail = findViewById(R.id.acspBusinessDetail);
         acspBusinessDetail.setAdapter(new AdapterListRange(this, RangeCategory.getRangesByCatKey("loan_purpose", "DescriptionEn", true), false));
 
+        banktype.setAdapter(new AdapterListRange(this, RangeCategory.getRangesByCatKey("banks", "DescriptionEn", true), false));
+
         acspLoanPurpose = findViewById(R.id.acspLoanReason);
+        acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true), false));
+
+
+
+
 
         tietMother = findViewById(R.id.tietMotherName);
         tietMother.addTextChangedListener(new MyTextWatcher(tietMother) {
@@ -549,34 +557,8 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                 }
             }
         });
-        banktype.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                bankName=adapterView.getSelectedItem().toString();
-                ArrayList<RangeCategory> arrayListBob=new ArrayList<>();
-                arrayListBob.add(new RangeCategory("loan_purpose","MSME","MSME","MSME","MSME",18,"MSME",149));
-                ArrayList<RangeCategory> arrayListUco=new ArrayList<>();
-                arrayListUco.add(new RangeCategory("loan_purpose","Purchase of Agri implements/equipments","अन्य कृषि ","Purchase of Agri implements/equipments","अन्य कृषि ",4,"Purchase of Agri implements/equipments",0));
 
-              /*  if (adapterView.getSelectedItem().toString().equals("BOB")){
-                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListBob, false));
 
-                }else if (adapterView.getSelectedItem().toString().equals("UCO") || adapterView.getSelectedItem().toString().equals("SBI")){
-                    acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, arrayListUco, false));
-                    Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
-                }else {*/
-                acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true), false));
-                Log.d("TAG", "onCreate: "+RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true));
-
-                // }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
         tietPanNo.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -808,9 +790,9 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
             tietExpence.setError("Please enter expense");
         }
         borrower.Loan_Duration= loanDurationData;
-        Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
-        Log.d("TAG", "getDataFromView: "+bankName);
-        borrower.BankName= bankName;
+        //Log.d("TAG", "getDataFromView: "+banktype.getSelectedItem().toString());
+       // Log.d("TAG", "getDataFromView: "+((RangeCategory) acspLoanPurpose.getSelectedItem()).RangeCode);
+        borrower.BankName= ((RangeCategory)banktype.getSelectedItem()).DescriptionEn;
 
 //     editor.putString("Name",)
         editor.clear();

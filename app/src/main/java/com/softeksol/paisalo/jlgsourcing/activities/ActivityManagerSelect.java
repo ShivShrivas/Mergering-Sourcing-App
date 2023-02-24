@@ -3,6 +3,7 @@ package com.softeksol.paisalo.jlgsourcing.activities;
 import static com.softeksol.paisalo.jlgsourcing.Global.ESIGN_TYPE_TAG;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -337,5 +338,7 @@ public class ActivityManagerSelect extends AppCompatActivity implements View.OnC
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
 }
 

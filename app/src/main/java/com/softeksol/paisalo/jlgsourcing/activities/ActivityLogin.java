@@ -336,7 +336,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
         //tilUserName.setErrorEnabled(true);
         userName.setError("Must be 10 Characters to share Device ID");
 
-       password = (EditText) findViewById(R.id.etLoginPassword);
+        password = (EditText) findViewById(R.id.etLoginPassword);
         //tilPassowrd.setErrorEnabled(true);
         password.setError("Min 5 chars required");
 
@@ -556,7 +556,6 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
 
     private void updateReloginToken(String newUrl, String UserName, String Password) {
         IglPreferences.setSharedPref(getBaseContext(), SEILIGL.BASE_URL, newUrl);
-
         DataAsyncResponseHandler reloginResponseHandler = new DataAsyncResponseHandler(this) {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -574,7 +573,6 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
             }
         };
         (new WebOperations()).getAccessToken(this, UserName, Password, reloginResponseHandler);
-
     }
 
     private void reStartApplication() {

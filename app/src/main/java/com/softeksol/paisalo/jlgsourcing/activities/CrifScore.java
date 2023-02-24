@@ -30,6 +30,7 @@ import com.softeksol.paisalo.jlgsourcing.Global;
 import com.softeksol.paisalo.jlgsourcing.R;
 import com.softeksol.paisalo.jlgsourcing.Utilities.Utils;
 import com.softeksol.paisalo.jlgsourcing.WebOperations;
+import com.softeksol.paisalo.jlgsourcing.adapters.AdapterListRange;
 import com.softeksol.paisalo.jlgsourcing.entities.ESignBorrower;
 import com.softeksol.paisalo.jlgsourcing.entities.ESigner;
 import com.softeksol.paisalo.jlgsourcing.entities.RangeCategory;
@@ -44,6 +45,7 @@ import com.softeksol.paisalo.jlgsourcing.retrofit.ScrifData;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import cz.msebera.android.httpclient.Header;
@@ -159,28 +161,15 @@ public class CrifScore extends AppCompatActivity {
 
             }
         });
-        checkCrifScore();
 
-
-        String[] arraySpinner = new String[] {
-                "UCO", "BOB","PNB","SBI"
-        };
-
-
-        spinner = (Spinner) findViewById(R.id.spinSelectBank);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, arraySpinner);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        int spinnerBankPos=adapter.getPosition(sharedPreferences.getString("Bank",""));
-        spinner.setSelection(spinnerBankPos);
-
+        spinner =findViewById(R.id.spinSelectBank);
+        spinner.setAdapter(new AdapterListRange(this, RangeCategory.getRangesByCatKey("banks", "DescriptionEn", true), false));
+        Utils.setSpinnerPosition(spinner,sharedPreferences.getString("Bank",""));
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                editor.putString("Bank",parent.getSelectedItem().toString());
+                editor.putString("Bank",((RangeCategory)spinner.getSelectedItem()).DescriptionEn);
                 editor.apply();
                 btnSrifScore.setText("TRY AGAIN");
                 Log.d("TAG", "onItemSelected: "+sharedPreferences.getString("Bank",""));
@@ -192,7 +181,7 @@ public class CrifScore extends AppCompatActivity {
             }
         });
 
-
+        checkCrifScore();
     }
 
     private JsonObject getJsonForCrif(String ficode, String creator, String amount, String emi) {
@@ -394,10 +383,7 @@ public class CrifScore extends AppCompatActivity {
                                 btnSrifScoreSave.setVisibility(View.GONE);
                                 btnSrifScore.setVisibility(View.VISIBLE);
                                 btnSrifScore.setText("TRY AGAIN");
-
                             }
-
-
                             progressBar.setMax(1000);
                             progressBar.setProgress(0);
                             new Thread(new Runnable() {
@@ -415,7 +401,6 @@ public class CrifScore extends AppCompatActivity {
                             }).start();
                             layout_design.setVisibility(View.VISIBLE);
                             layout_design_pending.setVisibility(View.GONE);                        }
-
                     }
                 }else{
                     layout_design.setVisibility(View.GONE);

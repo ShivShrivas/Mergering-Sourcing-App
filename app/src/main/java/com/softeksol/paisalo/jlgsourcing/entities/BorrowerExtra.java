@@ -171,50 +171,50 @@ public class BorrowerExtra extends BaseModel implements Serializable {
     @Column
     public String MOTHER_TITLE;
 
-     @Expose
+    @Expose
     @Column
     public String MOTHER_FIRST_NAME;
 
-      @Expose
+    @Expose
     @Column
     public String MOTHER_MIDDLE_NAME;
 
-       @Expose
+    @Expose
     @Column
     public String MOTHER_LAST_NAME;
 
-      @Expose
+    @Expose
     @Column
     public String MOTHER_MAIDEN_NAME;
 
- @Expose
+    @Expose
     @Column
     public String SPOUSE_TITLE;
 
 
-      @Expose
+    @Expose
     @Column
     public String SPOUSE_FIRST_NAME;
 
 
-      @Expose
+    @Expose
     @Column
     public String SPOUSE_MIDDLE_NAME;
 
-     @Expose
+    @Expose
     @Column
     public String SPOUSE_LAST_NAME;
 
-     @Expose
+    @Expose
     @Column
     public String FORM60SUBMISSIONDATE;
 
 
-     @Expose
+    @Expose
     @Column
     public String PAN_APPLIED_FLAG;
 
-     @Expose
+    @Expose
     @Column
     public String OTHER_THAN_AGRICULTURAL_INCOME;
 
@@ -223,12 +223,12 @@ public class BorrowerExtra extends BaseModel implements Serializable {
     public String APPLICNT_TITLE;
 
 
-     @Expose
+    @Expose
     @Column
     public String MARITAL_STATUS;
 
 
-      @Expose
+    @Expose
     @Column
     public String OCCUPATION_TYPE;
 
@@ -254,7 +254,7 @@ public class BorrowerExtra extends BaseModel implements Serializable {
     public String FATHER_MIDDLE_NAME;
 
 
-     @Expose
+    @Expose
     @Column
     public String FATHER_LAST_NAME;
 

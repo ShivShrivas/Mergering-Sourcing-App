@@ -413,7 +413,6 @@ public class WebOperations {
     public void getEntity(Context context, String controller, String method, String jsonString, ResponseHandlerInterface responseHandler) {
         try {
             String url = IglPreferences.getPrefString(context, SEILIGL.BASE_URL, "") + "api/" + controller + "/" + method;
-
             StringEntity entity = (jsonString == null ? null : new StringEntity(jsonString));
             AsyncHttpClient client = new AsyncHttpClient();
             client.setThreadPool(Executors.newSingleThreadExecutor());

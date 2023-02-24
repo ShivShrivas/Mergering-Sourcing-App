@@ -521,6 +521,7 @@ public class ActivityFinancing extends AppCompatActivity
                 showFragment(fragment);
             }
         };
+
         AsyncResponseHandler dataAsyncResponseHandler = new AsyncResponseHandler(this, "Loan Financing\nSubmittiong Loan Application","Submitting Borrower Information") {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

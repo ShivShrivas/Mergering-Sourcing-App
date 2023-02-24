@@ -1,6 +1,14 @@
 package com.softeksol.paisalo.jlgsourcing.activities;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -8,14 +16,23 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.BackoffPolicy;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.google.gson.reflect.TypeToken;
+import com.loopj.android.http.DataAsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.softeksol.paisalo.jlgsourcing.Global;
@@ -26,14 +43,18 @@ import com.softeksol.paisalo.jlgsourcing.WebOperations;
 import com.softeksol.paisalo.jlgsourcing.adapters.AdapterListManager;
 import com.softeksol.paisalo.jlgsourcing.adapters.AdapterOperation;
 import com.softeksol.paisalo.jlgsourcing.entities.Manager;
+import com.softeksol.paisalo.jlgsourcing.entities.RangeCategory;
 import com.softeksol.paisalo.jlgsourcing.entities.dto.OperationItem;
 import com.softeksol.paisalo.jlgsourcing.handlers.DataAsyncResponseHandler;
+import com.softeksol.paisalo.jlgsourcing.location.LocationJobService;
+import com.softeksol.paisalo.jlgsourcing.location.LocationWork;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -41,12 +62,21 @@ public class ActivityOperationSelect extends AppCompatActivity {
     private AdapterListManager adapterListManager;
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
+
+    private static final int PERMISSION_REQUEST_CODE = 200;
+
+    private static final String TAG = "LocationUpdate";
+    boolean registered = false, isServiceStarted=false;
+    public static final String JOB_STATE_CHANGED = "jobStateChanged";
+    public static final String LOCATION_ACQUIRED = "locAcquired";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_operation_select);
         drawerLayout = findViewById(R.id.my_drawer_layout);
-
+        //startLocationWork();
+        startBackgroundService();
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close){
             public void onDrawerClosed(View view)
             {
@@ -167,4 +197,71 @@ public class ActivityOperationSelect extends AppCompatActivity {
     public boolean onOptionsItemSelected(android.view.MenuItem item) {
         return actionBarDrawerToggle.onOptionsItemSelected(item);
     }
+
+
+/*
+    private  void startLocationWork(){
+
+        // START Worker
+        PeriodicWorkRequest periodicWork = new PeriodicWorkRequest.Builder(LocationWork.class, 15, TimeUnit.MINUTES)
+                .addTag(TAG)
+                .build();
+        WorkManager.getInstance().enqueueUniquePeriodicWork("Location", ExistingPeriodicWorkPolicy.REPLACE, periodicWork);
+
+        Toast.makeText(ActivityOperationSelect.this, "Location Worker Started : " + periodicWork.getId(), Toast.LENGTH_SHORT).show();
+
+
+       */
+/* OneTimeWorkRequest backGroundWork=new OneTimeWorkRequest.Builder(LocationWork.class)
+                .addTag("Location")
+                .setBackoffCriteria(BackoffPolicy.LINEAR,OneTimeWorkRequest.MIN_BACKOFF_MILLIS, TimeUnit.SECONDS)
+                .build();*//*
+
+
+
+    }
+*/
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void startBackgroundService() {
+        if(!registered) {
+            IntentFilter i = new IntentFilter(JOB_STATE_CHANGED);
+            i.addAction(LOCATION_ACQUIRED);
+            LocalBroadcastManager.getInstance(this).registerReceiver(jobStateChanged, i);
+        }
+        JobScheduler jobScheduler =
+                (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        assert jobScheduler != null;
+        jobScheduler.schedule(new JobInfo.Builder(LocationJobService.LOCATION_SERVICE_JOB_ID,
+                new ComponentName(this, LocationJobService.class))
+                .setOverrideDeadline(100)
+                .setPersisted(true)
+                .setRequiresDeviceIdle(false)
+                .build());
+    }
+
+    private BroadcastReceiver jobStateChanged = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent.getAction()==null){
+                return;
+            }
+            if(intent.getAction().equals(JOB_STATE_CHANGED)) {
+               // changeServiceButton(intent.getExtras().getBoolean("isStarted"));
+            }else if (intent.getAction().equals(LOCATION_ACQUIRED)){
+                if(intent.getExtras()!=null){
+                    Bundle b = intent.getExtras();
+                    Location l = b.getParcelable("location");
+                   // updateMarker(l);
+                }else{
+                    Log.d("intent","null");
+                }
+            }
+        }
+    };
+
+
 }

@@ -79,7 +79,7 @@ public class RangeCategory extends BaseModel {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String jsonString = new String(responseBody);
-                Log.d("RangeCategoryData", jsonString);
+                Log.e("RangeCategoryData", jsonString);
                 Type listType = new TypeToken<List<RangeCategory>>() {
                 }.getType();
                 List<RangeCategory> rangeCategoryList = WebOperations.convertToObjectArray(jsonString, listType);
