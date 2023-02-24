@@ -23,6 +23,7 @@ import com.softeksol.paisalo.jlgsourcing.Global;
 import com.softeksol.paisalo.jlgsourcing.R;
 import com.softeksol.paisalo.jlgsourcing.Utilities.Utils;
 import com.softeksol.paisalo.jlgsourcing.WebOperations;
+import com.softeksol.paisalo.jlgsourcing.activities.CrifScore;
 import com.softeksol.paisalo.jlgsourcing.adapters.AdapterListDocuments;
 import com.softeksol.paisalo.jlgsourcing.entities.Borrower;
 import com.softeksol.paisalo.jlgsourcing.entities.Borrower_Table;
@@ -209,26 +210,20 @@ public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemCli
             documentStore.imagePath = mDocumentStore.imagePath;
             jsonObject.addProperty("FiCode",mDocumentStore.ficode);
             jsonObject.addProperty("Creator",mDocumentStore.Creator);
-            jsonObject.addProperty("IsAadhaarEntry",Borrower.getBorrowerIsAdharEntryEntryType(mDocumentStore.ficode, mDocumentStore.Creator));
-            jsonObject.addProperty("IsNameVerify",Borrower.getBorrowerIsNameVerifyEntryType(mDocumentStore.ficode, mDocumentStore.Creator));
+            jsonObject.addProperty("IsAadhaarEntry",Borrower.getBorrowerIsAdharEntryEntryType(mDocumentStore.ficode, mDocumentStore.Creator)==null?"M":Borrower.getBorrowerIsAdharEntryEntryType(mDocumentStore.ficode, mDocumentStore.Creator));
+            jsonObject.addProperty("IsNameVerify",Borrower.getBorrowerIsNameVerifyEntryType(mDocumentStore.ficode, mDocumentStore.Creator)==null?"0":Borrower.getBorrowerIsNameVerifyEntryType(mDocumentStore.ficode, mDocumentStore.Creator));
+
+
             uploadKycJson(documentStore, view);
         }else {
             Toast.makeText(getContext(), "ImagePath_Null", Toast.LENGTH_SHORT).show();
         }
-
-
-
         //}
     }
-
-
     public interface OnListFragmentKycScanInteractionListener {
         void onListFragmentKycScanInteraction(Borrower borrower);
     }
-
-
     private void uploadKycJson(final DocumentStore documentStore, final View view) {
-        
 
         DataAsyncResponseHandler responseHandler = new DataAsyncResponseHandler(getContext(), "Loan Financing", "Uploading " + DocumentStore.getDocumentName(documentStore.checklistid)) {
             @Override
@@ -274,12 +269,8 @@ public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemCli
                         jsonObject.addProperty("PassBook_Longitude_Last",documentStore.longitude);
                         break;
 
-
                 }
                 Log.d("TAG", "onSuccess: "+jsonObject);
-
-
-
                 view.setEnabled(false);
                 view.setOnClickListener(null);
                 view.setActivated(false);
@@ -288,15 +279,12 @@ public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemCli
                // documentStore.imageshow = "";
                 documentStore.update();
                 (new File(documentStore.imagePath)).delete();
-
-
                 onResume();
                 Log.d("TAG", "onSuccess: "+jsonObject);
-
                 if (documentStores.size()==0){
                     Log.d("TAG", "onSuccess: "+jsonObject);
-
                     // TODO: 22-02-2023 Add api here for lat long of documents
+                    sendLatLongOfDocsOnServer(jsonObject);
                 }
 
             }
@@ -314,6 +302,28 @@ public class FragmentKycSubmit extends Fragment implements AdapterView.OnItemCli
         Log.d("Document Json",jsonString);
         String apiPath = documentStore.checklistid == 0 ? "/api/uploaddocs/savefipicjson" : "/api/uploaddocs/savefidocsjson";
         (new WebOperations()).postEntity(getContext(), BuildConfig.BASE_URL + apiPath, jsonString, responseHandler);
+    }
+
+    private void sendLatLongOfDocsOnServer(JsonObject jsonObject) {
+        DataAsyncResponseHandler responseHandlerForLatLong = new DataAsyncResponseHandler(getContext(), "Loan Financing", "Uploading Lat Long of Docs "){
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Log.d("TAG", "onSuccess: "+responseBody);
+                Log.d("TAG", "onSuccess: Data Uploaded");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                super.onFailure(statusCode, headers, responseBody, error);
+                Log.d("TAG", "onFailure: "+error.getMessage());
+            }
+        };
+
+            String apiPath =  "/api/FIDocLatLong/SaveDocLatLong";
+        Log.d("TAG", "sendLatLongOfDocsOnServer: "+jsonObject.toString());
+        (new WebOperations()).postEntity(getContext(), "FIDocLatLong", "SaveDocLatLong" ,jsonObject.toString(), responseHandlerForLatLong);
+
     }
 
     /*private void submitAllKyc(){

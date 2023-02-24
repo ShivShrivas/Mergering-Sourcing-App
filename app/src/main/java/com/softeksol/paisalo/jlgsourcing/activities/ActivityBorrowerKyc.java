@@ -1,6 +1,5 @@
 package com.softeksol.paisalo.jlgsourcing.activities;
 
-
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -25,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -34,7 +32,6 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.JsonObject;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -71,11 +68,9 @@ import com.softeksol.paisalo.jlgsourcing.retrofit.ApiClient;
 import com.softeksol.paisalo.jlgsourcing.retrofit.ApiInterface;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -101,25 +96,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
-
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-
 import cz.msebera.android.httpclient.Header;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 import static com.softeksol.paisalo.jlgsourcing.Utilities.Verhoeff.validateCaseCode;
-
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnClickListener,AdapterRecViewListDocuments.ItemListener, CameraUtils.OnCameraCaptureUpdate { //, CameraUtils.OnCameraCaptureUpdate
     private final AppCompatActivity activity = this;
+
     private Borrower borrower;
     private DocumentStore documentStore;
     //private BorrowerExtraBank borrowerExtraBank;
@@ -568,7 +560,7 @@ public class ActivityBorrowerKyc extends AppCompatActivity implements View.OnCli
                     Log.d("TAG", "onItemSelected: "+acspLoanPurpose.getSelectedItem());
                 }else {*/
                 acspLoanPurpose.setAdapter(new AdapterListRange(ActivityBorrowerKyc.this, RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true), false));
-                Log.d("TAG", "onCreate: "+RangeCategory.getRangesByCatKey("loan_purpose","DescriptionEn", true));
+                Log.d("TAG", "onCreate: "+RangeCategory.getRangesByCatKey("banks","DescriptionEn", true));
 
                 // }
 

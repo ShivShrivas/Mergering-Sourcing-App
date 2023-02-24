@@ -118,7 +118,6 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
 
         if (requestPermissions()){
             getDeviceID();
-            Toast.makeText(this, "All permissions are granted", Toast.LENGTH_SHORT).show();
         }else {
             permissionCheck();
         }
@@ -308,6 +307,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                                             finish();
                                         }
                                     } catch (JSONException e) {
+                                        Toast.makeText(ActivityLogin.this, "Manager List Not Mapped Kindly Contact to Your Head", Toast.LENGTH_LONG).show();
                                         e.printStackTrace();
                                     }
                                 }
@@ -726,7 +726,6 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                         // this method is called when all permissions are granted
                         if (multiplePermissionsReport.areAllPermissionsGranted()) {
                             // do you work now
-                            Toast.makeText(ActivityLogin.this, "All the permissions are granted..", Toast.LENGTH_SHORT).show();
                             permissionCheck();
                             perMissionFlag[0] =true;
 
