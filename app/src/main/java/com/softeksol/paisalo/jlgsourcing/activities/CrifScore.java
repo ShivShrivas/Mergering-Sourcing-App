@@ -162,6 +162,7 @@ public class CrifScore extends AppCompatActivity {
             }
         });
 
+
         spinner =findViewById(R.id.spinSelectBank);
         spinner.setAdapter(new AdapterListRange(this, RangeCategory.getRangesByCatKey("banks", "DescriptionEn", true), false));
         Utils.setSpinnerPosition(spinner,sharedPreferences.getString("Bank",""));
