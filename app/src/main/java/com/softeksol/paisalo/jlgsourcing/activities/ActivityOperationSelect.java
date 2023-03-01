@@ -76,7 +76,7 @@ public class ActivityOperationSelect extends AppCompatActivity {
         setContentView(R.layout.activity_operation_select);
         drawerLayout = findViewById(R.id.my_drawer_layout);
         //startLocationWork();
-        startBackgroundService();
+      //  startBackgroundService();
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close){
             public void onDrawerClosed(View view)
             {
